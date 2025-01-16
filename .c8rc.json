@@ -1,0 +1,12 @@
+{
+  "include": "src/**",
+  "exclude": [
+    "**/*.dto.ts",
+    "**/*.enum.ts",
+    "**/*.array.ts",
+    "**/*.response.ts",
+    "**/response/**",
+    "**/*.dto.ts",
+    "**/*.entity.ts"
+  ]
+}
