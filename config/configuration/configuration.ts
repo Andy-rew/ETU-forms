@@ -27,11 +27,21 @@ export type RecoveryCodeExpiration = {
   recoveryCodeExpireTime: number;
 };
 
+export type Database = {
+  type: string;
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+  database: string;
+};
+
 export type Configuration = {
   jwtAccess: JwtAccessConfig;
   jwtRefresh: JwtRefreshConfig;
   server: Server;
   recoveryCodeExpiration: RecoveryCodeExpiration;
+  database: Database;
 };
 
 export const loadConfiguration = (): Configuration => ({
@@ -50,4 +60,20 @@ export const loadConfiguration = (): Configuration => ({
   recoveryCodeExpiration: {
     recoveryCodeExpireTime: Number(process.env.RECOVERY_CODE_EXPIRE_TIME),
   },
+  database: {
+    type: process.env.DB_TYPE,
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    username: process.env.POSTGRES_USERNAME,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DATABASE,
+  },
 });
+
+export const CONFIGS: { [K in keyof Configuration]: K } = {
+  jwtAccess: 'jwtAccess',
+  jwtRefresh: 'jwtRefresh',
+  server: 'server',
+  recoveryCodeExpiration: 'recoveryCodeExpiration',
+  database: 'database',
+};
