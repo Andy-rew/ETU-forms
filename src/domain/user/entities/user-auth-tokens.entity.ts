@@ -20,6 +20,7 @@ export class UserAuthTokensEntity {
 
   @ManyToOne(() => UserEntity, (user: UserEntity) => user.authTokens, {
     onDelete: 'CASCADE',
+    nullable: false,
   })
   user: UserEntity;
 }

@@ -4,27 +4,21 @@ import {
   DeleteDateColumn,
   Entity,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import {
-  IsBoolean,
-  IsEmail,
-  IsEnum,
-  IsNumber,
-  IsPhoneNumber,
-} from 'class-validator';
+import { IsBoolean, IsEmail, IsEnum, IsNumber, IsPhoneNumber } from 'class-validator';
 import { UserAuthTokensEntity } from '@domain/user/entities/user-auth-tokens.entity';
-
-export enum UserStatus {
-  invited = 'invited',
-  activated = 'activated',
-}
-
-export enum UserRole {
-  user = 'user',
-  processAdmin = 'processAdmin',
-  systemAdmin = 'systemAdmin',
-}
+import { UserPasswordEntity } from '@domain/user/entities/user-password.entity';
+import { SystemAdminEntity } from '@domain/user/entities/system-admin.entity';
+import { ProcessesAdminEntity } from '@domain/user/entities/processes-admin.entity';
+import { FormSchemaUserTemplateEntity } from '@domain/form-schema/entities/form-schema-user-template.entity';
+import { UserStatusEnum } from '@domain/user/enums/user-status.enum';
+import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
+import { ProcessParticipantEntity } from '@domain/process/entities/process-participant.entity';
+import { ProcessManagersEntity } from '@domain/process/entities/process-managers.entity';
+import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
+import { ReactionEntity } from '@domain/reaction/entities/reaction.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -43,13 +37,18 @@ export class UserEntity {
   @IsNumber()
   etuId: number | null;
 
-  @Column({ type: 'enum', enum: UserStatus, default: UserStatus.invited })
-  @IsEnum(UserStatus)
-  status: UserStatus;
+  @Column({ type: 'enum', enum: UserStatusEnum, default: UserStatusEnum.invited })
+  @IsEnum(UserStatusEnum)
+  status: UserStatusEnum;
 
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.user })
-  @IsEnum(UserRole)
-  role: UserRole;
+  @Column({
+    type: 'enum',
+    array: true,
+    enum: UserRoleEnum,
+    default: [UserRoleEnum.user],
+  })
+  @IsEnum(UserRoleEnum, { each: true })
+  roles: UserRoleEnum[];
 
   @Column({ default: false })
   @IsBoolean()
@@ -63,4 +62,28 @@ export class UserEntity {
 
   @OneToMany(() => UserAuthTokensEntity, (authToken) => authToken.user)
   authTokens: UserAuthTokensEntity[];
+
+  @OneToOne(() => UserPasswordEntity, (password) => password.user)
+  password: UserPasswordEntity;
+
+  @OneToOne(() => SystemAdminEntity, (systemAdmin) => systemAdmin.user)
+  systemAdmin: SystemAdminEntity;
+
+  @OneToOne(() => ProcessesAdminEntity, (processAdmin) => processAdmin.user)
+  processesAdmin: ProcessesAdminEntity;
+
+  @OneToMany(() => FormSchemaUserTemplateEntity, (schemaTemplate: FormSchemaUserTemplateEntity) => schemaTemplate.user)
+  schemaTemplates: FormSchemaUserTemplateEntity[];
+
+  @OneToMany(() => ProcessParticipantEntity, (participant: ProcessParticipantEntity) => participant.user)
+  processParticipants: ProcessParticipantEntity[];
+
+  @OneToMany(() => ProcessManagersEntity, (manager: ProcessManagersEntity) => manager.user)
+  processManagers: ProcessManagersEntity[];
+
+  @OneToMany(() => StepExpertsEntity, (stepExpert: StepExpertsEntity) => stepExpert.user)
+  stepExperts: StepExpertsEntity[];
+
+  @OneToMany(() => ReactionEntity, (reaction: ReactionEntity) => reaction.reactedByUser)
+  reactions: ReactionEntity[];
 }
