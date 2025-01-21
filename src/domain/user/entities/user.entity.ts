@@ -19,6 +19,8 @@ import { ProcessParticipantEntity } from '@domain/process/entities/process-parti
 import { ProcessManagersEntity } from '@domain/process/entities/process-managers.entity';
 import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
 import { ReactionEntity } from '@domain/reaction/entities/reaction.entity';
+import { EducationEntity } from '@domain/user/entities/education.entity';
+import { UserDepartmentsEntity } from '@domain/user/entities/user-departments.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -86,4 +88,10 @@ export class UserEntity {
 
   @OneToMany(() => ReactionEntity, (reaction: ReactionEntity) => reaction.reactedByUser)
   reactions: ReactionEntity[];
+
+  @OneToMany(() => EducationEntity, (education: EducationEntity) => education.user)
+  educations: EducationEntity[];
+
+  @OneToMany(() => UserDepartmentsEntity, (userDepartments: UserDepartmentsEntity) => userDepartments.user)
+  userDepartments: UserDepartmentsEntity[];
 }
