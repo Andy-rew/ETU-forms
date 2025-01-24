@@ -3,6 +3,10 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import redoc from 'redoc-express';
+import * as process from 'process';
+
+export const apiVersion = process.env.API_VERSION || '0.0.1';
+export const apiVersionFileName = apiVersion.split('.').join('_');
 
 export function setupRedoc(app: INestApplication) {
   const redocOptions = {

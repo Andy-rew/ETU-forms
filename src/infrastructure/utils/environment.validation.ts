@@ -2,6 +2,9 @@ import { plainToClass } from 'class-transformer';
 import { IsNumber, IsString, validateSync } from 'class-validator';
 
 class EnvironmentVariables {
+  @IsString({ message: 'API_VERSION must be a string' })
+  API_VERSION: string;
+
   @IsString({ message: 'HOST must be a string' })
   HOST: string;
 

@@ -26,6 +26,7 @@
     "migration:create": "typeorm migration:create ./src/migrations/$name",
     "migration:run": "npm run typeorm:cli -- migration:run",
     "migration:revert": "npm run typeorm:cli -- migration:revert",
+    "generate:docs": "node -r ts-node/register -r tsconfig-paths/register generate-redoc-docs.ts",
     "fixtures": "node truncateTables.js && fixtures load ./config/fixtures/*.yml -d ./dist/config/datasource.js --require=ts-node/register --require=tsconfig-paths/register"
   },
   "dependencies": {
