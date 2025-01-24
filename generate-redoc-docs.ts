@@ -9,16 +9,14 @@ import * as path from 'path';
 async function generateJsonAndRedocDocs(): Promise<void> {
   const execPromise = util.promisify(exec);
 
-  const docPath = path.resolve(__dirname, 'redoc-docs');
+  const docPath = path.resolve(__dirname, 'docs');
   await fs.rm(docPath, { recursive: true, force: true });
   await fs.mkdir(docPath, { recursive: true });
 
   try {
-    await fs.writeFile(`./redoc-docs/api_${apiVersionFileName}.json`, JSON.stringify(systemAdminDocs));
+    await fs.writeFile(`./docs/api_${apiVersionFileName}.json`, JSON.stringify(systemAdminDocs));
 
-    await execPromise(
-      `redocly build-docs ./redoc-docs/api_${apiVersionFileName}.json --output ./redoc-docs/api_${apiVersionFileName}.html`,
-    );
+    await execPromise(`redocly build-docs ./docs/api_${apiVersionFileName}.json --output ./docs/index.html`);
 
     console.log(`Redoc docs was successfully generate`);
   } catch (err) {
