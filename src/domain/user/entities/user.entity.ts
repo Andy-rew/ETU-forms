@@ -27,6 +27,15 @@ export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  name: string;
+
+  @Column()
+  surname: string;
+
+  @Column({ nullable: true })
+  patronymic: string;
+
   @Column({ unique: true })
   @IsEmail()
   email: string;
