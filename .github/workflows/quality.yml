@@ -1,0 +1,102 @@
+name: Quality
+
+on: pull_request
+
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2.4.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Get npm cache directory
+        id: npm-cache
+        run: echo "::set-output name=dir::$(npm config get cache)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2.1.6
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: Install npm dependencies
+        run: npm ci --prefer-offline
+
+      - name: Lint with ESLint
+        run: npm run lint
+  build:
+   name: Build
+   runs-on: ubuntu-latest
+   steps:
+     - name: Checkout repository
+       uses: actions/checkout@v2.4.0
+
+     - name: Setup Node.js
+       uses: actions/setup-node@v2.5.0
+       with:
+         node-version-file: '.nvmrc'
+
+     - name: Cache dependencies
+       uses: actions/cache@v2.1.6
+       with:
+         path: ./.npm
+         key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+         restore-keys: |
+           ${{ runner.os }}-npm-
+
+     - name: Install npm dependencies
+       run: npm ci --prefer-offline --cache=./.npm
+
+     - name: Run build success check
+       run: npm run build
+
+  build-docs:
+    name: Build docs
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14.11-alpine3.19
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: etu-forms
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2.4.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Cache dependencies
+        uses: actions/cache@v2.1.6
+        with:
+          path: ./.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install npm dependencies
+        run: npm ci --prefer-offline --cache=./.npm
+
+      - name: Run build docs success check
+        run: npm run generate:docs
+        env:
+          ENVIRONMENT_NAME: test
+          DB_HOST: localhost
+          DB_PORT: 5432
+          POSTGRES_USERNAME: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DATABASE: etu-forms
+          ALLOWED_ORIGINS: http://localhost:8080
