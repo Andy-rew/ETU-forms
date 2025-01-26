@@ -1,9 +1,5 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import {
-  CONFIGS,
-  Database,
-  loadConfiguration,
-} from '../../config/configuration/configuration';
+import { CONFIGS, Database, loadConfiguration } from '../../config/configuration/configuration';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { EntitiesArray } from '@infrastructure/entities.array';
 import { validateEnv } from '@infrastructure/utils/environment.validation';

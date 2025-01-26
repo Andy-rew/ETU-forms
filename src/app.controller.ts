@@ -1,11 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import {
-  ApiOkResponse,
-  ApiOperation,
-  ApiProperty,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiProperty } from '@nestjs/swagger';
 
 class ResponseObj {
   @ApiProperty()
