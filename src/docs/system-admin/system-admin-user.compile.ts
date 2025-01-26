@@ -4,9 +4,9 @@ import { SystemAdminUserInviteResponse } from '@applications/http/system-admin/u
 import { SystemAdminUserDeleteDto } from '@applications/http/system-admin/user/request/system-admin-user-delete.dto';
 
 export function SystemAdminUserCompile(): void {
-  const salonAdminMasterController = systemAdminBaseController.createController('/user', [appSystemAdminUsersTag]);
+  const systemAdminUserController = systemAdminBaseController.createController('/user', [appSystemAdminUsersTag]);
 
-  salonAdminMasterController.addApiMethod('/invite', {
+  systemAdminUserController.addApiMethod('/invite', {
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,
@@ -17,7 +17,7 @@ export function SystemAdminUserCompile(): void {
     },
   });
 
-  salonAdminMasterController.addApiMethod('/delete', {
+  systemAdminUserController.addApiMethod('/delete', {
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,

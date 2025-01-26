@@ -1,7 +1,7 @@
 import { AbstractUnauthorizedException } from '@app/exceptions/abstract-base-exceptions/abstract-unauthorized.exception';
 import { ExceptionTypeEnum } from '@app/exceptions/exception-type.enum';
-import { ApiTypeException } from '@applications/decorators/api/common/api-type-exception.decorator';
-import { ApiMessageException } from '@applications/decorators/api/common/api-description-exception.decorator';
+import { ApiTypeException } from '@applications/decorators/api/helpers/api-type-exception.decorator';
+import { ApiMessageException } from '@applications/decorators/api/helpers/api-description-exception.decorator';
 
 export class AccessTokenInvalidException extends AbstractUnauthorizedException {
   @ApiMessageException('Access token invalid')
