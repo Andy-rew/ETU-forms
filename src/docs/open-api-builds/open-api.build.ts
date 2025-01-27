@@ -27,16 +27,15 @@ export const userBaseController = openApiDoc.createController('/user');
 export const authBaseController = openApiDoc.createController('/auth');
 
 export const appSystemAdminUsersTag = openApiDoc.createTag('Пользователи');
-export const appSystemAdminProcessTag = openApiDoc.createTag('Процессы');
 
-export const appProcessAdminProcessTag = openApiDoc.createTag('Процессы');
+export const appProcessAdminProcessTag = openApiDoc.createTag('Процессы (Адм.)');
 export const appProcessAdminMySchemasTag = openApiDoc.createTag('Мои шаблоны форм');
 
 export const authTag = openApiDoc.createTag('Общее');
 
 openApiDoc.addTagGroup('Регистрация и авторизация', [authTag]);
 
-openApiDoc.addTagGroup('Админ системы', [appSystemAdminUsersTag, appSystemAdminProcessTag]);
+openApiDoc.addTagGroup('Админ системы', [appSystemAdminUsersTag]);
 
 openApiDoc.addTagGroup('Админ процессов', [appProcessAdminProcessTag, appProcessAdminMySchemasTag]);
 
