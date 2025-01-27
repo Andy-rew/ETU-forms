@@ -4,6 +4,7 @@ import * as path from 'path';
 import { SystemAdminUserCompile } from '@app/docs/system-admin/system-admin-user.compile';
 import { AuthCompile } from '@app/docs/common/auth.compile';
 import { ProcessAdminProcessCompile } from '@app/docs/process-admin/process-admin-process.compile';
+import { ProcessAdminMySchemasCompile } from '@app/docs/process-admin/process-admin-my-schemas.compile';
 
 const config: OpenAPIDocConfig = {
   title: 'api ETU-forms',
@@ -46,5 +47,6 @@ AuthCompile();
 SystemAdminUserCompile();
 
 ProcessAdminProcessCompile();
+ProcessAdminMySchemasCompile();
 
 export const systemAdminDocs = openApiDoc.compileOpenApi();

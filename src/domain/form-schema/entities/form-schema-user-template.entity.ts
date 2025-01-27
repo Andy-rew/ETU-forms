@@ -22,6 +22,9 @@ export class FormSchemaUserTemplateEntity {
   @IsEnum(SchemaType)
   type: SchemaType;
 
+  @Column()
+  title: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
