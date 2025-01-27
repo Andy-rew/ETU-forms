@@ -62,6 +62,7 @@ export function ProcessAdminMySchemasCompile(): void {
     method: 'POST',
     requiresAuthorization: true,
     title: 'Редактировать шаблон формы',
+    description: 'Если поле не изменилось - все равно отправить его',
     requestBody: ProcessAdminMySchemasEditDto,
     responses: {
       '201': [],

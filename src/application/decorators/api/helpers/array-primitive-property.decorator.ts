@@ -1,4 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsEmail, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ArrayProperty } from '@ivankrtv/openapidoc/dist';
 import { applyDecorators } from '@nestjs/common';
 import { Type } from 'class-transformer';
@@ -9,7 +9,7 @@ type ArrayPrimitivePropertyDecoratorParams = {
   isOptional?: boolean;
   nullable?: boolean;
   description?: string;
-  items: 'string' | 'number' | 'uuid';
+  items: 'string' | 'number' | 'uuid' | 'email';
 };
 
 /**
@@ -55,6 +55,13 @@ export function ArrayPrimitiveProperty(params?: ArrayPrimitivePropertyDecoratorP
   if (params.items === 'uuid') {
     decorators.push(
       IsUUID('all', { each: true }),
+      Type(() => String),
+    );
+  }
+
+  if (params.items === 'email') {
+    decorators.push(
+      IsEmail({}, { each: true }),
       Type(() => String),
     );
   }
