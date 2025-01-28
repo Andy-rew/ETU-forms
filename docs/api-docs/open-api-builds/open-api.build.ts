@@ -1,15 +1,15 @@
 import { OpenApiDoc, OpenAPIDocConfig } from '@ivankrtv/openapidoc/dist';
 import { apiVersion } from '@app/main';
 import * as path from 'path';
-import { SystemAdminUserCompile } from '@app/docs/system-admin/system-admin-user.compile';
-import { AuthCompile } from '@app/docs/common/auth.compile';
-import { ProcessAdminProcessCompile } from '@app/docs/process-admin/process-admin-process.compile';
-import { ProcessAdminMySchemasCompile } from '@app/docs/process-admin/process-admin-my-schemas.compile';
+import { SystemAdminUserCompile } from '../system-admin/system-admin-user.compile';
+import { AuthCompile } from '../common/auth.compile';
+import { ProcessAdminProcessCompile } from '../process-admin/process-admin-process.compile';
+import { ProcessAdminMySchemasCompile } from '../process-admin/process-admin-my-schemas.compile';
 
 const config: OpenAPIDocConfig = {
   title: 'api ETU-forms',
   version: apiVersion,
-  additionalDescription: path.resolve(`${__dirname}/Doc.md`),
+  additionalDescription: path.resolve(`${__dirname}/../../Doc.md`),
 };
 
 const openApiDoc = new OpenApiDoc(config);
@@ -28,7 +28,8 @@ export const authBaseController = openApiDoc.createController('/auth');
 
 export const appSystemAdminUsersTag = openApiDoc.createTag('Пользователи');
 
-export const appProcessAdminProcessTag = openApiDoc.createTag('Процессы (Адм.)');
+export const appProcessAdminProcessTag = openApiDoc.createTag('Процессы. Общее (Адм.)');
+export const appProcessAdminProcessUsersTag = openApiDoc.createTag('Процессы. Пользователи (Адм.)');
 export const appProcessAdminMySchemasTag = openApiDoc.createTag('Мои шаблоны форм');
 
 export const authTag = openApiDoc.createTag('Общее');
@@ -37,7 +38,11 @@ openApiDoc.addTagGroup('Регистрация и авторизация', [auth
 
 openApiDoc.addTagGroup('Админ системы', [appSystemAdminUsersTag]);
 
-openApiDoc.addTagGroup('Админ процессов', [appProcessAdminProcessTag, appProcessAdminMySchemasTag]);
+openApiDoc.addTagGroup('Админ процессов', [
+  appProcessAdminMySchemasTag,
+  appProcessAdminProcessTag,
+  appProcessAdminProcessUsersTag,
+]);
 
 openApiDoc.addTagGroup('Пользователь', []);
 

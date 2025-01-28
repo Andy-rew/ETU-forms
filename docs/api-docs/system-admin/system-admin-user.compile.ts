@@ -1,4 +1,4 @@
-import { appSystemAdminUsersTag, systemAdminBaseController } from '@app/docs/open-api-builds/open-api.build';
+import { appSystemAdminUsersTag, systemAdminBaseController } from '../open-api-builds/open-api.build';
 import { SystemAdminUserInviteDto } from '@applications/http/system-admin/user/request/system-admin-user-invite.dto';
 import { SystemAdminUserInviteResponse } from '@applications/http/system-admin/user/response/system-admin-user-invite.response';
 import { SystemAdminUserDeleteDto } from '@applications/http/system-admin/user/request/system-admin-user-delete.dto';

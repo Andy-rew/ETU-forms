@@ -1,4 +1,8 @@
-import { appProcessAdminProcessTag, processAdminBaseController } from '@app/docs/open-api-builds/open-api.build';
+import {
+  appProcessAdminProcessTag,
+  appProcessAdminProcessUsersTag,
+  processAdminBaseController,
+} from '../open-api-builds/open-api.build';
 import { ProcessAdminProcessGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-get-all.dto';
 import { ProcessAdminProcessGetAllResponse } from '@applications/http/process-admin/process/response/process-admin-process-get-all.response';
 import { ProcessAdminProcessDeleteDto } from '@applications/http/process-admin/process/request/process-admin-process-delete.dto';
@@ -9,16 +13,15 @@ import { ProcessAdminProcessCreateResponse } from '@applications/http/process-ad
 import { ProcessAdminProcessEditDto } from '@applications/http/process-admin/process/request/process-admin-process-edit.dto';
 import { ProcessAdminProcessCreateFromTemplateDto } from '@applications/http/process-admin/process/request/process-admin-process-create-from-template.dto';
 import { ProcessAdminProcessCreateFromTemplateResponse } from '@applications/http/process-admin/process/response/process-admin-process-create-from-template.response';
-import { ProcessAdminProcessManagersAddResponse } from '@applications/http/process-admin/process/response/process-admin-process-managers-add.response';
-import { ProcessAdminProcessManagersAddDto } from '@applications/http/process-admin/process/request/process-admin-process-managers-add.dto';
-import { ProcessAdminProcessManagersRemoveDto } from '@applications/http/process-admin/process/request/process-admin-process-managers-remove.dto';
+import { ProcessAdminProcessUsersAddResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-add.response';
+import { ProcessAdminProcessUsersAddDto } from '@applications/http/process-admin/process/request/process-admin-process-users-add.dto';
+import { ProcessAdminProcessUsersRemoveDto } from '@applications/http/process-admin/process/request/process-admin-process-users-remove.dto';
 
 export function ProcessAdminProcessCompile(): void {
-  const processAdminProcessController = processAdminBaseController.createController('/process', [
-    appProcessAdminProcessTag,
-  ]);
+  const processAdminProcessController = processAdminBaseController.createController('/process', [,]);
 
   processAdminProcessController.addApiMethod('/all', {
+    tags: [appProcessAdminProcessTag],
     isImplemented: false,
     method: 'GET',
     requiresAuthorization: true,
@@ -30,6 +33,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/delete', {
+    tags: [appProcessAdminProcessTag],
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,
@@ -42,6 +46,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/view', {
+    tags: [appProcessAdminProcessTag],
     isImplemented: false,
     method: 'GET',
     requiresAuthorization: true,
@@ -53,6 +58,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/create', {
+    tags: [appProcessAdminProcessTag],
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,
@@ -64,6 +70,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/create/from-template', {
+    tags: [appProcessAdminProcessTag],
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,
@@ -75,36 +82,39 @@ export function ProcessAdminProcessCompile(): void {
     },
   });
 
+  processAdminProcessController.addApiMethod('/users/add', {
+    tags: [appProcessAdminProcessUsersTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Добавить пользователя в процесс по списку почт',
+    description: 'Если почта не найдена в системе - будет отправлено приглашение как внешнему пользователю',
+    requestBody: ProcessAdminProcessUsersAddDto,
+    responses: {
+      '201': [ProcessAdminProcessUsersAddResponse],
+    },
+  });
+
+  processAdminProcessController.addApiMethod('/users/remove', {
+    tags: [appProcessAdminProcessUsersTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Удалить пользователя из процесса',
+    requestBody: ProcessAdminProcessUsersRemoveDto,
+    responses: {
+      '201': [],
+    },
+  });
+
   processAdminProcessController.addApiMethod('/edit', {
+    tags: [appProcessAdminProcessTag],
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Редактировать основную информацию о процессе',
     description: 'Если поле не изменилось - все равно отправить его',
     requestBody: ProcessAdminProcessEditDto,
-    responses: {
-      '201': [],
-    },
-  });
-
-  processAdminProcessController.addApiMethod('/managers/add', {
-    isImplemented: false,
-    method: 'POST',
-    requiresAuthorization: true,
-    title: 'Добавить менеджеров в процесс по списку почт',
-    description: 'Если почта не найдена в системе - будет отправлено приглашение как внешнему пользователю',
-    requestBody: ProcessAdminProcessManagersAddDto,
-    responses: {
-      '201': [ProcessAdminProcessManagersAddResponse],
-    },
-  });
-
-  processAdminProcessController.addApiMethod('/managers/remove', {
-    isImplemented: false,
-    method: 'POST',
-    requiresAuthorization: true,
-    title: 'Удалить менеджера из процесса',
-    requestBody: ProcessAdminProcessManagersRemoveDto,
     responses: {
       '201': [],
     },

@@ -1,4 +1,4 @@
-import { appProcessAdminMySchemasTag, processAdminBaseController } from '@app/docs/open-api-builds/open-api.build';
+import { appProcessAdminMySchemasTag, processAdminBaseController } from '../open-api-builds/open-api.build';
 import { ProcessAdminMySchemasGetAllDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-get-all.dto';
 import { ProcessAdminMySchemasGetAllResponse } from '@applications/http/process-admin/my-schemas/response/process-admin-my-schemas-get-all.response';
 import { ProcessAdminMySchemasGetViewDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-get-view.dto';

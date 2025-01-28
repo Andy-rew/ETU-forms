@@ -1,4 +1,4 @@
-import { authBaseController, authTag } from '@app/docs/open-api-builds/open-api.build';
+import { authBaseController, authTag } from '../open-api-builds/open-api.build';
 import { AuthSignUpResponse } from '@applications/http/common/auth/response/auth-sign-up.response';
 import { AuthSignUpDto } from '@applications/http/common/auth/request/auth-sign-up.dto';
 import { AuthSignInDto } from '@applications/http/common/auth/request/auth-sign-in.dto';

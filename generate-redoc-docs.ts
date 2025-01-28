@@ -3,15 +3,10 @@ import { exec } from 'node:child_process';
 import { apiVersionFileName } from '@app/main';
 import * as process from 'process';
 import * as util from 'util';
-import { systemAdminDocs } from '@app/docs/open-api-builds/open-api.build';
-import * as path from 'path';
+import { systemAdminDocs } from './docs/api-docs/open-api-builds/open-api.build';
 
 async function generateJsonAndRedocDocs(): Promise<void> {
   const execPromise = util.promisify(exec);
-
-  const docPath = path.resolve(__dirname, 'docs');
-  await fs.rm(docPath, { recursive: true, force: true });
-  await fs.mkdir(docPath, { recursive: true });
 
   try {
     await fs.writeFile(`./docs/api_${apiVersionFileName}.json`, JSON.stringify(systemAdminDocs));

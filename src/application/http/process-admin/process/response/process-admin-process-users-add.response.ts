@@ -1,6 +1,6 @@
 import { ArrayPrimitiveProperty } from '@applications/decorators/api/helpers/array-primitive-property.decorator';
 
-export class ProcessAdminProcessManagersAddResponse {
+export class ProcessAdminProcessUsersAddResponse {
   @ArrayPrimitiveProperty({ items: 'email' })
   errorEmails: string[];
 
