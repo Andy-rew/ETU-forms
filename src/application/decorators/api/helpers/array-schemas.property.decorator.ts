@@ -10,10 +10,10 @@ export function ArraySchemasProperty<T>(params: {
   minItems?: number;
   maxItems?: number;
   isOptional?: boolean;
-  isNullable?: boolean;
+  nullable?: boolean;
 }) {
   const isOptional = params?.isOptional ?? false;
-  const isNullable = params?.isNullable ?? false;
+  const isNullable = params?.nullable ?? false;
 
   const decorators = [
     ArrayProperty({

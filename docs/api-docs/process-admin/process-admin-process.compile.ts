@@ -16,6 +16,8 @@ import { ProcessAdminProcessCreateFromTemplateResponse } from '@applications/htt
 import { ProcessAdminProcessUsersAddResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-add.response';
 import { ProcessAdminProcessUsersAddDto } from '@applications/http/process-admin/process/request/process-admin-process-users-add.dto';
 import { ProcessAdminProcessUsersRemoveDto } from '@applications/http/process-admin/process/request/process-admin-process-users-remove.dto';
+import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-users-get-all.dto';
+import { ProcessAdminProcessUsersGetAllResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-get-all.response';
 
 export function ProcessAdminProcessCompile(): void {
   const processAdminProcessController = processAdminBaseController.createController('/process', [,]);
@@ -104,6 +106,18 @@ export function ProcessAdminProcessCompile(): void {
     requestBody: ProcessAdminProcessUsersRemoveDto,
     responses: {
       '201': [],
+    },
+  });
+
+  processAdminProcessController.addApiMethod('/users/all', {
+    tags: [appProcessAdminProcessUsersTag],
+    isImplemented: false,
+    method: 'GET',
+    requiresAuthorization: true,
+    title: 'Получить актуальный список пользователей процесса',
+    query: ProcessAdminProcessUsersGetAllDto,
+    responses: {
+      '200': [ProcessAdminProcessUsersGetAllResponse],
     },
   });
 
