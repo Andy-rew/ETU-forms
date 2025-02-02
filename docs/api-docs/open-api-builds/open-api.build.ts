@@ -5,6 +5,7 @@ import { SystemAdminUserCompile } from '../system-admin/system-admin-user.compil
 import { AuthCompile } from '../common/auth.compile';
 import { ProcessAdminProcessCompile } from '../process-admin/process-admin-process.compile';
 import { ProcessAdminMySchemasCompile } from '../process-admin/process-admin-my-schemas.compile';
+import { ProcessAdminUsersCompile } from '../process-admin/process-admin-user.compile';
 
 const config: OpenAPIDocConfig = {
   title: 'api ETU-forms',
@@ -31,6 +32,7 @@ export const appSystemAdminUsersTag = openApiDoc.createTag('Пользовате
 export const appProcessAdminProcessTag = openApiDoc.createTag('Процессы. Общее (Адм.)');
 export const appProcessAdminProcessUsersTag = openApiDoc.createTag('Процессы. Пользователи (Адм.)');
 export const appProcessAdminMySchemasTag = openApiDoc.createTag('Мои шаблоны форм');
+export const appProcessAdminUsersTag = openApiDoc.createTag('Пользователи (Адм.)');
 
 export const authTag = openApiDoc.createTag('Общее');
 
@@ -42,6 +44,7 @@ openApiDoc.addTagGroup('Админ процессов', [
   appProcessAdminMySchemasTag,
   appProcessAdminProcessTag,
   appProcessAdminProcessUsersTag,
+  appProcessAdminUsersTag,
 ]);
 
 openApiDoc.addTagGroup('Пользователь', []);
@@ -52,5 +55,6 @@ SystemAdminUserCompile();
 
 ProcessAdminProcessCompile();
 ProcessAdminMySchemasCompile();
+ProcessAdminUsersCompile();
 
 export const systemAdminDocs = openApiDoc.compileOpenApi();

@@ -18,6 +18,7 @@ import { ProcessAdminProcessUsersAddDto } from '@applications/http/process-admin
 import { ProcessAdminProcessUsersRemoveDto } from '@applications/http/process-admin/process/request/process-admin-process-users-remove.dto';
 import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-users-get-all.dto';
 import { ProcessAdminProcessUsersGetAllResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-get-all.response';
+import { ProcessAdminProcessLinkAccessDto } from '@applications/http/process-admin/process/request/process-admin-process-link-access.dto';
 
 export function ProcessAdminProcessCompile(): void {
   const processAdminProcessController = processAdminBaseController.createController('/process', [,]);
@@ -81,6 +82,19 @@ export function ProcessAdminProcessCompile(): void {
     requestBody: ProcessAdminProcessCreateFromTemplateDto,
     responses: {
       '201': [ProcessAdminProcessCreateFromTemplateResponse],
+    },
+  });
+
+  processAdminProcessController.addApiMethod('/link-access', {
+    tags: [appProcessAdminProcessTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Установить/убрать доступ к процессу по ссылке',
+    description: 'Любой авторизированный пользователь может участвовать в процессе по ссылке',
+    requestBody: ProcessAdminProcessLinkAccessDto,
+    responses: {
+      '201': [],
     },
   });
 
