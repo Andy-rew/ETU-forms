@@ -1,0 +1,88 @@
+import { appProcessAdminStepsTag, processAdminBaseController } from '../open-api-builds/open-api.build';
+import { ProcessAdminGetAllProcessStepsDto } from '@applications/http/process-admin/step/request/process-admin-get-all-process-steps.dto';
+import { ProcessAdminGetAllProcessStepsResponse } from '@applications/http/process-admin/step/response/process-admin-get-all-process-steps.response';
+import { ProcessAdminCreateProcessStepResponse } from '@applications/http/process-admin/step/response/process-admin-create-process-step.response';
+import { ProcessAdminCreateProcessStepDto } from '@applications/http/process-admin/step/request/process-admin-create-process-step.dto';
+import { ProcessAdminDeleteProcessStepDto } from '@applications/http/process-admin/step/request/process-admin-delete-process-step.dto';
+import { ProcessAdminViewProcessStepDto } from '@applications/http/process-admin/step/request/process-admin-view-process-step.dto';
+import { ProcessAdminViewProcessStepResponse } from '@applications/http/process-admin/step/response/process-admin-view-process-step.response';
+import { ProcessAdminUpdateProcessStepDto } from '@applications/http/process-admin/step/request/process-admin-update-process-step.dto';
+import { ProcessAdminProcessStepExpertMainDto } from '@applications/http/process-admin/step/request/process-admin-process-step-expert-main.dto';
+
+export function ProcessAdminStepCompile(): void {
+  const processAdminStepController = processAdminBaseController.createController('/process/steps', []);
+
+  processAdminStepController.addApiMethod('/all', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: false,
+    method: 'GET',
+    requiresAuthorization: true,
+    title: 'Получить все этапы процесса',
+    query: ProcessAdminGetAllProcessStepsDto,
+    responses: {
+      '200': [ProcessAdminGetAllProcessStepsResponse],
+    },
+  });
+
+  processAdminStepController.addApiMethod('/view', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: false,
+    method: 'GET',
+    requiresAuthorization: true,
+    title: 'Получить полную информацию об этапе процесса',
+    query: ProcessAdminViewProcessStepDto,
+    responses: {
+      '200': [ProcessAdminViewProcessStepResponse],
+    },
+  });
+
+  processAdminStepController.addApiMethod('/create', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Создать новый этап процесса',
+    description: 'Для первого этапа отправлять participantsCount = null',
+    requestBody: ProcessAdminCreateProcessStepDto,
+    responses: {
+      '201': [ProcessAdminCreateProcessStepResponse],
+    },
+  });
+
+  processAdminStepController.addApiMethod('/remove', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Удалить  этап процесса',
+    requestBody: ProcessAdminDeleteProcessStepDto,
+    responses: {
+      '201': [],
+    },
+  });
+
+  processAdminStepController.addApiMethod('/update', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Обновить этап процесса',
+    description: 'Отправлять старое значение, если оно не изменилось',
+    requestBody: ProcessAdminUpdateProcessStepDto,
+    responses: {
+      '201': [],
+    },
+  });
+
+  processAdminStepController.addApiMethod('/expert/main', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Сделать эксперта ответственным за этап процесса',
+    requestBody: ProcessAdminProcessStepExpertMainDto,
+    responses: {
+      '201': [],
+    },
+  });
+}

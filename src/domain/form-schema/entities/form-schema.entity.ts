@@ -15,6 +15,9 @@ export class FormSchemaEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  title: string;
+
   @Column({ type: 'jsonb' })
   schema: JSON;
 

@@ -21,7 +21,7 @@ import { ProcessAdminProcessUsersGetAllResponse } from '@applications/http/proce
 import { ProcessAdminProcessLinkAccessDto } from '@applications/http/process-admin/process/request/process-admin-process-link-access.dto';
 
 export function ProcessAdminProcessCompile(): void {
-  const processAdminProcessController = processAdminBaseController.createController('/process', [,]);
+  const processAdminProcessController = processAdminBaseController.createController('/process', []);
 
   processAdminProcessController.addApiMethod('/all', {
     tags: [appProcessAdminProcessTag],

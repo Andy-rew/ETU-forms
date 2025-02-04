@@ -1,16 +1,20 @@
 import { IdProperty } from '@applications/decorators/api/common/id.property.decorator';
-import { FormSchemaUserTemplateEntity } from '@domain/form-schema/entities/form-schema-user-template.entity';
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
+import { FormSchemaEntity } from '@domain/form-schema/entities/form-schema.entity';
 
 export class ProcessAdminMySchemasGetViewResponse {
   @IdProperty({ description: 'Id шаблона' })
   id: number;
 
+  @TextProperty({ description: 'Название шаблона' })
+  title: string;
+
   @TextProperty({ description: 'JSON-схема шаблона для вставки в SurveyJS-компонент' })
   schema: JSON;
 
-  constructor(schema: FormSchemaUserTemplateEntity) {
+  constructor(schema: FormSchemaEntity) {
     this.id = schema.id;
-    this.schema = schema.schema.schema;
+    this.title = schema.title;
+    this.schema = schema.schema;
   }
 }

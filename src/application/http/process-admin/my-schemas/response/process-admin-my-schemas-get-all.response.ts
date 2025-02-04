@@ -6,8 +6,8 @@ import { CountProperty } from '@applications/decorators/api/common/count.propert
 import { ArraySchemasProperty } from '@applications/decorators/api/helpers/array-schemas.property.decorator';
 
 class ProcessAdminGetAllMySchemasSchemaItem {
-  @IdProperty()
-  id: number;
+  @IdProperty({ description: 'Id шаблона для просмотра формы и прикрепления к этапу' })
+  formSchemaId: number;
 
   @TextProperty({ description: 'Название шаблона' })
   title: string;
@@ -19,8 +19,8 @@ class ProcessAdminGetAllMySchemasSchemaItem {
   updatedAt: Date;
 
   constructor(schema: FormSchemaUserTemplateEntity) {
-    this.id = schema.id;
-    this.title = schema.title;
+    this.formSchemaId = schema.schema.id;
+    this.title = schema.schema.title;
     this.createdAt = schema.createdAt;
     this.updatedAt = schema.updatedAt;
   }
