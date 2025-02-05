@@ -8,6 +8,10 @@ import { ProcessAdminViewProcessStepDto } from '@applications/http/process-admin
 import { ProcessAdminViewProcessStepResponse } from '@applications/http/process-admin/step/response/process-admin-view-process-step.response';
 import { ProcessAdminUpdateProcessStepDto } from '@applications/http/process-admin/step/request/process-admin-update-process-step.dto';
 import { ProcessAdminProcessStepExpertMainDto } from '@applications/http/process-admin/step/request/process-admin-process-step-expert-main.dto';
+import { ProcessAdminProcessStepParticipantsDto } from '@applications/http/process-admin/step/request/process-admin-process-step-participants.dto';
+import { ProcessAdminProcessStepParticipantsResponse } from '@applications/http/process-admin/step/response/process-admin-process-step-participants.response';
+import { ProcessAdminProcessStepParticipantFormDto } from '@applications/http/process-admin/step/request/process-admin-process-step-participant-form.dto';
+import { ProcessAdminProcessStepParticipantFormResponse } from '@applications/http/process-admin/step/response/process-admin-process-step-participant-form.response';
 
 export function ProcessAdminStepCompile(): void {
   const processAdminStepController = processAdminBaseController.createController('/process/steps', []);
@@ -83,6 +87,31 @@ export function ProcessAdminStepCompile(): void {
     requestBody: ProcessAdminProcessStepExpertMainDto,
     responses: {
       '201': [],
+    },
+  });
+
+  processAdminStepController.addApiMethod('/participants', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: false,
+    method: 'GET',
+    requiresAuthorization: true,
+    title: 'Получить участников этапа',
+    query: ProcessAdminProcessStepParticipantsDto,
+    responses: {
+      '200': [ProcessAdminProcessStepParticipantsResponse],
+    },
+  });
+
+  processAdminStepController.addApiMethod('/participant-form', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: false,
+    method: 'GET',
+    requiresAuthorization: true,
+    title: 'Получить заполненную форму участника этапа(если есть) + реакция(если есть)',
+    description: 'Получить заполненную форму и реакцию эксперта на нее по id участника этапа',
+    query: ProcessAdminProcessStepParticipantFormDto,
+    responses: {
+      '200': [ProcessAdminProcessStepParticipantFormResponse],
     },
   });
 }

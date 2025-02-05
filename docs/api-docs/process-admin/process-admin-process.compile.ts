@@ -1,6 +1,7 @@
 import {
   appProcessAdminProcessTag,
   appProcessAdminProcessUsersTag,
+  appUserManagerProcessTag,
   processAdminBaseController,
 } from '../open-api-builds/open-api.build';
 import { ProcessAdminProcessGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-get-all.dto';
@@ -19,6 +20,10 @@ import { ProcessAdminProcessUsersRemoveDto } from '@applications/http/process-ad
 import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-users-get-all.dto';
 import { ProcessAdminProcessUsersGetAllResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-get-all.response';
 import { ProcessAdminProcessLinkAccessDto } from '@applications/http/process-admin/process/request/process-admin-process-link-access.dto';
+import { ProcessAdminProcessFormTemplateViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-template-view.dto';
+import { ProcessAdminProcessFormTemplateViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-template-view.response';
+import { ProcessAdminProcessFormFilledViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-filled-view.dto';
+import { ProcessAdminProcessFormFilledViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-filled-view.response';
 
 export function ProcessAdminProcessCompile(): void {
   const processAdminProcessController = processAdminBaseController.createController('/process', []);
@@ -49,7 +54,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/view', {
-    tags: [appProcessAdminProcessTag],
+    tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
     isImplemented: false,
     method: 'GET',
     requiresAuthorization: true,
@@ -86,7 +91,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/link-access', {
-    tags: [appProcessAdminProcessTag],
+    tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,
@@ -99,7 +104,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/users/add', {
-    tags: [appProcessAdminProcessUsersTag],
+    tags: [appProcessAdminProcessUsersTag, appUserManagerProcessTag],
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,
@@ -112,7 +117,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/users/remove', {
-    tags: [appProcessAdminProcessUsersTag],
+    tags: [appProcessAdminProcessUsersTag, appUserManagerProcessTag],
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,
@@ -124,7 +129,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/users/all', {
-    tags: [appProcessAdminProcessUsersTag],
+    tags: [appProcessAdminProcessUsersTag, appUserManagerProcessTag],
     isImplemented: false,
     method: 'GET',
     requiresAuthorization: true,
@@ -136,7 +141,7 @@ export function ProcessAdminProcessCompile(): void {
   });
 
   processAdminProcessController.addApiMethod('/edit', {
-    tags: [appProcessAdminProcessTag],
+    tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
     isImplemented: false,
     method: 'POST',
     requiresAuthorization: true,
@@ -145,6 +150,32 @@ export function ProcessAdminProcessCompile(): void {
     requestBody: ProcessAdminProcessEditDto,
     responses: {
       '201': [],
+    },
+  });
+
+  processAdminProcessController.addApiMethod('/form-schema', {
+    tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
+    isImplemented: false,
+    method: 'GET',
+    requiresAuthorization: true,
+    title: 'Получить шаблон формы процесса',
+    description: 'Получение любого шаблона формы внутри процесса',
+    requestBody: ProcessAdminProcessFormTemplateViewDto,
+    responses: {
+      '200': [ProcessAdminProcessFormTemplateViewResponse],
+    },
+  });
+
+  processAdminProcessController.addApiMethod('/form-filled', {
+    tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
+    isImplemented: false,
+    method: 'GET',
+    requiresAuthorization: true,
+    title: 'Получить заполненный шаблон формы процесса',
+    description: 'Получение любого заполненного шаблона формы внутри процесса',
+    requestBody: ProcessAdminProcessFormFilledViewDto,
+    responses: {
+      '200': [ProcessAdminProcessFormFilledViewResponse],
     },
   });
 }

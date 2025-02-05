@@ -28,13 +28,15 @@ export const processAdminBaseController = openApiDoc.createController('/process-
 export const userBaseController = openApiDoc.createController('/user');
 export const authBaseController = openApiDoc.createController('/auth');
 
-export const appSystemAdminUsersTag = openApiDoc.createTag('Пользователи');
+export const appSystemAdminUsersTag = openApiDoc.createTag('Пользователи (Адм-сис.)');
 
 export const appProcessAdminProcessTag = openApiDoc.createTag('Процессы. Общее (Адм.)');
-export const appProcessAdminProcessUsersTag = openApiDoc.createTag('Процессы. Пользователи (Адм.)');
+export const appProcessAdminProcessUsersTag = openApiDoc.createTag('Процессы. Пользователи');
 export const appProcessAdminMySchemasTag = openApiDoc.createTag('Мои шаблоны форм');
-export const appProcessAdminUsersTag = openApiDoc.createTag('Пользователи (Адм.)');
-export const appProcessAdminStepsTag = openApiDoc.createTag('Этапы процесса (Адм.)');
+export const appProcessAdminUsersTag = openApiDoc.createTag('Пользователи');
+export const appProcessAdminStepsTag = openApiDoc.createTag('Этапы процесса');
+
+export const appUserManagerProcessTag = openApiDoc.createTag('Процессы. Общее (Мен.)');
 
 export const authTag = openApiDoc.createTag('Общее');
 
@@ -50,7 +52,12 @@ openApiDoc.addTagGroup('Админ процессов', [
   appProcessAdminStepsTag,
 ]);
 
-openApiDoc.addTagGroup('Пользователь', []);
+openApiDoc.addTagGroup('Пользователь.Менеджер процесса', [
+  appUserManagerProcessTag,
+  appProcessAdminStepsTag,
+  appProcessAdminUsersTag,
+  appProcessAdminProcessUsersTag,
+]);
 
 AuthCompile();
 
