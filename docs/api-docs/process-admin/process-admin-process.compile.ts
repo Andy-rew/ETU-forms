@@ -4,8 +4,6 @@ import {
   appUserManagerProcessTag,
   processAdminBaseController,
 } from '../open-api-builds/open-api.build';
-import { ProcessAdminProcessGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-get-all.dto';
-import { ProcessAdminProcessGetAllResponse } from '@applications/http/process-admin/process/response/process-admin-process-get-all.response';
 import { ProcessAdminProcessDeleteDto } from '@applications/http/process-admin/process/request/process-admin-process-delete.dto';
 import { ProcessAdminProcessViewDto } from '@applications/http/process-admin/process/request/process-admin-process-view.dto';
 import { ProcessAdminProcessViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-view.response';
@@ -17,7 +15,7 @@ import { ProcessAdminProcessCreateFromTemplateResponse } from '@applications/htt
 import { ProcessAdminProcessUsersAddResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-add.response';
 import { ProcessAdminProcessUsersAddDto } from '@applications/http/process-admin/process/request/process-admin-process-users-add.dto';
 import { ProcessAdminProcessUsersRemoveDto } from '@applications/http/process-admin/process/request/process-admin-process-users-remove.dto';
-import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-users-get-all.dto';
+import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/common/process/request/process-admin-process-users-get-all.dto';
 import { ProcessAdminProcessUsersGetAllResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-get-all.response';
 import { ProcessAdminProcessLinkAccessDto } from '@applications/http/process-admin/process/request/process-admin-process-link-access.dto';
 import { ProcessAdminProcessFormTemplateViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-template-view.dto';
@@ -27,18 +25,6 @@ import { ProcessAdminProcessFormFilledViewResponse } from '@applications/http/pr
 
 export function ProcessAdminProcessCompile(): void {
   const processAdminProcessController = processAdminBaseController.createController('/process', []);
-
-  processAdminProcessController.addApiMethod('/all', {
-    tags: [appProcessAdminProcessTag],
-    isImplemented: false,
-    method: 'GET',
-    requiresAuthorization: true,
-    title: 'Получить все процессы',
-    query: ProcessAdminProcessGetAllDto,
-    responses: {
-      '200': [ProcessAdminProcessGetAllResponse],
-    },
-  });
 
   processAdminProcessController.addApiMethod('/delete', {
     tags: [appProcessAdminProcessTag],

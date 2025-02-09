@@ -6,7 +6,7 @@ import { DateProperty } from '@applications/decorators/api/common/date.property.
 import { LimitProperty } from '@applications/decorators/api/common/limit.property.decorator';
 import { OffsetProperty } from '@applications/decorators/api/common/offset.property.decorator';
 
-export class ProcessAdminProcessGetAllDto {
+export class ProcessGetAllDto {
   @EnumApiProperty({ enum: ProcessGetAllByRoleEnum, description: 'Роль текущего пользователя в процессе' })
   role: ProcessGetAllByRoleEnum;
 

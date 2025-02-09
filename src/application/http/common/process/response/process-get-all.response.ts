@@ -32,7 +32,7 @@ class ProcessAdminProcessGetAllProcessItem {
   }
 }
 
-export class ProcessAdminProcessGetAllResponse {
+export class ProcessGetAllResponse {
   @ArraySchemasProperty({
     item: ProcessAdminProcessGetAllProcessItem,
     description: 'Список процессов',
