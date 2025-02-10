@@ -45,7 +45,7 @@ export function ProcessAdminProcessCompile(): void {
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить основную информацию о процессе',
-    requestBody: ProcessAdminProcessViewDto,
+    query: ProcessAdminProcessViewDto,
     responses: {
       '200': [ProcessAdminProcessViewResponse],
     },
@@ -146,7 +146,7 @@ export function ProcessAdminProcessCompile(): void {
     requiresAuthorization: true,
     title: 'Получить шаблон формы процесса',
     description: 'Получение любого шаблона формы внутри процесса',
-    requestBody: ProcessAdminProcessFormTemplateViewDto,
+    query: ProcessAdminProcessFormTemplateViewDto,
     responses: {
       '200': [ProcessAdminProcessFormTemplateViewResponse],
     },
@@ -159,7 +159,7 @@ export function ProcessAdminProcessCompile(): void {
     requiresAuthorization: true,
     title: 'Получить заполненный шаблон формы процесса',
     description: 'Получение любого заполненного шаблона формы внутри процесса',
-    requestBody: ProcessAdminProcessFormFilledViewDto,
+    query: ProcessAdminProcessFormFilledViewDto,
     responses: {
       '200': [ProcessAdminProcessFormFilledViewResponse],
     },

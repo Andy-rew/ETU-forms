@@ -8,6 +8,7 @@ import { ProcessAdminMySchemasCompile } from '../process-admin/process-admin-my-
 import { ProcessAdminUsersCompile } from '../process-admin/process-admin-user.compile';
 import { ProcessAdminStepCompile } from '../process-admin/process-admin-step.compile';
 import { ProcessCompile } from '../common/process.compile';
+import { UserProcessCompile } from '../user/user-process.compile';
 
 const config: OpenAPIDocConfig = {
   title: 'api ETU-forms',
@@ -40,6 +41,8 @@ export const appProcessAdminStepsTag = openApiDoc.createTag('Этапы проц
 
 export const appUserManagerProcessTag = openApiDoc.createTag('Процессы. Общее (Мен.)');
 
+export const appUserProcessTag = openApiDoc.createTag('Процессы.(Уч.)');
+
 export const authTag = openApiDoc.createTag('Регистрация и авторизация');
 export const processTag = openApiDoc.createTag('Процессы');
 
@@ -62,6 +65,8 @@ openApiDoc.addTagGroup('Пользователь.Менеджер процесс
   appProcessAdminProcessUsersTag,
 ]);
 
+openApiDoc.addTagGroup('Пользователь. Участник процесса', [appUserProcessTag]);
+
 AuthCompile();
 ProcessCompile();
 
@@ -71,5 +76,7 @@ ProcessAdminProcessCompile();
 ProcessAdminMySchemasCompile();
 ProcessAdminUsersCompile();
 ProcessAdminStepCompile();
+
+UserProcessCompile();
 
 export const systemAdminDocs = openApiDoc.compileOpenApi();
