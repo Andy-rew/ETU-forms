@@ -1,11 +1,11 @@
-import { profileTag, userBaseController } from '../open-api-builds/open-api.build';
+import { appUserProfileTag, userBaseController } from '../open-api-builds/open-api.build';
 import { UserProfileStudentEducationResponse } from '@applications/http/user/profile/response/user-profile-student-education.response';
 
 export function UserProfileCompile(): void {
   const userProfileController = userBaseController.createController('/profile', []);
 
   userProfileController.addApiMethod('student/education', {
-    tags: [profileTag],
+    tags: [appUserProfileTag],
     isImplemented: false,
     method: 'GET',
     requiresAuthorization: true,

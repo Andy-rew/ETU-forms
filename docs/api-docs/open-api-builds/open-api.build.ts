@@ -8,9 +8,10 @@ import { ProcessAdminMySchemasCompile } from '../process-admin/process-admin-my-
 import { ProcessAdminUsersCompile } from '../process-admin/process-admin-user.compile';
 import { ProcessAdminStepCompile } from '../process-admin/process-admin-step.compile';
 import { ProcessCompile } from '../common/process.compile';
-import { UserProcessCompile } from '../user/user-process.compile';
+import { ProcessParticipantProcessCompile } from '../user/process-participant-process.compile';
 import { UserProfileCompile } from '../user/user-profile.compile';
 import { ProfileCompile } from '../common/profile.compile';
+import { ExpertProcessCompile } from '../user/expert-process.compile';
 
 const config: OpenAPIDocConfig = {
   title: 'api ETU-forms',
@@ -47,6 +48,8 @@ export const appUserManagerProcessTag = openApiDoc.createTag('Процессы. 
 export const appUserProcessTag = openApiDoc.createTag('Процессы.(Уч.)');
 export const appUserProfileTag = openApiDoc.createTag('Профиль.(Уч.)');
 
+export const appExpertProcessTag = openApiDoc.createTag('Процессы.(Эксп.)');
+
 export const authTag = openApiDoc.createTag('Регистрация и авторизация');
 export const processTag = openApiDoc.createTag('Процессы');
 export const profileTag = openApiDoc.createTag('Профиль');
@@ -73,7 +76,9 @@ openApiDoc.addTagGroup('Пользователь.Менеджер процесс
   appProcessAdminProcessUsersTag,
 ]);
 
-openApiDoc.addTagGroup('Пользователь. Участник процесса', [appUserProcessTag]);
+openApiDoc.addTagGroup('Пользователь. Участник процесса', [appUserProcessTag, appUserProfileTag]);
+
+openApiDoc.addTagGroup('Пользователь. Эксперт', [appExpertProcessTag]);
 
 AuthCompile();
 ProcessCompile();
@@ -86,7 +91,9 @@ ProcessAdminMySchemasCompile();
 ProcessAdminUsersCompile();
 ProcessAdminStepCompile();
 
-UserProcessCompile();
+ProcessParticipantProcessCompile();
 UserProfileCompile();
+
+ExpertProcessCompile();
 
 export const systemAdminDocs = openApiDoc.compileOpenApi();

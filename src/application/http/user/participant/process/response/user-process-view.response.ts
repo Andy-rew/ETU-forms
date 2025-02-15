@@ -5,6 +5,7 @@ import { UuidProperty } from '@applications/decorators/api/common/uuid.property.
 import { DateProperty } from '@applications/decorators/api/common/date.property.decorator';
 import { ArraySchemasProperty } from '@applications/decorators/api/helpers/array-schemas.property.decorator';
 import { ProcessEntity } from '@domain/process/entities/process.entity';
+import { StepEntity } from '@domain/step/entities/step.entity';
 
 class UserProcessViewImageItem {
   @IdProperty()
@@ -16,6 +17,19 @@ class UserProcessViewImageItem {
   constructor(image: FileEntity) {
     this.id = image.id;
     this.url = image.url;
+  }
+}
+
+class UserProcessViewStepItem {
+  @IdProperty()
+  id: number;
+
+  @IdProperty({ description: 'Id родительского этапа (после которого данный). Для первого = null', nullable: true })
+  parentId: number | null;
+
+  constructor(step: StepEntity) {
+    this.id = step.id;
+    this.parentId = step.parent?.id || null;
   }
 }
 
@@ -38,6 +52,12 @@ export class UserProcessViewResponse {
   })
   imageUrls: UserProcessViewImageItem[];
 
+  @ArraySchemasProperty({
+    item: UserProcessViewStepItem,
+    description: 'Список этапов процесса',
+  })
+  steps: UserProcessViewStepItem[];
+
   @TextProperty({ description: 'Описание процесса', nullable: true })
   description: string | null;
 
@@ -47,6 +67,7 @@ export class UserProcessViewResponse {
     this.startDate = process.startDate;
     this.endDate = process.endDate;
     this.imageUrls = process.processImages.map((image) => new UserProcessViewImageItem(image));
+    this.steps = process.steps.map((step) => new UserProcessViewStepItem(step));
     this.description = process.description;
   }
 }

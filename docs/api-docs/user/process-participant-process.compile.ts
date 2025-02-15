@@ -1,22 +1,22 @@
 import { appUserProcessTag, userBaseController } from '../open-api-builds/open-api.build';
-import { UserProcessViewDto } from '@applications/http/user/process/request/user-process-view.dto';
-import { UserProcessViewResponse } from '@applications/http/user/process/response/user-process-view.response';
-import { UserProcessMyStepsDto } from '@applications/http/user/process/request/user-process-my-steps.dto';
-import { UserProcessMyStepsResponse } from '@applications/http/user/process/response/user-process-my-steps.response';
-import { UserProcessStepSchemaResponse } from '@applications/http/user/process/response/user-process-step-schema.response';
-import { UserProcessStepSchemaDto } from '@applications/http/user/process/request/user-process-step-schema.dto';
-import { UserProcessStepApplyDto } from '@applications/http/user/process/request/user-process-step-apply.dto';
-import { UserProcessStepReactionDto } from '@applications/http/user/process/request/user-process-step-reaction.dto';
-import { UserProcessStepReactionResponse } from '@applications/http/user/process/response/user-process-step-reaction.response';
-import { UserProcessStepFormFilledDto } from '@applications/http/user/process/request/user-process-step-form-filled.dto';
-import { UserProcessStepFormFilledResponse } from '@applications/http/user/process/response/user-process-step-form-filled.response';
-import { UserProcessStepReactionSchemaDto } from '@applications/http/user/process/request/user-process-step-reaction-schema.dto';
-import { UserProcessStepReactionSchemaResponse } from '@applications/http/user/process/response/user-process-step-reaction-schema.response';
-import { UserProcessStepReactionSchemaFilledDto } from '@applications/http/user/process/request/user-process-step-reaction-schema-filled.dto';
-import { UserProcessStepReactionSchemaFilledResponse } from '@applications/http/user/process/response/user-process-step-reaction-schema-filled.response';
+import { UserProcessViewDto } from '@applications/http/user/participant/process/request/user-process-view.dto';
+import { UserProcessViewResponse } from '@applications/http/user/participant/process/response/user-process-view.response';
+import { UserProcessMyStepsDto } from '@applications/http/user/participant/process/request/user-process-my-steps.dto';
+import { UserProcessMyStepsResponse } from '@applications/http/user/participant/process/response/user-process-my-steps.response';
+import { UserProcessStepSchemaResponse } from '@applications/http/user/participant/process/response/user-process-step-schema.response';
+import { UserProcessStepSchemaDto } from '@applications/http/user/participant/process/request/user-process-step-schema.dto';
+import { UserProcessStepApplyDto } from '@applications/http/user/participant/process/request/user-process-step-apply.dto';
+import { UserProcessStepReactionDto } from '@applications/http/user/participant/process/request/user-process-step-reaction.dto';
+import { UserProcessStepReactionResponse } from '@applications/http/user/participant/process/response/user-process-step-reaction.response';
+import { UserProcessStepFormFilledDto } from '@applications/http/user/participant/process/request/user-process-step-form-filled.dto';
+import { UserProcessStepFormFilledResponse } from '@applications/http/user/participant/process/response/user-process-step-form-filled.response';
+import { UserProcessStepReactionSchemaDto } from '@applications/http/user/participant/process/request/user-process-step-reaction-schema.dto';
+import { UserProcessStepReactionSchemaResponse } from '@applications/http/user/participant/process/response/user-process-step-reaction-schema.response';
+import { UserProcessStepReactionSchemaFilledDto } from '@applications/http/user/participant/process/request/user-process-step-reaction-schema-filled.dto';
+import { UserProcessStepReactionSchemaFilledResponse } from '@applications/http/user/participant/process/response/user-process-step-reaction-schema-filled.response';
 
-export function UserProcessCompile(): void {
-  const userProcessController = userBaseController.createController('/process', []);
+export function ProcessParticipantProcessCompile(): void {
+  const userProcessController = userBaseController.createController('/participant/process', []);
 
   userProcessController.addApiMethod('/view', {
     tags: [appUserProcessTag],

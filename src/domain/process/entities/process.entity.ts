@@ -57,5 +57,5 @@ export class ProcessEntity {
   userManagers: ProcessManagersEntity[];
 
   @OneToMany(() => StepEntity, (step: StepEntity) => step.process)
-  steps: StepEntity;
+  steps: StepEntity[];
 }
