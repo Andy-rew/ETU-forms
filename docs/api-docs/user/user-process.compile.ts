@@ -16,9 +16,9 @@ import { UserProcessStepReactionSchemaFilledDto } from '@applications/http/user/
 import { UserProcessStepReactionSchemaFilledResponse } from '@applications/http/user/process/response/user-process-step-reaction-schema-filled.response';
 
 export function UserProcessCompile(): void {
-  const processAdminUserController = userBaseController.createController('/process', []);
+  const userProcessController = userBaseController.createController('/process', []);
 
-  processAdminUserController.addApiMethod('/view', {
+  userProcessController.addApiMethod('/view', {
     tags: [appUserProcessTag],
     isImplemented: false,
     method: 'GET',
@@ -30,7 +30,7 @@ export function UserProcessCompile(): void {
     },
   });
 
-  processAdminUserController.addApiMethod('/my-steps', {
+  userProcessController.addApiMethod('/my-steps', {
     tags: [appUserProcessTag],
     isImplemented: false,
     method: 'GET',
@@ -43,7 +43,7 @@ export function UserProcessCompile(): void {
     },
   });
 
-  processAdminUserController.addApiMethod('/step/schema', {
+  userProcessController.addApiMethod('/step/schema', {
     tags: [appUserProcessTag],
     isImplemented: false,
     method: 'GET',
@@ -55,7 +55,7 @@ export function UserProcessCompile(): void {
     },
   });
 
-  processAdminUserController.addApiMethod('/step/filled-form', {
+  userProcessController.addApiMethod('/step/filled-form', {
     tags: [appUserProcessTag],
     isImplemented: false,
     method: 'GET',
@@ -67,7 +67,7 @@ export function UserProcessCompile(): void {
     },
   });
 
-  processAdminUserController.addApiMethod('/step/apply', {
+  userProcessController.addApiMethod('/step/apply', {
     tags: [appUserProcessTag],
     isImplemented: false,
     method: 'POST',
@@ -79,7 +79,7 @@ export function UserProcessCompile(): void {
     },
   });
 
-  processAdminUserController.addApiMethod('/step/reaction/info', {
+  userProcessController.addApiMethod('/step/reaction/info', {
     tags: [appUserProcessTag],
     isImplemented: false,
     method: 'GET',
@@ -92,7 +92,7 @@ export function UserProcessCompile(): void {
     },
   });
 
-  processAdminUserController.addApiMethod('/step/reaction/schema', {
+  userProcessController.addApiMethod('/step/reaction/schema', {
     tags: [appUserProcessTag],
     isImplemented: false,
     method: 'GET',
@@ -104,7 +104,7 @@ export function UserProcessCompile(): void {
     },
   });
 
-  processAdminUserController.addApiMethod('/step/reaction/filled', {
+  userProcessController.addApiMethod('/step/reaction/filled', {
     tags: [appUserProcessTag],
     isImplemented: false,
     method: 'GET',

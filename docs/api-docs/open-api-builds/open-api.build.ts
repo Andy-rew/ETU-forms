@@ -9,6 +9,8 @@ import { ProcessAdminUsersCompile } from '../process-admin/process-admin-user.co
 import { ProcessAdminStepCompile } from '../process-admin/process-admin-step.compile';
 import { ProcessCompile } from '../common/process.compile';
 import { UserProcessCompile } from '../user/user-process.compile';
+import { UserProfileCompile } from '../user/user-profile.compile';
+import { ProfileCompile } from '../common/profile.compile';
 
 const config: OpenAPIDocConfig = {
   title: 'api ETU-forms',
@@ -30,6 +32,7 @@ export const processAdminBaseController = openApiDoc.createController('/process-
 export const userBaseController = openApiDoc.createController('/user');
 export const authBaseController = openApiDoc.createController('/auth');
 export const processBaseController = openApiDoc.createController('/process');
+export const profileBaseController = openApiDoc.createController('/profile');
 
 export const appSystemAdminUsersTag = openApiDoc.createTag('Пользователи (Адм-сис.)');
 
@@ -42,11 +45,13 @@ export const appProcessAdminStepsTag = openApiDoc.createTag('Этапы проц
 export const appUserManagerProcessTag = openApiDoc.createTag('Процессы. Общее (Мен.)');
 
 export const appUserProcessTag = openApiDoc.createTag('Процессы.(Уч.)');
+export const appUserProfileTag = openApiDoc.createTag('Профиль.(Уч.)');
 
 export const authTag = openApiDoc.createTag('Регистрация и авторизация');
 export const processTag = openApiDoc.createTag('Процессы');
+export const profileTag = openApiDoc.createTag('Профиль');
 
-openApiDoc.addTagGroup('Общее', [authTag, processTag]);
+openApiDoc.addTagGroup('Общее', [authTag, processTag, profileTag]);
 
 openApiDoc.addTagGroup('Админ системы', [appSystemAdminUsersTag]);
 
@@ -58,7 +63,10 @@ openApiDoc.addTagGroup('Админ процессов', [
   appProcessAdminStepsTag,
 ]);
 
+openApiDoc.addTagGroup('Пользователь. Общее', []);
+
 openApiDoc.addTagGroup('Пользователь.Менеджер процесса', [
+  appProcessAdminMySchemasTag,
   appUserManagerProcessTag,
   appProcessAdminStepsTag,
   appProcessAdminUsersTag,
@@ -69,6 +77,7 @@ openApiDoc.addTagGroup('Пользователь. Участник процес�
 
 AuthCompile();
 ProcessCompile();
+ProfileCompile();
 
 SystemAdminUserCompile();
 
@@ -78,5 +87,6 @@ ProcessAdminUsersCompile();
 ProcessAdminStepCompile();
 
 UserProcessCompile();
+UserProfileCompile();
 
 export const systemAdminDocs = openApiDoc.compileOpenApi();
