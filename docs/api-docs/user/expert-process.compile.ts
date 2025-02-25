@@ -13,6 +13,9 @@ import { ExpertProcessStepsParticipantsReactionDto } from '@applications/http/us
 import { ExpertProcessStepsParticipantsReactionResponse } from '@applications/http/user/expert/process/response/expert-process-steps-participants-reaction.response';
 import { ExpertProcessStepsParticipantsAddReactionDto } from '@applications/http/user/expert/process/request/expert-process-steps-participants-add-reaction.dto';
 import { ExpertProcessStepsParticipantsAddReactionResponse } from '@applications/http/user/expert/process/response/expert-process-steps-participants-add-reaction.response';
+import { ExpertProcessStepsParticipantsReactionMainDto } from '@applications/http/user/expert/process/request/expert-process-steps-participants-reaction-main.dto';
+import { ExpertProcessStepsParticipantsReactionAllDto } from '@applications/http/user/expert/process/request/expert-process-steps-participants-reaction-all.dto';
+import { ExpertProcessStepsParticipantsReactionAllResponse } from '@applications/http/user/expert/process/response/expert-process-steps-participants-reaction-all.response';
 
 export function ExpertProcessCompile(): void {
   const expertController = userBaseController.createController('/expert/process', []);
@@ -99,6 +102,32 @@ export function ExpertProcessCompile(): void {
     requestBody: ExpertProcessStepsParticipantsAddReactionDto,
     responses: {
       '201': [ExpertProcessStepsParticipantsAddReactionResponse],
+    },
+  });
+
+  expertController.addApiMethod('/steps/participants/reaction/main', {
+    tags: [appExpertProcessTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Выбрать реакцию на этап как основную',
+    description: 'Только для ответственного эксперта',
+    requestBody: ExpertProcessStepsParticipantsReactionMainDto,
+    responses: {
+      '201': [],
+    },
+  });
+
+  expertController.addApiMethod('/steps/participants/reaction/all', {
+    tags: [appExpertProcessTag],
+    isImplemented: false,
+    method: 'GET',
+    requiresAuthorization: true,
+    title: 'Получить все реакции на этап',
+    description: 'Только для ответственного эксперта',
+    query: ExpertProcessStepsParticipantsReactionAllDto,
+    responses: {
+      '200': [ExpertProcessStepsParticipantsReactionAllResponse],
     },
   });
 }
