@@ -52,38 +52,30 @@ export class BaseTestClass {
 
     this.sandbox.stub(outerQueryRunner, 'release').callsFake(async () => {});
 
-    this.sandbox
-      .stub(BaseTransactionModule, 'BaseTransaction')
-      .callsFake(async () => {
-        const queryRunner = outerQueryRunner;
-        await queryRunner.startTransaction();
-        return queryRunner;
-      });
+    this.sandbox.stub(BaseTransactionModule, 'BaseTransaction').callsFake(async () => {
+      const queryRunner = outerQueryRunner;
+      await queryRunner.startTransaction();
+      return queryRunner;
+    });
 
-    this.sandbox
-      .stub(DataSource.prototype, 'createQueryRunner')
-      .callsFake(function (_ = 'master') {
-        return outerQueryRunner;
-      });
+    this.sandbox.stub(DataSource.prototype, 'createQueryRunner').callsFake(function (_ = 'master') {
+      return outerQueryRunner;
+    });
 
-    this.sandbox
-      .stub(Repository.prototype, 'createQueryBuilder')
-      .callsFake(function (alias?: string, _?: QueryRunner) {
-        return outerManager.createQueryBuilder(
-          this.target,
-          alias || this.metadata.targetName,
-          outerQueryRunner,
-        );
-      });
+    this.sandbox.stub(Repository.prototype, 'createQueryBuilder').callsFake(function (alias?: string, _?: QueryRunner) {
+      return outerManager.createQueryBuilder(this.target, alias || this.metadata.targetName, outerQueryRunner);
+    });
 
-    this.sandbox
-      .stub(Repository.prototype, 'save')
-      .callsFake(async function (entityOrEntities, options) {
-        await outerQueryRunner.startTransaction();
-        const res = outerManager.save(this.target, entityOrEntities, options);
-        await outerQueryRunner.commitTransaction();
-        return res;
-      });
+    this.sandbox.stub(Repository.prototype, 'save').callsFake(async function (entityOrEntities, options) {
+      await outerQueryRunner.startTransaction();
+      const res = outerManager.save(this.target, entityOrEntities, options);
+      await outerQueryRunner.commitTransaction();
+      return res;
+    });
+
+    this.sandbox.stub(Repository.prototype, 'softDelete').callsFake(async function (options) {
+      return outerManager.softDelete(this.target, options);
+    });
   }
 
   async afterAll(): Promise<void> {
@@ -105,9 +97,7 @@ export class BaseTestClass {
     const entities = this.app.get(getDataSourceToken()).entityMetadatas;
 
     await this.queryRunner.query(
-      `TRUNCATE TABLE ${entities
-        .map((el) => `"${el.tableName}"`)
-        .join(', ')} RESTART IDENTITY CASCADE;`,
+      `TRUNCATE TABLE ${entities.map((el) => `"${el.tableName}"`).join(', ')} RESTART IDENTITY CASCADE;`,
     );
   }
 
@@ -116,9 +106,7 @@ export class BaseTestClass {
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  public getService<TInput = any, TResult = TInput>(
-    typeOrToken: Type<TInput> | Function | string | symbol,
-  ): TResult {
+  public getService<TInput = any, TResult = TInput>(typeOrToken: Type<TInput> | Function | string | symbol): TResult {
     return this.app.get(typeOrToken);
   }
 

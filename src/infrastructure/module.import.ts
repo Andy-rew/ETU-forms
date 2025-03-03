@@ -4,6 +4,8 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { EntitiesArray } from '@infrastructure/entities.array';
 import { validateEnv } from '@infrastructure/utils/environment.validation';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { ProcessModule } from '@domain/process/process.module';
+import { UserModule } from '@domain/user/user.module';
 
 export const ModuleImport = [
   ConfigModule.forRoot({
@@ -29,4 +31,6 @@ export const ModuleImport = [
         // logger: 'simple-console',
       } as TypeOrmModuleOptions),
   }),
+  ProcessModule,
+  UserModule,
 ];
