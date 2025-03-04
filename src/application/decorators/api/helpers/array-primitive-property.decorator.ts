@@ -1,4 +1,14 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsEmail, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { ArrayProperty } from '@ivankrtv/openapidoc/dist';
 import { applyDecorators } from '@nestjs/common';
 import { Type } from 'class-transformer';
@@ -9,7 +19,8 @@ type ArrayPrimitivePropertyDecoratorParams = {
   isOptional?: boolean;
   nullable?: boolean;
   description?: string;
-  items: 'string' | 'number' | 'uuid' | 'email';
+  enum?: Record<string, any> | string[];
+  items: 'string' | 'number' | 'uuid' | 'email' | 'enum';
 };
 
 /**
@@ -22,7 +33,8 @@ type ArrayPrimitivePropertyDecoratorParams = {
  * @param {boolean} [params.isOptional=false] - Указывает, является ли свойство массива опциональным.
  * @param {boolean} [params.nullable=false] - Указывает, может ли свойство массива быть равно null.
  * @param {string} [params.description='Массив значений'] - Описание для свойства массива.
- * @param {'string' | 'number'} [params.items='string'] - Тип элементов в массиве. Может быть либо 'string', либо 'number', либо 'uuid'.
+ * @param {Record<string, any> | string[]} [params.enum=UserRoleEnum] - enum если в items='enum'.
+ * @param {'string' | 'number' | 'uuid' | 'email', 'enum'} [params.items='string'] - Тип элементов в массиве. Может быть либо 'string', либо 'number', либо 'uuid'.
  *
  */
 export function ArrayPrimitiveProperty(params?: ArrayPrimitivePropertyDecoratorParams) {
@@ -62,6 +74,13 @@ export function ArrayPrimitiveProperty(params?: ArrayPrimitivePropertyDecoratorP
   if (params.items === 'email') {
     decorators.push(
       IsEmail({}, { each: true }),
+      Type(() => String),
+    );
+  }
+
+  if (params.items === 'enum') {
+    decorators.push(
+      IsEnum(params.enum, { each: true }),
       Type(() => String),
     );
   }

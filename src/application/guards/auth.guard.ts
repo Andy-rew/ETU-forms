@@ -9,17 +9,17 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { CommonAuthPayload } from '@domain/auth/types/common-auth-payload';
-import { UserRepository } from '@domain/user/repository/user.repository';
 import { UserStatusEnum } from '@domain/user/enums/user-status.enum';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '@applications/decorators/auth-roles.decorator';
 import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
+import { UserAuthTokensRepository } from '@domain/user/repository/user-auth-tokens.repository';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     @Inject('AuthJwtAccessTokenService') private readonly jwtService: JwtService,
-    @Inject(UserRepository) private readonly userRepository: UserRepository,
+    @Inject(UserAuthTokensRepository) private readonly userAuthTokensRepository: UserAuthTokensRepository,
     private reflector: Reflector,
   ) {}
 
@@ -28,10 +28,6 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-
-    if (!requiredRoles) {
-      return true;
-    }
 
     const request = context.switchToHttp().getRequest();
     const accessToken = this.extractTokenFromHeader(request);
@@ -47,20 +43,33 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    const user = await this.userRepository.findByIdForAuth(basePayload.id);
-    if (!user) {
-      throw new NotFoundException('User not found');
+    const userAuthToken = await this.userAuthTokensRepository.findByAccessTokenAndUserIdOrFail({
+      accessToken,
+      userId: basePayload.id,
+    });
+
+    if (!userAuthToken) {
+      throw new NotFoundException('User for token not found');
+    }
+
+    const user = await userAuthToken.user;
+
+    if (user.status !== UserStatusEnum.activated) {
+      throw new UnauthorizedException('User is not activated');
+    }
+
+    if (!requiredRoles) {
+      request['user'] = user;
+      request['token'] = userAuthToken;
+      return true;
     }
 
     if (!requiredRoles.some((role) => user.roles.includes(role))) {
       throw new UnauthorizedException('User does not have required role');
     }
 
-    if (user.status !== UserStatusEnum.activated) {
-      throw new UnauthorizedException('User is not activated');
-    }
-
     request['user'] = user;
+    request['token'] = userAuthToken;
 
     return true;
   }

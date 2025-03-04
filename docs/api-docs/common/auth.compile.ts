@@ -10,7 +10,7 @@ export function AuthCompile(): void {
   const authController = authBaseController.createController('', [authTag]);
 
   authController.addApiMethod('/sign-up', {
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: false,
     title: 'Зарегистрироваться в системе',
@@ -21,7 +21,7 @@ export function AuthCompile(): void {
   });
 
   authController.addApiMethod('/sign-in', {
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: false,
     title: 'Авторизоваться в системе по связке логин-пароль',
@@ -31,8 +31,19 @@ export function AuthCompile(): void {
     },
   });
 
+  authController.addApiMethod('/sign-out', {
+    isImplemented: true,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Выход из системы',
+    description: 'Выход из системы. Удаляется пара access-токен/refresh-токен',
+    responses: {
+      '201': [],
+    },
+  });
+
   authController.addApiMethod('/refresh', {
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Обновить access токен по refresh токену',

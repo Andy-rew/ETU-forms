@@ -2,10 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { UserAuthTokensEntity } from '@domain/user/entities/user-auth-tokens.entity';
 import { AuthJwtTokenService } from '@domain/auth/services/auth-jwt-token.service';
-import * as bcrypt from 'bcrypt';
 import { UserRepository } from '@domain/user/repository/user.repository';
 import { AuthValidator } from '@domain/auth/validators/auth.validator';
 import { UserAuthTokensRepository } from '@domain/user/repository/user-auth-tokens.repository';
+import { UserPasswordRepository } from '@domain/user/repository/user-password.repository';
+import { AuthManager } from '@domain/auth/managers/auth.manager';
+import { UserPasswordEntity } from '@domain/user/entities/user-password.entity';
+import { PasswordUtilsService } from '@domain/auth/services/password-utils.service';
+import { CommonAuthPayload } from '@domain/auth/types/common-auth-payload';
 
 @Injectable()
 export class AuthService {
@@ -14,32 +18,74 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly authValidator: AuthValidator,
     private readonly userAuthTokensRepository: UserAuthTokensRepository,
+    private readonly userPasswordRepository: UserPasswordRepository,
+    private readonly authManager: AuthManager,
+    private readonly passwordUtilsService: PasswordUtilsService,
   ) {}
 
-  private async checkPasswordHash(dto: { enteredPassword: string; hashedPassword: string }): Promise<boolean> {
-    return bcrypt.compare(dto.enteredPassword, dto.hashedPassword);
-  }
-
-  async login(dto: { email: string; password: string }): Promise<UserAuthTokensEntity> {
+  async signIn(dto: { email: string; password: string }): Promise<UserAuthTokensEntity> {
     const user: UserEntity = await this.userRepository.findByEmailWithPasswordDataOrFail(dto.email);
 
-    this.authValidator.validateUserLogin(user);
+    this.authValidator.validateUserSignIn(user);
 
-    const isCorrectPassword: boolean = await this.checkPasswordHash({
+    await this.passwordUtilsService.checkPasswordHashOrFail({
       enteredPassword: dto.password,
       hashedPassword: user.password.password,
     });
 
-    if (!isCorrectPassword) {
-      throw new BadRequestException('Incorrect email or password');
+    const newAuthTokenEntity: UserAuthTokensEntity =
+      await this.authJwtTokenService.generateNewTokensWithExpirationDates(user);
+
+    return this.userAuthTokensRepository.save(newAuthTokenEntity);
+  }
+
+  async signUpByActivationCode(dto: {
+    activationCode: string;
+    password: string;
+    samePassword: string;
+  }): Promise<UserPasswordEntity> {
+    const userPassword = await this.userPasswordRepository.finByActivationCodeOrFail(dto.activationCode);
+
+    this.authValidator.validateUserActivationCodeSignUp({
+      userPassword,
+      password: dto.password,
+      samePassword: dto.samePassword,
+    });
+
+    const hashedPassword = await this.passwordUtilsService.hashPassword(dto.password);
+
+    const userPasswordEntity = this.authManager.createUserSignUpEntity({
+      userPassword,
+      hashedPassword,
+    });
+
+    return this.userPasswordRepository.saveWithUserTransaction(userPasswordEntity);
+  }
+
+  async refreshTokens(dto: { refreshToken: string; currentUser: UserEntity }): Promise<UserAuthTokensEntity> {
+    const payload: CommonAuthPayload = await this.authValidator.validateAndVerifyRefreshToken(dto.refreshToken);
+
+    if (payload.id !== dto.currentUser.id) {
+      throw new BadRequestException('You are bad man. Use your own refresh token');
     }
 
-    const newAuthToken: UserAuthTokensEntity = await this.authJwtTokenService.generateNewTokensWithExpirationDates(
-      user,
-    );
+    const userToken: UserAuthTokensEntity = await this.userAuthTokensRepository.findByRefreshTokenAndUserIdOrFail({
+      refreshToken: dto.refreshToken,
+      userId: payload.id,
+    });
 
-    await this.userAuthTokensRepository.saveWithUser(newAuthToken);
+    const newAuthTokenEntity: UserAuthTokensEntity =
+      await this.authJwtTokenService.generateNewTokensWithExpirationDates(userToken.user);
 
-    return newAuthToken;
+    const refreshedTokens = this.authManager.refreshTokens({ oldTokens: userToken, newTokens: newAuthTokenEntity });
+
+    return this.userAuthTokensRepository.save(refreshedTokens);
+  }
+
+  async signOut(dto: { accessToken: string; userId: number }): Promise<void> {
+    await this.userAuthTokensRepository.deleteByAccessTokenAndUserId({
+      accessToken: dto.accessToken,
+      userId: dto.userId,
+    });
   }
 }
