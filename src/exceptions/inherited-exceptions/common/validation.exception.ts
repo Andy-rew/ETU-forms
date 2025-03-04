@@ -4,14 +4,14 @@ import { ApiTypeException } from '@applications/decorators/api/helpers/api-type-
 import { ApiMessageException } from '@applications/decorators/api/helpers/api-description-exception.decorator';
 
 export class ValidationException extends AbstractDomainException {
-  @ApiMessageException('Validation error')
+  @ApiMessageException('Текст ошибки валидации', 'Validation error')
   message: string;
 
   @ApiTypeException(ExceptionTypeEnum.validation_error)
   type = ExceptionTypeEnum.validation_error;
 
-  constructor() {
-    const messageText = 'Validation error';
+  constructor(message?: string) {
+    const messageText = message || 'Validation error';
     super(ExceptionTypeEnum.validation_error, messageText);
   }
 }

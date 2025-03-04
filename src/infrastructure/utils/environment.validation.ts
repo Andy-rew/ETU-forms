@@ -35,17 +35,17 @@ class EnvironmentVariables {
   @IsString({ message: 'JWT_ACCESS_SECRET_KEY must be a string' })
   JWT_ACCESS_SECRET_KEY: string;
 
-  @IsNumber({}, { message: 'JWT_ACCESS_EXPIRE_TIME must be a number' })
-  JWT_ACCESS_EXPIRE_TIME: number;
+  @IsNumber({}, { message: 'JWT_ACCESS_EXPIRE_TIME_MINUTES must be a number' })
+  JWT_ACCESS_EXPIRE_TIME_MINUTES: number;
 
   @IsString({ message: 'JWT_REFRESH_SECRET_KEY must be a string' })
   JWT_REFRESH_SECRET_KEY: string;
 
-  @IsNumber({}, { message: 'JWT_REFRESH_EXPIRE_TIME must be a number' })
-  JWT_REFRESH_EXPIRE_TIME: number;
+  @IsNumber({}, { message: 'JWT_REFRESH_EXPIRE_TIME_MINUTES must be a number' })
+  JWT_REFRESH_EXPIRE_TIME_MINUTES: number;
 
-  @IsNumber({}, { message: 'RECOVERY_CODE_EXPIRE_TIME must be a number' })
-  RECOVERY_CODE_EXPIRE_TIME: number;
+  @IsNumber({}, { message: 'RECOVERY_CODE_EXPIRE_TIME_MINUTES must be a number' })
+  RECOVERY_CODE_EXPIRE_TIME_MINUTES: number;
 }
 
 export const validateEnv = (config: Record<string, unknown>) => {

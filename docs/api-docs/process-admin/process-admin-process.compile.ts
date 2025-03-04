@@ -28,7 +28,7 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/delete', {
     tags: [appProcessAdminProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Удалить процесс',
@@ -41,7 +41,7 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/view', {
     tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить основную информацию о процессе',
@@ -53,7 +53,7 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/create', {
     tags: [appProcessAdminProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Создать процесс с основной информацией',
