@@ -8,6 +8,7 @@ import { ProcessModule } from '@domain/process/process.module';
 import { UserModule } from '@domain/user/user.module';
 import { FileModule } from '@domain/file/file.module';
 import { AuthModule } from '@domain/auth/auth.module';
+import { MailerModule } from '@domain/mailer/mailer.module';
 
 export const ModuleImport = [
   ConfigModule.forRoot({
@@ -35,6 +36,7 @@ export const ModuleImport = [
   }),
   ProcessModule,
   UserModule,
-  AuthModule,
   FileModule,
+  AuthModule,
+  MailerModule,
 ];

@@ -22,8 +22,9 @@ export type Server = {
   env: Env;
 };
 
-export type RecoveryCodeExpiration = {
+export type UrlCodeExpiration = {
   recoveryCodeExpireTimeMinutes: number;
+  activationCodeExpireTimeMinutes: number;
 };
 
 export type Database = {
@@ -35,12 +36,18 @@ export type Database = {
   database: string;
 };
 
+export type Links = {
+  passwordRecoveryPageUrl: string;
+  registrationPageUrl: string;
+};
+
 export type Configuration = {
   jwtAccess: JwtAccessConfig;
   jwtRefresh: JwtRefreshConfig;
   server: Server;
-  recoveryCodeExpiration: RecoveryCodeExpiration;
+  urlCodeExpiration: UrlCodeExpiration;
   database: Database;
+  links: Links;
 };
 
 export const loadConfiguration = (): Configuration => ({
@@ -56,8 +63,13 @@ export const loadConfiguration = (): Configuration => ({
     port: Number(process.env.PORT),
     env: process.env.ENVIRONMENT_NAME as Env,
   },
-  recoveryCodeExpiration: {
+  urlCodeExpiration: {
     recoveryCodeExpireTimeMinutes: Number(process.env.RECOVERY_CODE_EXPIRE_TIME_MINUTES),
+    activationCodeExpireTimeMinutes: Number(process.env.ACTIVATION_CODE_EXPIRE_TIME_MINUTES),
+  },
+  links: {
+    passwordRecoveryPageUrl: process.env.PASSWORD_RECOVERY_PAGE_URL,
+    registrationPageUrl: process.env.REGISTRATION_PAGE_URL,
   },
   database: {
     type: process.env.DB_TYPE,
@@ -73,6 +85,7 @@ export const CONFIGS: { [K in keyof Configuration]: K } = {
   jwtAccess: 'jwtAccess',
   jwtRefresh: 'jwtRefresh',
   server: 'server',
-  recoveryCodeExpiration: 'recoveryCodeExpiration',
+  urlCodeExpiration: 'urlCodeExpiration',
   database: 'database',
+  links: 'links',
 };

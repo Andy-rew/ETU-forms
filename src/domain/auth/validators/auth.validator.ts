@@ -5,6 +5,7 @@ import { ValidationException } from '@app/exceptions/inherited-exceptions/common
 import { CommonAuthPayload } from '@domain/auth/types/common-auth-payload';
 import { JwtService } from '@nestjs/jwt';
 import { UserPasswordEntity } from '@domain/user/entities/user-password.entity';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class AuthValidator {
@@ -24,6 +25,10 @@ export class AuthValidator {
   }
 
   validateUserActivationCodeSignUp(dto: { userPassword: UserPasswordEntity; password: string; samePassword: string }) {
+    if (dayjs().isAfter(dto.userPassword.activationCodeExpiredAt)) {
+      throw new BadRequestException('Activation code is expired');
+    }
+
     if (dto.password !== dto.samePassword) {
       throw new BadRequestException('Passwords do not match');
     }

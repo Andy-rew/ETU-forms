@@ -8,7 +8,7 @@ import { UserAuthTokensRepository } from '@domain/user/repository/user-auth-toke
 import { UserPasswordRepository } from '@domain/user/repository/user-password.repository';
 import { AuthManager } from '@domain/auth/managers/auth.manager';
 import { UserPasswordEntity } from '@domain/user/entities/user-password.entity';
-import { PasswordUtilsService } from '@domain/auth/services/password-utils.service';
+import { AuthUtilsService } from '@domain/auth/services/auth-utils.service';
 import { CommonAuthPayload } from '@domain/auth/types/common-auth-payload';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class AuthService {
     private readonly userAuthTokensRepository: UserAuthTokensRepository,
     private readonly userPasswordRepository: UserPasswordRepository,
     private readonly authManager: AuthManager,
-    private readonly passwordUtilsService: PasswordUtilsService,
+    private readonly passwordUtilsService: AuthUtilsService,
   ) {}
 
   async signIn(dto: { email: string; password: string }): Promise<UserAuthTokensEntity> {
