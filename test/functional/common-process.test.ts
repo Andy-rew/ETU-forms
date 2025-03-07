@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { UserBuilder } from '../builders/user.builder';
 
 @suite()
-export class ProcessCommonTest extends BaseTestClass {
+export class CommonProcessTest extends BaseTestClass {
   @test()
   async createProcess() {
     const dataForCreation = {

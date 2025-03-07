@@ -8,7 +8,7 @@ export function SystemAdminUserCompile(): void {
 
   systemAdminUserController.addApiMethod('/invite', {
     tags: [appSystemAdminUsersTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Пригласить пользователя в систему',

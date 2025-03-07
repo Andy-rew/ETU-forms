@@ -10,9 +10,17 @@ import { CommonUserService } from '@domain/user/services/common-user.service';
 import { UserManager } from '@domain/user/managers/user.manager';
 import { AuthModule } from '@domain/auth/auth.module';
 import { MailerModule } from '@domain/mailer/mailer.module';
+import { SystemAdminUserController } from '@applications/http/system-admin/user/system-admin-user.controller';
+import { AuthJwtAccessTokenModule } from '@infrastructure/module/auth-jwt-access-token.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, UserAuthTokensEntity, UserPasswordEntity]), AuthModule, MailerModule],
+  controllers: [SystemAdminUserController],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity, UserAuthTokensEntity, UserPasswordEntity]),
+    AuthModule,
+    MailerModule,
+    AuthJwtAccessTokenModule,
+  ],
   providers: [UserRepository, UserAuthTokensRepository, UserPasswordRepository, CommonUserService, UserManager],
   exports: [UserRepository, UserAuthTokensRepository, UserPasswordRepository, CommonUserService],
 })

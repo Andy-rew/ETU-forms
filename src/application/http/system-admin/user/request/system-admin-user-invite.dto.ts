@@ -1,7 +1,7 @@
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
 import { EmailProperty } from '@applications/decorators/api/common/email-property.decorator';
 import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
-import { EnumApiProperty } from '@applications/decorators/api/common/enum-api.property';
+import { ArrayPrimitiveProperty } from '@applications/decorators/api/helpers/array-primitive-property.decorator';
 
 export class SystemAdminUserInviteDto {
   @TextProperty({ description: 'Имя пользователя' })
@@ -16,9 +16,6 @@ export class SystemAdminUserInviteDto {
   @EmailProperty()
   email: string;
 
-  @EnumApiProperty({
-    enum: UserRoleEnum,
-    description: 'Роль пользователя',
-  })
-  role: UserRoleEnum;
+  @ArrayPrimitiveProperty({ items: 'enum', enum: UserRoleEnum })
+  roles: UserRoleEnum[];
 }

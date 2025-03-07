@@ -1,12 +1,12 @@
-import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { UserEntity } from '@domain/user/entities/user.entity';
 
 @Entity('user_password')
 export class UserPasswordEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ name: 'user_id' })
   userId: number;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
 
   @Column({ nullable: true })
@@ -16,5 +16,6 @@ export class UserPasswordEntity {
   activationCodeExpiredAt: Date | null;
 
   @OneToOne(() => UserEntity, (user: UserEntity) => user.password)
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 }

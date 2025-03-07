@@ -13,6 +13,6 @@ import { AuthController } from '@applications/http/common/auth/auth.controller';
   controllers: [AuthController],
   imports: [AuthJwtRefreshTokenModule, AuthJwtAccessTokenModule, forwardRef(() => UserModule)],
   providers: [AuthManager, AuthService, AuthJwtTokenService, AuthValidator, AuthUtilsService],
-  exports: [AuthUtilsService],
+  exports: [AuthUtilsService, AuthJwtTokenService],
 })
 export class AuthModule {}

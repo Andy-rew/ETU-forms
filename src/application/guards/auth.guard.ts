@@ -58,7 +58,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('User is not activated');
     }
 
-    if (!requiredRoles) {
+    if (!requiredRoles.length) {
       request['user'] = user;
       request['token'] = userAuthToken;
       return true;

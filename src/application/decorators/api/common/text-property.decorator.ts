@@ -16,8 +16,8 @@ const defaultParams: Required<TextPropertyParams> = {
   description: 'Текстовое поле',
   example: 'Текстовое значение',
   isOptional: false,
-  maxLength: 0,
-  minLength: 1000,
+  maxLength: 1000,
+  minLength: 0,
   nullable: false,
 };
 

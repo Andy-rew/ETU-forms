@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { UserAuthTokensEntity } from '@domain/user/entities/user-auth-tokens.entity';
-//import { AuthJwtTokenRepository } from '@domain/auth-jwt-token/auth-jwt-token.repository';
+import { UserAuthTokensRepository } from '@domain/user/repository/user-auth-tokens.repository';
 
 export class RequestQueryBuilder {
   private bodyVal: string | object | null = null;
@@ -28,7 +28,7 @@ export class RequestQueryBuilder {
 
   public async execute(): Promise<request.Request> {
     if (this.authTokenData) {
-      // await this.app.get(AuthJwtTokenRepository).save(this.authTokenData);
+      await this.app.get(UserAuthTokensRepository).save(this.authTokenData);
     }
 
     if (this.bodyVal !== null) {

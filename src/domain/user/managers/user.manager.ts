@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
 import { UserStatusEnum } from '@domain/user/enums/user-status.enum';
+import { UserPasswordEntity } from '@domain/user/entities/user-password.entity';
 
 @Injectable()
 export class UserManager {
@@ -22,8 +23,11 @@ export class UserManager {
     user.roles = dto.roles;
     user.status = UserStatusEnum.invited;
 
-    user.password.activationCode = dto.activationCode;
-    user.password.activationCodeExpiredAt = dto.activationCodeExpiresAt;
+    const userPassword = new UserPasswordEntity();
+    userPassword.activationCode = dto.activationCode;
+    userPassword.activationCodeExpiredAt = dto.activationCodeExpiresAt;
+    userPassword.userId = user.id;
+    user.password = userPassword;
 
     return user;
   }
@@ -47,8 +51,11 @@ export class UserManager {
     user.deletedAt = null;
     user.status = UserStatusEnum.invited;
 
-    user.password.activationCode = dto.activationCode;
-    user.password.activationCodeExpiredAt = dto.activationCodeExpiresAt;
+    const userPassword = new UserPasswordEntity();
+    userPassword.activationCode = dto.activationCode;
+    userPassword.activationCodeExpiredAt = dto.activationCodeExpiresAt;
+    userPassword.userId = user.id;
+    user.password = userPassword;
 
     return user;
   }

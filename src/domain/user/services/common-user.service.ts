@@ -76,7 +76,7 @@ export class CommonUserService {
     roles: UserRoleEnum[];
     patronymic?: string | null;
     sender: UserEntity;
-  }) {
+  }): Promise<UserEntity> {
     const user = await this.userRepository.findByEmail(dto.email);
 
     let userForInvite: UserEntity;
@@ -110,5 +110,7 @@ export class CommonUserService {
       subject: 'Invitation',
       type: MailTypeEnum.invite,
     });
+
+    return userForInvite;
   }
 }

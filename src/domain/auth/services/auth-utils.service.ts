@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { CONFIGS, UrlCodeExpiration } from '../../../../config/configuration/configuration';
 import * as dayjs from 'dayjs';
+import { randomBytes } from 'node:crypto';
 
 @Injectable()
 export class AuthUtilsService {
@@ -25,7 +26,7 @@ export class AuthUtilsService {
   }
 
   async generateActivationCodeWithExpirationDate(): Promise<{ activationCode: string; expiresAt: Date }> {
-    const activationCode = await bcrypt.genSalt(20);
+    const activationCode = randomBytes(20).toString('hex') + new Date().valueOf().toString();
     const expiresAt = dayjs().add(this.urlCodeConfig.activationCodeExpireTimeMinutes, 'minutes').toDate();
 
     return { activationCode, expiresAt };

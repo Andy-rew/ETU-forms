@@ -52,6 +52,7 @@ export class UserBuilder {
     user.patronymic = this.patronymic;
     user.email = this.email;
     user.status = this.status;
+    user.roles = this.roles;
     return user;
   }
 
