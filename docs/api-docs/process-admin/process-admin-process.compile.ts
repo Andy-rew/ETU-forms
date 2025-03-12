@@ -128,7 +128,7 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/edit', {
     tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Редактировать основную информацию о процессе',

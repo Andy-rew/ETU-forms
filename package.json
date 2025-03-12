@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@fosfad/openapi-typescript-definitions": "^0.0.28",
-    "@ivankrtv/openapidoc": "^0.3.2",
+    "@ivankrtv/openapidoc": "^0.3.7",
     "@nestjs/axios": "^0.0.7",
     "@nestjs/cli": "^8.2.5",
     "@nestjs/common": "^8.0.0",

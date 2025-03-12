@@ -4,6 +4,8 @@ import { ProcessEntity } from '@domain/process/entities/process.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { ProcessManagersEntity } from '@domain/process/entities/process-managers.entity';
+import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
+import { ProcessParticipantEntity } from '@domain/process/entities/process-participant.entity';
 
 @Injectable()
 export class ProcessRepository {
@@ -41,5 +43,19 @@ export class ProcessRepository {
 
   async findByIdOrFail(id: string): Promise<ProcessEntity | null> {
     return this.repo.findOneByOrFail({ id });
+  }
+
+  async createProcessManagers(processManagers: ProcessManagersEntity[]): Promise<ProcessManagersEntity[]> {
+    return this.repo.manager.save(ProcessManagersEntity, processManagers);
+  }
+
+  async createProcessStepExperts(processStepExperts: StepExpertsEntity[]): Promise<StepExpertsEntity[]> {
+    return this.repo.manager.save(StepExpertsEntity, processStepExperts);
+  }
+
+  async createProcessParticipants(
+    processParticipants: ProcessParticipantEntity[],
+  ): Promise<ProcessParticipantEntity[]> {
+    return this.repo.manager.save(ProcessParticipantEntity, processParticipants);
   }
 }

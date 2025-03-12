@@ -52,7 +52,7 @@ export class ProcessAdminProcessViewResponse {
     this.title = process.title;
     this.startDate = process.startDate;
     this.endDate = process.endDate;
-    this.imageUrls = process.processImages.map((image) => new ProcessAdminProcessViewImageItem(image));
+    this.imageUrls = process.processImages?.map((image) => new ProcessAdminProcessViewImageItem(image));
     this.description = process.description;
   }
 }

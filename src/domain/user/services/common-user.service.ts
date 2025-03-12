@@ -113,4 +113,32 @@ export class CommonUserService {
 
     return userForInvite;
   }
+
+  async inviteByEmails(dto: { emails: string[]; sender: UserEntity }) {
+    const notExistUsers = [];
+    for (const email of dto.emails) {
+      const codeObj = await this.authUtilsService.generateActivationCodeWithExpirationDate();
+
+      const newUser = this.userManager.createNewForInvite({
+        name: null,
+        surname: null,
+        patronymic: null,
+        email: email,
+        roles: [UserRoleEnum.user],
+        activationCode: codeObj.activationCode,
+        activationCodeExpiresAt: codeObj.expiresAt,
+      });
+
+      await this.mailSender.sendMail({
+        to: newUser,
+        from: dto.sender,
+        subject: 'Invitation',
+        type: MailTypeEnum.invite,
+      });
+
+      notExistUsers.push(newUser);
+    }
+
+    return this.userRepository.saveSeveralWithPasswordTransaction(notExistUsers);
+  }
 }

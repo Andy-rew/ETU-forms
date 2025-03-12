@@ -66,7 +66,7 @@ openApiDoc.addTagGroup('Админ процессов', [
   appProcessAdminStepsTag,
 ]);
 
-openApiDoc.addTagGroup('Пользователь. Общее', []);
+//openApiDoc.addTagGroup('Пользователь. Общее', []);
 
 openApiDoc.addTagGroup('Пользователь.Менеджер процесса', [
   appProcessAdminMySchemasTag,

@@ -10,6 +10,9 @@ import { FileModule } from '@domain/file/file.module';
 import { ProcessAdminProcessController } from '@applications/http/process-admin/process/process-admin-process.controller';
 import { AuthJwtAccessTokenModule } from '@infrastructure/module/auth-jwt-access-token.module';
 import { UserModule } from '@domain/user/user.module';
+import { ProcessUsersService } from '@domain/process/services/process-users.service';
+import { StepModule } from '@domain/step/step.module';
+import { UserProcessManager } from '@domain/process/managers/user-process.manager';
 
 @Module({
   controllers: [ProcessAdminProcessController],
@@ -18,8 +21,16 @@ import { UserModule } from '@domain/user/user.module';
     FileModule,
     AuthJwtAccessTokenModule,
     UserModule,
+    StepModule,
   ],
-  providers: [ProcessRepository, ProcessManagerRepository, CommonProcessManager, CommonProcessService],
-  exports: [CommonProcessService, ProcessRepository, ProcessManagerRepository],
+  providers: [
+    ProcessRepository,
+    ProcessManagerRepository,
+    CommonProcessManager,
+    CommonProcessService,
+    ProcessUsersService,
+    UserProcessManager,
+  ],
+  exports: [CommonProcessService, ProcessRepository, ProcessManagerRepository, ProcessUsersService],
 })
 export class ProcessModule {}

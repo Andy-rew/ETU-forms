@@ -5,7 +5,7 @@ import { ArrayPrimitiveProperty } from '@applications/decorators/api/helpers/arr
 
 export class ProcessAdminProcessEditDto {
   @UuidProperty()
-  id: string;
+  processId: string;
 
   @TextProperty({ description: 'Название процесса' })
   title: string;

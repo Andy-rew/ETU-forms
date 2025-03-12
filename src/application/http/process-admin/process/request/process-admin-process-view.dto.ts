@@ -2,5 +2,5 @@ import { UuidProperty } from '@applications/decorators/api/common/uuid.property.
 
 export class ProcessAdminProcessViewDto {
   @UuidProperty()
-  id: string;
+  processId: string;
 }

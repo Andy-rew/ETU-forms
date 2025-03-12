@@ -27,14 +27,14 @@ export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
-
-  @Column()
-  surname: string;
+  @Column({ nullable: true })
+  name: string | null;
 
   @Column({ nullable: true })
-  patronymic: string;
+  surname: string | null;
+
+  @Column({ nullable: true })
+  patronymic: string | null;
 
   @Column({ unique: true })
   @IsEmail()

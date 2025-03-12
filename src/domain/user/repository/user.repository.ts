@@ -48,4 +48,29 @@ export class UserRepository {
       await qr.release();
     }
   }
+
+  async saveSeveralWithPasswordTransaction(users: UserEntity[]): Promise<UserEntity[]> {
+    const qr = this.repo.manager.connection.createQueryRunner();
+    await qr.startTransaction();
+    try {
+      for (const user of users) {
+        const savedUser = await qr.manager.save(user);
+        const passwordData = user.password;
+        passwordData.user = savedUser;
+        savedUser.password = await qr.manager.save(passwordData);
+      }
+
+      await qr.commitTransaction();
+      return users;
+    } catch (error) {
+      await qr.rollbackTransaction();
+      throw new Error(error);
+    } finally {
+      await qr.release();
+    }
+  }
+
+  async findByEmails(emails: string[]): Promise<UserEntity[]> {
+    return this.repo.createQueryBuilder('user').where('user.email IN (:...emails)', { emails }).withDeleted().getMany();
+  }
 }
