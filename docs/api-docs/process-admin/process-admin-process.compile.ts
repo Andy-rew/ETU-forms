@@ -12,7 +12,6 @@ import { ProcessAdminProcessCreateResponse } from '@applications/http/process-ad
 import { ProcessAdminProcessEditDto } from '@applications/http/process-admin/process/request/process-admin-process-edit.dto';
 import { ProcessAdminProcessCreateFromTemplateDto } from '@applications/http/process-admin/process/request/process-admin-process-create-from-template.dto';
 import { ProcessAdminProcessCreateFromTemplateResponse } from '@applications/http/process-admin/process/response/process-admin-process-create-from-template.response';
-import { ProcessAdminProcessUsersAddResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-add.response';
 import { ProcessAdminProcessUsersAddDto } from '@applications/http/process-admin/process/request/process-admin-process-users-add.dto';
 import { ProcessAdminProcessUsersRemoveDto } from '@applications/http/process-admin/process/request/process-admin-process-users-remove.dto';
 import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/common/process/request/process-admin-process-users-get-all.dto';
@@ -91,14 +90,14 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/users/add', {
     tags: [appProcessAdminProcessUsersTag, appUserManagerProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Добавить пользователя в процесс по списку почт',
     description: 'Если почта не найдена в системе - будет отправлено приглашение как внешнему пользователю',
     requestBody: ProcessAdminProcessUsersAddDto,
     responses: {
-      '201': [ProcessAdminProcessUsersAddResponse],
+      '201': [],
     },
   });
 

@@ -60,4 +60,17 @@ export class UserBuilder {
     const user = this.buildEntity();
     return this.app.get<Repository<UserEntity>>(getRepositoryToken(UserEntity)).save(user);
   }
+
+  async buildMany(count: number): Promise<UserEntity[]> {
+    const users: UserEntity[] = [];
+
+    for (let i = 0; i < count; i++) {
+      this.email = `test${new Date().getTime()}${i}@mail.ru`;
+      this.roles = [UserRoleEnum.user];
+      const user = this.buildEntity();
+      users.push(user);
+    }
+
+    return this.app.get<Repository<UserEntity>>(getRepositoryToken(UserEntity)).save(users);
+  }
 }

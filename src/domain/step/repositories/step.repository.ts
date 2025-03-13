@@ -8,7 +8,7 @@ export class StepRepository {
   constructor(@InjectRepository(StepEntity) private readonly repo: Repository<StepEntity>) {}
 
   async findOneWithProcessById(id: number): Promise<StepEntity | null> {
-    return this.repo.findOne({ where: { id }, relations: { process: true } });
+    return this.repo.findOne({ where: { id }, relations: { process: true, parent: true } });
   }
 
   async findOneWithProcessByIdOrFail(id: number): Promise<StepEntity> {
@@ -17,5 +17,9 @@ export class StepRepository {
       throw new NotFoundException('Step not found');
     }
     return step;
+  }
+
+  async saveNewStep(step: StepEntity): Promise<StepEntity> {
+    return this.repo.save(step);
   }
 }

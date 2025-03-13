@@ -8,6 +8,7 @@ import { StepEntity } from '@domain/step/entities/step.entity';
 import { StepRepository } from '@domain/step/repositories/step.repository';
 import { UserProcessManager } from '@domain/process/managers/user-process.manager';
 import { CommonUserService } from '@domain/user/services/common-user.service';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ProcessUsersService {
@@ -41,8 +42,6 @@ export class ProcessUsersService {
     currentUser: UserEntity;
     stepId?: number;
   }) {
-    //todo валидация процесса и этапа (если добавляем экспертов),тесты
-
     const existUsers = await this.userRepository.findByEmails(dto.emails);
     const existDeletedUsers = existUsers.filter((user) => user.deletedAt !== null).map((user) => user.email);
 
@@ -63,12 +62,25 @@ export class ProcessUsersService {
 
     const process = await this.processRepository.findByIdOrFail(dto.processId);
 
+    if (dayjs().isAfter(dayjs(process.endDate), 'date')) {
+      throw new BadRequestException('Process is over');
+    }
+
     switch (dto.userType) {
       case ProcessUserRoleEnum.expert:
         if (!dto.stepId) {
           throw new BadRequestException('stepId is required for inviting expert');
         }
         const stepWithProcess = await this.stepRepository.findOneWithProcessByIdOrFail(dto.stepId);
+
+        if (process.id !== stepWithProcess.process.id) {
+          throw new BadRequestException('Step does not belong to this process');
+        }
+
+        if (dayjs().isAfter(dayjs(stepWithProcess.endTime), 'minutes')) {
+          throw new BadRequestException('Process step is over');
+        }
+
         await this.addExperts({ users: existUsers, step: stepWithProcess });
         break;
 

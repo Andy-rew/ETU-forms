@@ -80,6 +80,7 @@ export class ProcessAdminProcessController {
     });
   }
 
+  @ProcessAccess(ProcessUserRoleEnum.manager)
   @Post('/users/add')
   async addUsers(@Body() body: ProcessAdminProcessUsersAddDto, @ReqUser() user: UserEntity) {
     await this.processUsersService.addUsersToProcess({

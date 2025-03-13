@@ -42,7 +42,7 @@ export function ProcessAdminStepCompile(): void {
 
   processAdminStepController.addApiMethod('/create', {
     tags: [appProcessAdminStepsTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Создать новый этап процесса',

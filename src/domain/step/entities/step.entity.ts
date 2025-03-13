@@ -36,15 +36,15 @@ export class StepEntity {
   @ManyToOne(() => ProcessEntity, (process: ProcessEntity) => process.steps, { nullable: false })
   process: ProcessEntity;
 
-  @OneToOne(() => FormSchemaEntity, { nullable: false })
+  @OneToOne(() => FormSchemaEntity, { nullable: true })
   @JoinColumn({ name: 'form_schema_id' })
   formSchema: FormSchemaEntity;
 
-  @OneToOne(() => FormSchemaEntity, { nullable: false })
+  @OneToOne(() => FormSchemaEntity, { nullable: true })
   @JoinColumn({ name: 'form_accept_schema_id' })
   formAcceptSchema: FormSchemaEntity;
 
-  @OneToOne(() => FormSchemaEntity, { nullable: false })
+  @OneToOne(() => FormSchemaEntity, { nullable: true })
   @JoinColumn({ name: 'form_decline_schema_id' })
   formDeclineSchema: FormSchemaEntity;
 

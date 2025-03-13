@@ -25,7 +25,7 @@ export class AuthUtilsService {
     return await bcrypt.hash(password, saltRounds);
   }
 
-  async generateActivationCodeWithExpirationDate(): Promise<{ activationCode: string; expiresAt: Date }> {
+  generateActivationCodeWithExpirationDate(): { activationCode: string; expiresAt: Date } {
     const activationCode = randomBytes(20).toString('hex') + new Date().valueOf().toString();
     const expiresAt = dayjs().add(this.urlCodeConfig.activationCodeExpireTimeMinutes, 'minutes').toDate();
 

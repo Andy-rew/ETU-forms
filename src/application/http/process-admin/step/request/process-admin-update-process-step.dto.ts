@@ -25,9 +25,6 @@ export class ProcessAdminUpdateProcessStepDto {
   })
   participantsCount: number | null;
 
-  @IdProperty({ description: 'Id родительского этапа (после которого данный). Для первого = null', nullable: true })
-  parentId: number | null;
-
   @IdProperty({ description: 'Id шаблона подтверждения', nullable: true })
   acceptFormId: number | null;
 

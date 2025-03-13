@@ -13,11 +13,12 @@ import { UserModule } from '@domain/user/user.module';
 import { ProcessUsersService } from '@domain/process/services/process-users.service';
 import { StepModule } from '@domain/step/step.module';
 import { UserProcessManager } from '@domain/process/managers/user-process.manager';
+import { ProcessParticipantEntity } from '@domain/process/entities/process-participant.entity';
 
 @Module({
   controllers: [ProcessAdminProcessController],
   imports: [
-    TypeOrmModule.forFeature([ProcessEntity, ProcessManagersEntity]),
+    TypeOrmModule.forFeature([ProcessEntity, ProcessManagersEntity, ProcessParticipantEntity]),
     FileModule,
     AuthJwtAccessTokenModule,
     UserModule,

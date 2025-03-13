@@ -8,6 +8,12 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ProcessEntity } from '@domain/process/entities/process.entity';
 import { Repository } from 'typeorm';
 import { UserBuilder } from '../builders/user.builder';
+import { ProcessUsersService } from '@domain/process/services/process-users.service';
+import { ProcessUserRoleEnum } from '@domain/process/enums/process-user-role.enum';
+import { ProcessParticipantEntity } from '@domain/process/entities/process-participant.entity';
+import { ProcessManagersEntity } from '@domain/process/entities/process-managers.entity';
+import { StepBuilder } from '../builders/step.builder';
+import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
 
 @suite()
 export class CommonProcessTest extends BaseTestClass {
@@ -74,6 +80,92 @@ export class CommonProcessTest extends BaseTestClass {
       .findOneBy({ id: process.id });
 
     expect(deletedProcess).toBe(null);
+  }
+
+  @test()
+  async addParticipantsToProcessSuccess() {
+    const participantsCount = 5;
+
+    const process = await this.getBuilder(ProcessBuilder).build();
+    const usersToAdd = await this.getBuilder(UserBuilder).buildMany(participantsCount);
+
+    const processAdmin = await new UserBuilder(this.app).withEmail('ffefwef@eded.de').build();
+
+    await this.getService(ProcessUsersService).addUsersToProcess({
+      processId: process.id,
+      emails: usersToAdd.map((user) => user.email),
+      currentUser: processAdmin,
+      userType: ProcessUserRoleEnum.participant,
+    });
+
+    const participants = await this.app
+      .get<Repository<ProcessParticipantEntity>>(getRepositoryToken(ProcessParticipantEntity))
+      .find({ where: { process: { id: process.id } }, relations: { user: true } });
+
+    for (const user of usersToAdd) {
+      const findUser = participants.find((participant) => participant.user.id === user.id);
+      expect(findUser).toBeDefined();
+      expect(findUser.user.id).toBe(user.id);
+    }
+  }
+
+  @test()
+  async addManagersToProcessSuccess() {
+    const managersCount = 5;
+
+    const process = await this.getBuilder(ProcessBuilder).build();
+    const usersToAdd = await this.getBuilder(UserBuilder).buildMany(managersCount);
+
+    const processAdmin = await new UserBuilder(this.app).withEmail('ffefwef@eded.de').build();
+
+    await this.getService(ProcessUsersService).addUsersToProcess({
+      processId: process.id,
+      emails: usersToAdd.map((user) => user.email),
+      currentUser: processAdmin,
+      userType: ProcessUserRoleEnum.manager,
+    });
+
+    const managers = await this.app
+      .get<Repository<ProcessManagersEntity>>(getRepositoryToken(ProcessManagersEntity))
+      .find({ where: { process: { id: process.id } }, relations: { user: true } });
+
+    for (const user of usersToAdd) {
+      const findUser = managers.find((participant) => participant.user.id === user.id);
+      expect(findUser).toBeDefined();
+      expect(findUser.user.id).toBe(user.id);
+    }
+  }
+
+  @test()
+  async addExpertsToProcessStepSuccess() {
+    const expertsCount = 5;
+
+    const process = await this.getBuilder(ProcessBuilder).build();
+    const step = await this.getBuilder(StepBuilder).withProcess(process).build();
+    const usersToAdd = await this.getBuilder(UserBuilder).buildMany(expertsCount);
+
+    const processAdmin = await new UserBuilder(this.app).withEmail('ffefwef@eded.de').build();
+
+    await this.getService(ProcessUsersService).addUsersToProcess({
+      processId: process.id,
+      emails: usersToAdd.map((user) => user.email),
+      currentUser: processAdmin,
+      stepId: step.id,
+      userType: ProcessUserRoleEnum.expert,
+    });
+
+    const experts = await this.app
+      .get<Repository<StepExpertsEntity>>(getRepositoryToken(StepExpertsEntity))
+      .find({ where: { step: { id: step.id } }, relations: { user: true } });
+
+    await this.queryRunner.commitTransaction();
+    await this.queryRunner.startTransaction();
+
+    for (const user of usersToAdd) {
+      const findUser = experts.find((participant) => participant.user.id === user.id);
+      expect(findUser).toBeDefined();
+      expect(findUser.user.id).toBe(user.id);
+    }
   }
 }
 describe('', () => {});

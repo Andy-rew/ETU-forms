@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProcessEntity } from '@domain/process/entities/process.entity';
 import { Repository } from 'typeorm';
@@ -43,6 +43,21 @@ export class ProcessRepository {
 
   async findByIdOrFail(id: string): Promise<ProcessEntity | null> {
     return this.repo.findOneByOrFail({ id });
+  }
+
+  async findByIdWitParticipantsAndSteps(id: string): Promise<ProcessEntity | null> {
+    return this.repo.findOne({
+      where: { id },
+      relations: { userParticipants: true, steps: { parent: true } },
+    });
+  }
+
+  async findByIdWitParticipantsAndStepsOrFail(id: string): Promise<ProcessEntity> {
+    const process = await this.findByIdWitParticipantsAndSteps(id);
+    if (!process) {
+      throw new NotFoundException('Process not found');
+    }
+    return process;
   }
 
   async createProcessManagers(processManagers: ProcessManagersEntity[]): Promise<ProcessManagersEntity[]> {

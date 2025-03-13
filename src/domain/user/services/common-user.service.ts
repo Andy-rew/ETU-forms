@@ -25,7 +25,7 @@ export class CommonUserService {
     patronymic?: string | null;
     sender: UserEntity;
   }): Promise<UserEntity> {
-    const codeObj = await this.authUtilsService.generateActivationCodeWithExpirationDate();
+    const codeObj = this.authUtilsService.generateActivationCodeWithExpirationDate();
 
     const newUser = this.userManager.createNewForInvite({
       name: dto.name,
@@ -53,7 +53,7 @@ export class CommonUserService {
       throw new BadRequestException('User is already activated');
     }
 
-    const codeObj = await this.authUtilsService.generateActivationCodeWithExpirationDate();
+    const codeObj = this.authUtilsService.generateActivationCodeWithExpirationDate();
 
     const updatedExistUser = this.userManager.createExistForInvite({
       existUser: dto.existUser,
@@ -117,7 +117,7 @@ export class CommonUserService {
   async inviteByEmails(dto: { emails: string[]; sender: UserEntity }) {
     const notExistUsers = [];
     for (const email of dto.emails) {
-      const codeObj = await this.authUtilsService.generateActivationCodeWithExpirationDate();
+      const codeObj = this.authUtilsService.generateActivationCodeWithExpirationDate();
 
       const newUser = this.userManager.createNewForInvite({
         name: null,
