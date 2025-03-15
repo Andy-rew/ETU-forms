@@ -47,12 +47,15 @@ jobs:
       - name: Run tests
         run: npm run test:ci
         env:
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
+          API_VERSION: 0.0.1
+          HOST: localhost
+          PORT: 3001
+          DB_TYPE: postgres
+          DB_HOST: localhost
+          DB_PORT: 5432
           POSTGRES_USERNAME: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DATABASE: etu-forms
-          ENVIRONMENT_NAME: test
           JWT_ACCESS_SECRET_KEY: b6f50a3ce8e11c16c1680276702ab0681e911904e41afc59044deda0606f7d51
           JWT_ACCESS_EXPIRE_TIME_MINUTES: 360
           JWT_REFRESH_SECRET_KEY: b6f50a3ce8e11c16c1680276702abewe1e911904e41afc59044deda0606f7d51
