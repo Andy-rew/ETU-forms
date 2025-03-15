@@ -1,0 +1,70 @@
+name: Tests
+
+on: push
+
+jobs:
+  Jest:
+    name: Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: etu-forms
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run build
+        run: npm run build
+
+      - name: Migrations
+        run: npm run migration:run
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USERNAME: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DATABASE: etu-forms
+
+      - name: Run tests
+        run: npm run test:ci
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USERNAME: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DATABASE: etu-forms
+          ENVIRONMENT_NAME: test
+          JWT_ACCESS_SECRET_KEY: b6f50a3ce8e11c16c1680276702ab0681e911904e41afc59044deda0606f7d51
+          JWT_ACCESS_EXPIRE_TIME_MINUTES: 360
+          JWT_REFRESH_SECRET_KEY: b6f50a3ce8e11c16c1680276702abewe1e911904e41afc59044deda0606f7d51
+          JWT_REFRESH_EXPIRE_TIME_MINUTES: 360
+          RECOVERY_CODE_EXPIRE_TIME_MINUTES: 1440
+          ACTIVATION_CODE_EXPIRE_TIME_MINUTES: 1440
+          PASSWORD_RECOVERY_PAGE_URL: http://localhost:3000/password-recovery
+          REGISTRATION_PAGE_URL: http://localhost:3000/registration
+
+
+
+
+
+
+
