@@ -22,4 +22,23 @@ export class StepRepository {
   async saveNewStep(step: StepEntity): Promise<StepEntity> {
     return this.repo.save(step);
   }
+
+  async findAllByProcess(processId: string): Promise<StepEntity[]> {
+    return this.repo.find({ where: { process: { id: processId } }, relations: { process: true, parent: true } });
+  }
+
+  async findViewById(id: number): Promise<StepEntity | null> {
+    return this.repo.findOne({
+      where: { id },
+      relations: { process: true, parent: true, formAcceptSchema: true, formDeclineSchema: true, formSchema: true },
+    });
+  }
+
+  async findViewByIdOrFail(id: number): Promise<StepEntity> {
+    const step = await this.findViewById(id);
+    if (!step) {
+      throw new NotFoundException('Step not found');
+    }
+    return step;
+  }
 }

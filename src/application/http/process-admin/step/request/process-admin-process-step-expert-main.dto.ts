@@ -2,8 +2,8 @@ import { IdProperty } from '@applications/decorators/api/common/id.property.deco
 import { UuidProperty } from '@applications/decorators/api/common/uuid.property.decorator';
 
 export class ProcessAdminProcessStepExpertMainDto {
-  @IdProperty({ description: 'Id эксперта' })
-  userExpertId: number;
+  @IdProperty({ description: 'Id пользователя, для назначения экспертом' })
+  userId: number;
 
   @IdProperty({ description: 'Id этапа' })
   stepId: number;

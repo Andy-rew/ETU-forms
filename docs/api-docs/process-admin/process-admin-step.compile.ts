@@ -18,7 +18,7 @@ export function ProcessAdminStepCompile(): void {
 
   processAdminStepController.addApiMethod('/all', {
     tags: [appProcessAdminStepsTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить все этапы процесса',
@@ -30,7 +30,7 @@ export function ProcessAdminStepCompile(): void {
 
   processAdminStepController.addApiMethod('/view', {
     tags: [appProcessAdminStepsTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить полную информацию об этапе процесса',
