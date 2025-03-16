@@ -14,7 +14,7 @@ import { ProcessAdminProcessCreateFromTemplateDto } from '@applications/http/pro
 import { ProcessAdminProcessCreateFromTemplateResponse } from '@applications/http/process-admin/process/response/process-admin-process-create-from-template.response';
 import { ProcessAdminProcessUsersAddDto } from '@applications/http/process-admin/process/request/process-admin-process-users-add.dto';
 import { ProcessAdminProcessUsersRemoveDto } from '@applications/http/process-admin/process/request/process-admin-process-users-remove.dto';
-import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/common/process/request/process-admin-process-users-get-all.dto';
+import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-users-get-all.dto';
 import { ProcessAdminProcessUsersGetAllResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-get-all.response';
 import { ProcessAdminProcessLinkAccessDto } from '@applications/http/process-admin/process/request/process-admin-process-link-access.dto';
 import { ProcessAdminProcessFormTemplateViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-template-view.dto';

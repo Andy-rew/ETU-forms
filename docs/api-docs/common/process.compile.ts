@@ -1,5 +1,5 @@
 import { appProcessAdminProcessTag, processBaseController, processTag } from '../open-api-builds/open-api.build';
-import { ProcessGetAllDto } from '@applications/http/process-admin/process/request/process-get-all.dto';
+import { ProcessGetAllDto } from '@applications/http/common/process/request/process-get-all.dto';
 import { ProcessGetAllResponse } from '@applications/http/common/process/response/process-get-all.response';
 
 export function ProcessCompile(): void {
