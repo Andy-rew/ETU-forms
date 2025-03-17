@@ -1,5 +1,5 @@
 import { plainToClass } from 'class-transformer';
-import { IsNumber, IsString, validateSync } from 'class-validator';
+import { IsNumber, IsString, validate } from 'class-validator';
 
 class EnvironmentVariables {
   @IsString({ message: 'API_VERSION must be a string' })
@@ -48,14 +48,12 @@ class EnvironmentVariables {
   RECOVERY_CODE_EXPIRE_TIME_MINUTES: number;
 }
 
-export const validateEnv = (config: Record<string, unknown>) => {
-  // `plainToClass` to converts plain object into Class
+export const validateEnv = async (config: Record<string, unknown>) => {
   const validatedConfig = plainToClass(EnvironmentVariables, config, {
     enableImplicitConversion: true,
   });
 
-  // `validateSync` method validate the class and returns errors
-  const errors = validateSync(validatedConfig, {
+  const errors = await validate(validatedConfig, {
     skipMissingProperties: false,
   });
 

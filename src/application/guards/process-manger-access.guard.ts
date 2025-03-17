@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { ValidationException } from '@app/exceptions/inherited-exceptions/common/validation.exception';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { ProcessManagerRepository } from '@domain/process/repository/process-manager.repository';
+import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
 
 @Injectable()
 export class ProcessMangerAccessGuard implements CanActivate {
@@ -21,6 +22,10 @@ export class ProcessMangerAccessGuard implements CanActivate {
 
     if (!user) {
       throw new ValidationException('No user in request');
+    }
+
+    if (user.roles.includes(UserRoleEnum.processAdmin)) {
+      return true;
     }
 
     const processManagerWithProcess = await this.processManagerRepository.findByProcessIdAndUserId({

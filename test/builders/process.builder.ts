@@ -7,13 +7,15 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { UserBuilder } from './user.builder';
 import { CommonProcessManager } from '@domain/process/managers/common-process.manager';
+import * as dayjs from 'dayjs';
+import { Repository } from 'typeorm';
 
 export class ProcessBuilder {
   constructor(private readonly app: INestApplication) {}
 
   private title = 'Тестовый процесс';
-  private startDate = new Date();
-  private endDate = new Date();
+  private startDate = dayjs().add(1, 'day').toDate();
+  private endDate = dayjs().add(2, 'day').toDate();
   private status: ProcessStatusEnum = ProcessStatusEnum.draft;
   private description: string | null = null;
   private images: FileEntity[] | null = null;
@@ -63,6 +65,8 @@ export class ProcessBuilder {
       images: this.images,
     });
 
+    process.status = this.status;
+
     return process;
   }
 
@@ -88,5 +92,17 @@ export class ProcessBuilder {
     }
 
     return createdProcess;
+  }
+
+  async buildMany(count: number): Promise<ProcessEntity[]> {
+    const processes = [];
+    for (let i = 0; i < count; i++) {
+      const process = this.buildEntity();
+      process.title = `Test process ${i}`;
+      processes.push(process);
+    }
+
+    await this.app.get<Repository<ProcessEntity>>(getRepositoryToken(ProcessEntity)).save(processes);
+    return processes;
   }
 }

@@ -4,6 +4,7 @@ import { ProcessEntity } from '@domain/process/entities/process.entity';
 import { INestApplication } from '@nestjs/common';
 import { CommonStepService } from '@domain/step/services/common-step.service';
 import { ProcessBuilder } from './process.builder';
+import { UserEntity } from '@domain/user/entities/user.entity';
 
 export class StepBuilder {
   constructor(private readonly app: INestApplication) {}
@@ -14,9 +15,15 @@ export class StepBuilder {
   private participantsCount: number | null = null;
   private parent: StepEntity | null = null;
   private process: ProcessEntity | null = null;
+  private experts: UserEntity[] | null = null;
 
   public withProcess(process: ProcessEntity): this {
     this.process = process;
+    return this;
+  }
+
+  public withExperts(experts: UserEntity[]): this {
+    this.experts = experts;
     return this;
   }
 

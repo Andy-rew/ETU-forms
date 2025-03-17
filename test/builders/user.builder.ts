@@ -11,7 +11,7 @@ export class UserBuilder {
   private name = 'Иван';
   private surname = 'Иванов';
   private patronymic = 'Иванович';
-  private email = 'test@mail.ru';
+  private email = `test${new Date().getTime()}@mail.ru`;
   private status = UserStatusEnum.activated;
   private roles = [UserRoleEnum.processAdmin];
 

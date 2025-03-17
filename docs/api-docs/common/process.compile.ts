@@ -7,7 +7,7 @@ export function ProcessCompile(): void {
 
   processController.addApiMethod('/all', {
     tags: [appProcessAdminProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить все процессы для текущего пользователя',

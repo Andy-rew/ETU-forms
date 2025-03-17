@@ -14,9 +14,11 @@ import { ProcessUsersService } from '@domain/process/services/process-users.serv
 import { StepModule } from '@domain/step/step.module';
 import { UserProcessManager } from '@domain/process/managers/user-process.manager';
 import { ProcessParticipantEntity } from '@domain/process/entities/process-participant.entity';
+import { ProcessController } from '@applications/http/common/process/process.controller';
+import { ProcessStatusService } from '@domain/process/services/process-status.service';
 
 @Module({
-  controllers: [ProcessAdminProcessController],
+  controllers: [ProcessAdminProcessController, ProcessController],
   imports: [
     TypeOrmModule.forFeature([ProcessEntity, ProcessManagersEntity, ProcessParticipantEntity]),
     FileModule,
@@ -31,7 +33,14 @@ import { ProcessParticipantEntity } from '@domain/process/entities/process-parti
     CommonProcessService,
     ProcessUsersService,
     UserProcessManager,
+    ProcessStatusService,
   ],
-  exports: [CommonProcessService, ProcessRepository, ProcessManagerRepository, ProcessUsersService],
+  exports: [
+    CommonProcessService,
+    ProcessRepository,
+    ProcessManagerRepository,
+    ProcessUsersService,
+    ProcessStatusService,
+  ],
 })
 export class ProcessModule {}
