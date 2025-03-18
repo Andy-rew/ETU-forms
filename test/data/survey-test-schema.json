@@ -1,0 +1,40 @@
+{
+  "pages": [
+    {
+      "name": "page1",
+      "elements": [
+        {
+          "type": "text",
+          "name": "question1"
+        },
+        {
+          "type": "text",
+          "name": "question2"
+        },
+        {
+          "type": "tagbox",
+          "name": "question3",
+          "choices": [
+            "Item 1",
+            "Item 2",
+            "Item 3"
+          ]
+        },
+        {
+          "type": "radiogroup",
+          "name": "question4",
+          "choices": [
+            "Item 1",
+            "Item 2",
+            "Item 3"
+          ]
+        },
+        {
+          "type": "file",
+          "name": "question5",
+          "storeDataAsText": false
+        }
+      ]
+    }
+  ]
+}

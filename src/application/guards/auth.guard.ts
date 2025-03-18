@@ -14,6 +14,7 @@ import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '@applications/decorators/auth-roles.decorator';
 import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
 import { UserAuthTokensRepository } from '@domain/user/repository/user-auth-tokens.repository';
+import { SCHEMA_MANAGE } from '@applications/decorators/schemas-manage.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -25,6 +26,11 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredRoles = this.reflector.getAllAndOverride<UserRoleEnum[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    const checkSchemaManage = this.reflector.getAllAndOverride<boolean>(SCHEMA_MANAGE, [
       context.getHandler(),
       context.getClass(),
     ]);
@@ -56,6 +62,12 @@ export class AuthGuard implements CanActivate {
 
     if (user.status !== UserStatusEnum.activated) {
       throw new UnauthorizedException('User is not activated');
+    }
+
+    if (checkSchemaManage) {
+      if (!user.allowTemplates) {
+        throw new UnauthorizedException('User is not allowed to manage schemas');
+      }
     }
 
     if (!requiredRoles.length) {

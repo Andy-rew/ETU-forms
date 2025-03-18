@@ -64,7 +64,20 @@ export class ProcessRepository {
   }
 
   async createProcessManagers(processManagers: ProcessManagersEntity[]): Promise<ProcessManagersEntity[]> {
-    return this.repo.manager.save(ProcessManagersEntity, processManagers);
+    const qr = this.repo.manager.connection.createQueryRunner();
+    await qr.startTransaction();
+    try {
+      await qr.manager.save(processManagers);
+      await qr.manager.save(processManagers.map((manager) => manager.user));
+
+      await qr.commitTransaction();
+      return processManagers;
+    } catch (error) {
+      await qr.rollbackTransaction();
+      throw new Error(error);
+    } finally {
+      await qr.release();
+    }
   }
 
   async createProcessStepExperts(processStepExperts: StepExpertsEntity[]): Promise<StepExpertsEntity[]> {

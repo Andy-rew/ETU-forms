@@ -19,7 +19,7 @@ export class FormSchemaEntity {
   title: string;
 
   @Column({ type: 'jsonb' })
-  schema: JSON;
+  schema: any; // todo типизировать
 
   @CreateDateColumn()
   createdAt: Date;

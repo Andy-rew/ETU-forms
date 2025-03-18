@@ -53,6 +53,7 @@ export class UserBuilder {
     user.email = this.email;
     user.status = this.status;
     user.roles = this.roles;
+    user.allowTemplates = this.roles.includes(UserRoleEnum.processAdmin);
     return user;
   }
 

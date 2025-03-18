@@ -21,6 +21,7 @@ export class UserManager {
     user.patronymic = dto.patronymic ?? null;
     user.email = dto.email;
     user.roles = dto.roles;
+    user.allowTemplates = dto.roles.includes(UserRoleEnum.processAdmin);
     user.status = UserStatusEnum.invited;
 
     const userPassword = new UserPasswordEntity();

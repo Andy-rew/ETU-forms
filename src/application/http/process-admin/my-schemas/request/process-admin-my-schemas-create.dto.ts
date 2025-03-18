@@ -1,5 +1,5 @@
 import { SchemaType } from '@domain/form-schema/enums/schema-type.enum';
-import { EnumProperty } from '@ivankrtv/openapidoc/dist';
+import { EnumProperty, StringProperty } from '@ivankrtv/openapidoc/dist';
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
 
 export class ProcessAdminMySchemasCreateDto {
@@ -9,8 +9,7 @@ export class ProcessAdminMySchemasCreateDto {
   @TextProperty({ description: 'Название шаблона' })
   title: string;
 
-  @TextProperty({
-    description: 'JSON-схема шаблона для вставки в SurveyJS-компонент',
-  })
-  schema: JSON;
+  // TODO: add validation
+  @StringProperty({ description: 'JSON-схема шаблона для вставки в SurveyJS-компонент', example: '' })
+  schema: any;
 }

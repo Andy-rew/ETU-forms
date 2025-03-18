@@ -47,7 +47,7 @@ export function ProcessAdminMySchemasCompile(): void {
   });
 
   processAdminMySchemasController.addApiMethod('/create', {
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Создать шаблон формы',

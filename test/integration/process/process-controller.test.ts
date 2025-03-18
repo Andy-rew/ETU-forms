@@ -258,9 +258,6 @@ export class ProcessControllerTest extends BaseTestClass {
 
     query.status = ProcessStatusEnum.finished;
 
-    await this.queryRunner.commitTransaction();
-    await this.queryRunner.startTransaction();
-
     const resGetAllFinished = await this.httpRequest()
       .withAuth(processAdmin)
       .get('/process/all')

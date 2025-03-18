@@ -28,6 +28,7 @@ export class UserProcessManager {
       const manager = new ProcessManagersEntity();
       manager.user = user;
       manager.process = dto.process;
+      user.allowTemplates = true;
       processManagers.push(manager);
     });
 

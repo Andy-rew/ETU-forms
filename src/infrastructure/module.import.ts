@@ -9,6 +9,7 @@ import { UserModule } from '@domain/user/user.module';
 import { FileModule } from '@domain/file/file.module';
 import { AuthModule } from '@domain/auth/auth.module';
 import { MailerModule } from '@domain/mailer/mailer.module';
+import { FormSchemaModule } from '@domain/form-schema/form-schema.module';
 
 export const ModuleImport = [
   ConfigModule.forRoot({
@@ -39,4 +40,5 @@ export const ModuleImport = [
   FileModule,
   AuthModule,
   MailerModule,
+  FormSchemaModule,
 ];
