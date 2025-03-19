@@ -26,9 +26,6 @@ export class MySchemasControllerTest extends BaseTestClass {
       .body(body)
       .execute();
 
-    await this.queryRunner.commitTransaction();
-    await this.queryRunner.startTransaction();
-
     expect(response.status).toBe(201);
   }
 }
