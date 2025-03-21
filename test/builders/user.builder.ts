@@ -14,6 +14,7 @@ export class UserBuilder {
   private email = `test${new Date().getTime()}@mail.ru`;
   private status = UserStatusEnum.activated;
   private roles = [UserRoleEnum.processAdmin];
+  private allowTemplates = false;
 
   public withName(name: string): this {
     this.name = name;
@@ -45,6 +46,11 @@ export class UserBuilder {
     return this;
   }
 
+  public withAllowTemplates(allowTemplates: boolean): this {
+    this.allowTemplates = allowTemplates;
+    return this;
+  }
+
   buildEntity(): UserEntity {
     const user = new UserEntity();
     user.name = this.name;
@@ -53,7 +59,7 @@ export class UserBuilder {
     user.email = this.email;
     user.status = this.status;
     user.roles = this.roles;
-    user.allowTemplates = this.roles.includes(UserRoleEnum.processAdmin);
+    user.allowTemplates = this.allowTemplates;
     return user;
   }
 

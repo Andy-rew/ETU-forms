@@ -23,6 +23,9 @@ class ProcessAdminGetAllProcessStepItem {
   @IdProperty({ description: 'Id родительского этапа (после которого данный). Для первого = null', nullable: true })
   parentId: number | null;
 
+  @DateWithTimeProperty()
+  createdAt: Date;
+
   constructor(step: StepEntity) {
     this.id = step.id;
     this.title = step.title;
@@ -30,6 +33,7 @@ class ProcessAdminGetAllProcessStepItem {
     this.endTime = step.endTime;
     this.participantsCount = step.participantsCount;
     this.parentId = step.parent?.id || null;
+    this.createdAt = step.createdAt;
   }
 }
 

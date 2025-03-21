@@ -2,5 +2,5 @@ import { IdProperty } from '@applications/decorators/api/common/id.property.deco
 
 export class ProcessAdminMySchemasDeleteDto {
   @IdProperty()
-  id: number;
+  schemaId: number;
 }

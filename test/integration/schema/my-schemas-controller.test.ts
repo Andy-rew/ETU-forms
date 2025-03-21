@@ -4,6 +4,7 @@ import * as fs from 'node:fs/promises';
 import { ProcessAdminMySchemasCreateDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-create.dto';
 import { SchemaType } from '@domain/form-schema/enums/schema-type.enum';
 import { UserBuilder } from '../../builders/user.builder';
+import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
 
 @suite()
 export class MySchemasControllerTest extends BaseTestClass {
@@ -12,7 +13,7 @@ export class MySchemasControllerTest extends BaseTestClass {
     const file = await fs.readFile(`./test/data/survey-test-schema.json`, 'utf-8');
     const schema = JSON.parse(file);
 
-    const user = await this.getBuilder(UserBuilder).build();
+    const user = await this.getBuilder(UserBuilder).withAllowTemplates(true).build();
 
     const body: ProcessAdminMySchemasCreateDto = {
       schema: schema,
@@ -34,7 +35,7 @@ export class MySchemasControllerTest extends BaseTestClass {
     const file = await fs.readFile(`./test/data/survey-test-schema.json`, 'utf-8');
     const schema = JSON.parse(file);
 
-    const user = await this.getBuilder(UserBuilder).build();
+    const user = await this.getBuilder(UserBuilder).withRoles([UserRoleEnum.user]).withAllowTemplates(true).build();
 
     const body: ProcessAdminMySchemasCreateDto = {
       schema: schema,
@@ -57,6 +58,36 @@ export class MySchemasControllerTest extends BaseTestClass {
       .execute();
 
     expect(responseView.status).toBe(200);
+  }
+
+  @test()
+  async deleteSchema() {
+    const file = await fs.readFile(`./test/data/survey-test-schema.json`, 'utf-8');
+    const schema = JSON.parse(file);
+
+    const user = await this.getBuilder(UserBuilder).withRoles([UserRoleEnum.user]).withAllowTemplates(true).build();
+
+    const body: ProcessAdminMySchemasCreateDto = {
+      schema: schema,
+      title: 'test',
+      type: SchemaType.form,
+    };
+
+    const responseCreate = await this.httpRequest()
+      .withAuth(user)
+      .post('/process-admin/my-schemas/create')
+      .body(body)
+      .execute();
+
+    expect(responseCreate.status).toBe(201);
+
+    const responseDelete = await this.httpRequest()
+      .withAuth(user)
+      .post('/process-admin/my-schemas/delete')
+      .body({ schemaId: responseCreate['body'].id })
+      .execute();
+
+    expect(responseDelete.status).toBe(201);
   }
 }
 describe('', () => {});

@@ -36,7 +36,7 @@ export function ProcessAdminMySchemasCompile(): void {
   });
 
   processAdminMySchemasController.addApiMethod('/delete', {
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Удалить шаблон формы',

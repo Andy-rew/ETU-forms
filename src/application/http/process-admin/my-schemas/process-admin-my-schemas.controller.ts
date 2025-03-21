@@ -8,6 +8,7 @@ import { ProcessAdminMySchemasGetViewDto } from '@applications/http/process-admi
 import { FormSchemaRepository } from '@domain/form-schema/repository/form-schema.repository';
 import { ProcessAdminMySchemasGetViewResponse } from '@applications/http/process-admin/my-schemas/response/process-admin-my-schemas-get-view.response';
 import { MyApiOperation } from '@applications/decorators/my-api-operation.decorator';
+import { ProcessAdminMySchemasDeleteDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-delete.dto';
 
 @Controller('process-admin/my-schemas')
 export class ProcessAdminMySchemasController {
@@ -47,5 +48,17 @@ export class ProcessAdminMySchemasController {
     const res = await this.formSchemaRepository.findByIdOrFail(query.schemaId);
 
     return new ProcessAdminMySchemasGetViewResponse(res);
+  }
+
+  @MyApiOperation({
+    rights: {
+      schema: {
+        mySchemas: true,
+      },
+    },
+  })
+  @Post('/delete')
+  async deleteSchema(@Body() body: ProcessAdminMySchemasDeleteDto) {
+    const res = await this.commonSchemasService.deleteUserSchemaByFormSchemaId(body.schemaId);
   }
 }

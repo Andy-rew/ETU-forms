@@ -41,4 +41,15 @@ export class StepRepository {
     }
     return step;
   }
+
+  async findOneByFormSchemaId(formSchemaId: number): Promise<StepEntity | null> {
+    return this.repo
+      .createQueryBuilder('step')
+      .where('step.form_schema_id = :formSchemaId')
+      .orWhere('step.form_accept_schema_id = :formSchemaId')
+      .orWhere('step.form_decline_schema_id = :formSchemaId')
+      .setParameters({ formSchemaId: formSchemaId })
+      .withDeleted()
+      .getOne();
+  }
 }

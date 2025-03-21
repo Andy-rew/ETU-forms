@@ -41,4 +41,19 @@ export class FormSchemaRepository {
     }
     return schema;
   }
+
+  async deleteUserSchemaByFormSchemaIdTransaction(id: number) {
+    const qr = this.repo.manager.connection.createQueryRunner();
+    await qr.startTransaction();
+    try {
+      await qr.manager.delete(FormSchemaUserTemplateEntity, { schema: { id } });
+      await qr.manager.delete(FormSchemaEntity, { id });
+      await qr.commitTransaction();
+    } catch (error) {
+      await qr.rollbackTransaction();
+      throw new Error(error);
+    } finally {
+      await qr.release();
+    }
+  }
 }

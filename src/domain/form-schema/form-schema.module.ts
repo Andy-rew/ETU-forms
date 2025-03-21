@@ -10,6 +10,7 @@ import { ProcessAdminMySchemasController } from '@applications/http/process-admi
 import { AuthJwtAccessTokenModule } from '@infrastructure/module/auth-jwt-access-token.module';
 import { UserModule } from '@domain/user/user.module';
 import { FormSchemaUserTemplateRepository } from '@domain/form-schema/repository/form-schema-user-template.repository';
+import { StepModule } from '@domain/step/step.module';
 
 @Module({
   controllers: [ProcessAdminMySchemasController],
@@ -17,6 +18,7 @@ import { FormSchemaUserTemplateRepository } from '@domain/form-schema/repository
     TypeOrmModule.forFeature([FormSchemaEntity, FormSchemaFilledEntity, FormSchemaUserTemplateEntity]),
     AuthJwtAccessTokenModule,
     UserModule,
+    StepModule,
   ],
   providers: [FormSchemaRepository, CommonSchemasService, CommonSchemasManager, FormSchemaUserTemplateRepository],
   exports: [FormSchemaRepository, CommonSchemasService, FormSchemaUserTemplateRepository],

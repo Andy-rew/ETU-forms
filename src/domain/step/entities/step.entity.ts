@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
@@ -29,6 +30,9 @@ export class StepEntity {
 
   @Column({ type: 'timestamptz' })
   endTime: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @DeleteDateColumn()
   deletedAt: Date | null;
