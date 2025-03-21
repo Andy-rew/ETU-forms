@@ -9,12 +9,16 @@ import { FormSchemaRepository } from '@domain/form-schema/repository/form-schema
 import { ProcessAdminMySchemasGetViewResponse } from '@applications/http/process-admin/my-schemas/response/process-admin-my-schemas-get-view.response';
 import { MyApiOperation } from '@applications/decorators/my-api-operation.decorator';
 import { ProcessAdminMySchemasDeleteDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-delete.dto';
+import { ProcessAdminMySchemasGetAllDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-get-all.dto';
+import { FormSchemaUserTemplateRepository } from '@domain/form-schema/repository/form-schema-user-template.repository';
+import { ProcessAdminMySchemasGetAllResponse } from '@applications/http/process-admin/my-schemas/response/process-admin-my-schemas-get-all.response';
 
 @Controller('process-admin/my-schemas')
 export class ProcessAdminMySchemasController {
   constructor(
     private readonly commonSchemasService: CommonSchemasService,
     private readonly formSchemaRepository: FormSchemaRepository,
+    private readonly formSchemaUserTemplateRepository: FormSchemaUserTemplateRepository,
   ) {}
 
   @MyApiOperation({
@@ -25,7 +29,10 @@ export class ProcessAdminMySchemasController {
     },
   })
   @Post('/create')
-  async createSchema(@Body() body: ProcessAdminMySchemasCreateDto, @ReqUser() user: UserEntity) {
+  async createSchema(
+    @Body() body: ProcessAdminMySchemasCreateDto,
+    @ReqUser() user: UserEntity,
+  ): Promise<ProcessAdminMySchemasCreateResponse> {
     const res = await this.commonSchemasService.createUserSchema({
       user,
       title: body.title,
@@ -44,7 +51,7 @@ export class ProcessAdminMySchemasController {
     },
   })
   @Get('/view')
-  async getViewSchema(@Query() query: ProcessAdminMySchemasGetViewDto) {
+  async getViewSchema(@Query() query: ProcessAdminMySchemasGetViewDto): Promise<ProcessAdminMySchemasGetViewResponse> {
     const res = await this.formSchemaRepository.findByIdOrFail(query.schemaId);
 
     return new ProcessAdminMySchemasGetViewResponse(res);
@@ -58,7 +65,32 @@ export class ProcessAdminMySchemasController {
     },
   })
   @Post('/delete')
-  async deleteSchema(@Body() body: ProcessAdminMySchemasDeleteDto) {
-    const res = await this.commonSchemasService.deleteUserSchemaByFormSchemaId(body.schemaId);
+  async deleteSchema(@Body() body: ProcessAdminMySchemasDeleteDto): Promise<void> {
+    await this.commonSchemasService.deleteUserSchemaByFormSchemaId(body.schemaId);
+  }
+
+  @MyApiOperation({
+    rights: {
+      schema: {
+        allowTemplates: true,
+      },
+    },
+  })
+  @Get('/all')
+  async getAll(
+    @Query() query: ProcessAdminMySchemasGetAllDto,
+    @ReqUser() user: UserEntity,
+  ): Promise<ProcessAdminMySchemasGetAllResponse> {
+    const [res, count] = await this.formSchemaUserTemplateRepository.getAllForUser({
+      user,
+      type: query.type,
+      limit: query.limit,
+      offset: query.offset,
+      title: query.title,
+      createdAt: query.createdAt,
+      updatedAt: query.updatedAt,
+    });
+
+    return new ProcessAdminMySchemasGetAllResponse(count, res);
   }
 }

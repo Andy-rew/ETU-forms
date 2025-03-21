@@ -14,7 +14,7 @@ export function ProcessAdminMySchemasCompile(): void {
   ]);
 
   processAdminMySchemasController.addApiMethod('/all', {
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить все мои шаблоны форм',
