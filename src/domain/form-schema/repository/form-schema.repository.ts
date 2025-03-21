@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FormSchemaEntity } from '@domain/form-schema/entities/form-schema.entity';
 import { Repository } from 'typeorm';
@@ -28,5 +28,17 @@ export class FormSchemaRepository {
     } finally {
       await qr.release();
     }
+  }
+
+  async findById(id: number): Promise<FormSchemaEntity | null> {
+    return this.repo.findOne({ where: { id }, relations: { userTemplate: true } });
+  }
+
+  async findByIdOrFail(id: number) {
+    const schema = await this.findById(id);
+    if (!schema) {
+      throw new NotFoundException('Schema not found');
+    }
+    return schema;
   }
 }

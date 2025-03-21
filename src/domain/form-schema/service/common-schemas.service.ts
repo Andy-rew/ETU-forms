@@ -4,6 +4,7 @@ import { SchemaType } from '@domain/form-schema/enums/schema-type.enum';
 import { CommonSchemasManager } from '@domain/form-schema/managers/common-schemas.manager';
 import { FormSchemaRepository } from '@domain/form-schema/repository/form-schema.repository';
 import { FormSchemaUserTemplateEntity } from '@domain/form-schema/entities/form-schema-user-template.entity';
+import { SurveySchemaType } from '@domain/form-schema/type/survey-schema.type';
 
 @Injectable()
 export class CommonSchemasService {
@@ -16,7 +17,7 @@ export class CommonSchemasService {
     user: UserEntity;
     title: string;
     type: SchemaType;
-    schema: any;
+    schema: SurveySchemaType;
   }): Promise<FormSchemaUserTemplateEntity> {
     const schema = this.commonSchemasManager.create(dto);
 

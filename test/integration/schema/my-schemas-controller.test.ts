@@ -28,5 +28,35 @@ export class MySchemasControllerTest extends BaseTestClass {
 
     expect(response.status).toBe(201);
   }
+
+  @test()
+  async viewSchema() {
+    const file = await fs.readFile(`./test/data/survey-test-schema.json`, 'utf-8');
+    const schema = JSON.parse(file);
+
+    const user = await this.getBuilder(UserBuilder).build();
+
+    const body: ProcessAdminMySchemasCreateDto = {
+      schema: schema,
+      title: 'test',
+      type: SchemaType.form,
+    };
+
+    const responseCreate = await this.httpRequest()
+      .withAuth(user)
+      .post('/process-admin/my-schemas/create')
+      .body(body)
+      .execute();
+
+    expect(responseCreate.status).toBe(201);
+
+    const responseView = await this.httpRequest()
+      .withAuth(user)
+      .get('/process-admin/my-schemas/view')
+      .query({ schemaId: responseCreate['body'].id })
+      .execute();
+
+    expect(responseView.status).toBe(200);
+  }
 }
 describe('', () => {});

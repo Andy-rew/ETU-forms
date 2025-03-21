@@ -1,7 +1,8 @@
 import { SchemaType } from '@domain/form-schema/enums/schema-type.enum';
 import { EnumProperty, StringProperty } from '@ivankrtv/openapidoc/dist';
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
-import { SurveySchemaProperty } from '@applications/decorators/api/common/survey-schema.property.decorator';
+import { ValidateSurveySchema } from '@applications/decorators/api/common/validate-survey-schema.property.decorator';
+import { SurveySchemaType } from '@domain/form-schema/type/survey-schema.type';
 
 export class ProcessAdminMySchemasCreateDto {
   @EnumProperty({ enum: SchemaType })
@@ -10,8 +11,7 @@ export class ProcessAdminMySchemasCreateDto {
   @TextProperty({ description: 'Название шаблона' })
   title: string;
 
-  // TODO: add validation
   @StringProperty({ description: 'JSON-схема шаблона для вставки в SurveyJS-компонент', example: '' })
-  @SurveySchemaProperty()
-  schema: any;
+  @ValidateSurveySchema()
+  schema: SurveySchemaType;
 }

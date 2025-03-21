@@ -1,6 +1,7 @@
 import { IdProperty } from '@applications/decorators/api/common/id.property.decorator';
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
 import { FormSchemaEntity } from '@domain/form-schema/entities/form-schema.entity';
+import { SurveySchemaType } from '@domain/form-schema/type/survey-schema.type';
 
 export class ExpertProcessStepsSchemaResponse {
   @IdProperty()
@@ -9,7 +10,7 @@ export class ExpertProcessStepsSchemaResponse {
   @TextProperty({
     description: 'JSON-схема шаблона для вставки в SurveyJS-компонент',
   })
-  schema: JSON;
+  schema: SurveySchemaType;
 
   constructor(formSchema: FormSchemaEntity) {
     this.id = formSchema.id;

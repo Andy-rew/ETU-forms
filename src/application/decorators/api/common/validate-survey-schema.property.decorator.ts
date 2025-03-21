@@ -2,7 +2,7 @@ import { registerDecorator, ValidationOptions } from 'class-validator';
 import { JsonError, Model } from 'survey-core';
 import { SurveySchemaValidationException } from '@applications/exceptions/survey-schema-validation.exception';
 
-export function SurveySchemaProperty(validationOptions?: ValidationOptions) {
+export function ValidateSurveySchema(validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {
     registerDecorator({
       target: object.constructor,
@@ -12,7 +12,7 @@ export function SurveySchemaProperty(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any) {
           const errors: JsonError[] = new Model(value).jsonErrors;
-          if (errors.length > 0) {
+          if (errors && errors.length > 0) {
             throw new SurveySchemaValidationException(errors);
           }
           return true;

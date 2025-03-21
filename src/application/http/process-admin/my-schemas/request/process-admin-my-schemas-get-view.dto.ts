@@ -2,5 +2,5 @@ import { IdProperty } from '@applications/decorators/api/common/id.property.deco
 
 export class ProcessAdminMySchemasGetViewDto {
   @IdProperty({ description: 'Id шаблона' })
-  id: number;
+  schemaId: number;
 }

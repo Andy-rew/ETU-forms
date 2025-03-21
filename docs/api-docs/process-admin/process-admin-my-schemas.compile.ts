@@ -25,7 +25,7 @@ export function ProcessAdminMySchemasCompile(): void {
   });
 
   processAdminMySchemasController.addApiMethod('/view', {
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить шаблон формы',

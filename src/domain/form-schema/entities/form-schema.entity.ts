@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { FormSchemaFilledEntity } from '@domain/form-schema/entities/form-schema-filled.entity';
 import { FormSchemaUserTemplateEntity } from '@domain/form-schema/entities/form-schema-user-template.entity';
+import { SurveySchemaType } from '@domain/form-schema/type/survey-schema.type';
 
 @Entity('form_schemas')
 export class FormSchemaEntity {
@@ -19,7 +20,7 @@ export class FormSchemaEntity {
   title: string;
 
   @Column({ type: 'jsonb' })
-  schema: any; // todo типизировать
+  schema: SurveySchemaType;
 
   @CreateDateColumn()
   createdAt: Date;
