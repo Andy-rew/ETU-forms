@@ -5,10 +5,10 @@ import { ProcessRepository } from '@domain/process/repository/process.repository
 import { ProcessEntity } from '@domain/process/entities/process.entity';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { StepEntity } from '@domain/step/entities/step.entity';
-import { StepRepository } from '@domain/step/repositories/step.repository';
 import { UserProcessManager } from '@domain/process/managers/user-process.manager';
 import { CommonUserService } from '@domain/user/services/common-user.service';
 import * as dayjs from 'dayjs';
+import { StepRepository } from '@domain/step/repository/step.repository';
 
 @Injectable()
 export class ProcessUsersService {

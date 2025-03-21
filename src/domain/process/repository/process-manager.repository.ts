@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { ProcessManagersEntity } from '@domain/process/entities/process-managers.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,5 +18,13 @@ export class ProcessManagerRepository {
         user: true,
       },
     });
+  }
+
+  async findByProcessIdAndUserIdOrFail(dto: { processId: string; userId: number }): Promise<ProcessManagersEntity> {
+    const processManager = await this.findByProcessIdAndUserId(dto);
+    if (!processManager) {
+      throw new NotFoundException('ProcessManager not found');
+    }
+    return processManager;
   }
 }

@@ -16,6 +16,7 @@ import { UserProcessManager } from '@domain/process/managers/user-process.manage
 import { ProcessParticipantEntity } from '@domain/process/entities/process-participant.entity';
 import { ProcessController } from '@applications/http/common/process/process.controller';
 import { ProcessStatusService } from '@domain/process/services/process-status.service';
+import { ProcessParticipantRepository } from '@domain/process/repository/process-participant.repository';
 
 @Module({
   controllers: [ProcessAdminProcessController, ProcessController],
@@ -29,6 +30,7 @@ import { ProcessStatusService } from '@domain/process/services/process-status.se
   providers: [
     ProcessRepository,
     ProcessManagerRepository,
+    ProcessParticipantRepository,
     CommonProcessManager,
     CommonProcessService,
     ProcessUsersService,
@@ -39,6 +41,7 @@ import { ProcessStatusService } from '@domain/process/services/process-status.se
     CommonProcessService,
     ProcessRepository,
     ProcessManagerRepository,
+    ProcessParticipantRepository,
     ProcessUsersService,
     ProcessStatusService,
   ],

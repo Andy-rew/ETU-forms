@@ -1,5 +1,4 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { StepRepository } from '@domain/step/repositories/step.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { StepEntity } from '@domain/step/entities/step.entity';
 import { ProcessAdminProcessStepController } from '@applications/http/process-admin/step/process-admin-process-step.controller';
@@ -11,16 +10,24 @@ import { UserModule } from '@domain/user/user.module';
 import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
 import { StepExpertsParticipantsEntity } from '@domain/step/entities/step-experts-participants.entity';
 import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
+import { StepExpertsRepository } from '@domain/step/repository/step-experts.repository';
+import { StepRepository } from '@domain/step/repository/step.repository';
 
 @Module({
   controllers: [ProcessAdminProcessStepController],
   imports: [
-    TypeOrmModule.forFeature([StepEntity, StepExpertsEntity, StepExpertsParticipantsEntity, StepParticipantsEntity]),
+    TypeOrmModule.forFeature([
+      StepEntity,
+      StepExpertsEntity,
+      StepExpertsParticipantsEntity,
+      StepParticipantsEntity,
+      StepExpertsEntity,
+    ]),
     forwardRef(() => ProcessModule),
     AuthJwtAccessTokenModule,
     UserModule,
   ],
-  providers: [StepRepository, CommonStepService, StepManager],
-  exports: [StepRepository, CommonStepService],
+  providers: [StepRepository, StepExpertsRepository, CommonStepService, StepManager],
+  exports: [StepRepository, CommonStepService, StepExpertsRepository],
 })
 export class StepModule {}

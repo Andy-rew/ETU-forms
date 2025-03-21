@@ -1,5 +1,4 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { AuthRoles } from '@applications/decorators/auth-roles.decorator';
 import { AuthService } from '@domain/auth/services/auth.service';
 import { AuthSignUpDto } from '@applications/http/common/auth/request/auth-sign-up.dto';
 import { AuthSignInDto } from '@applications/http/common/auth/request/auth-sign-in.dto';
@@ -11,6 +10,7 @@ import { UserAuthTokensEntity } from '@domain/user/entities/user-auth-tokens.ent
 import { AuthRefreshResponse } from '@applications/http/common/auth/response/auth-refresh.response';
 import { ReqUser } from '@applications/decorators/req-user.decorator';
 import { UserEntity } from '@domain/user/entities/user.entity';
+import { MyApiOperation } from '@applications/decorators/my-api-operation.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -32,13 +32,17 @@ export class AuthController {
     return new AuthSignUpResponse(res.user);
   }
 
-  @AuthRoles()
+  @MyApiOperation({
+    anyRole: true,
+  })
   @Post('/sign-out')
   async signOut(@ReqToken() token: UserAuthTokensEntity) {
     await this.authService.signOut({ accessToken: token.accessToken, userId: token.user.id });
   }
 
-  @AuthRoles()
+  @MyApiOperation({
+    anyRole: true,
+  })
   @Post('/refresh')
   async refresh(@Body() body: AuthRefreshDto, @ReqUser() user: UserEntity) {
     const res = await this.authService.refreshTokens({ refreshToken: body.refreshToken, currentUser: user });

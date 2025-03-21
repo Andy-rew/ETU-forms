@@ -9,6 +9,7 @@ import { CommonSchemasManager } from '@domain/form-schema/managers/common-schema
 import { ProcessAdminMySchemasController } from '@applications/http/process-admin/my-schemas/process-admin-my-schemas.controller';
 import { AuthJwtAccessTokenModule } from '@infrastructure/module/auth-jwt-access-token.module';
 import { UserModule } from '@domain/user/user.module';
+import { FormSchemaUserTemplateRepository } from '@domain/form-schema/repository/form-schema-user-template.repository';
 
 @Module({
   controllers: [ProcessAdminMySchemasController],
@@ -17,7 +18,7 @@ import { UserModule } from '@domain/user/user.module';
     AuthJwtAccessTokenModule,
     UserModule,
   ],
-  providers: [FormSchemaRepository, CommonSchemasService, CommonSchemasManager],
-  exports: [FormSchemaRepository, CommonSchemasService],
+  providers: [FormSchemaRepository, CommonSchemasService, CommonSchemasManager, FormSchemaUserTemplateRepository],
+  exports: [FormSchemaRepository, CommonSchemasService, FormSchemaUserTemplateRepository],
 })
 export class FormSchemaModule {}

@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { StepRepository } from '@domain/step/repositories/step.repository';
 import { ProcessRepository } from '@domain/process/repository/process.repository';
 import { StepManager } from '@domain/step/managers/step.manager';
 import { StepEntity } from '@domain/step/entities/step.entity';
+import { StepRepository } from '@domain/step/repository/step.repository';
 
 @Injectable()
 export class CommonStepService {

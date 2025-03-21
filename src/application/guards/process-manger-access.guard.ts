@@ -28,16 +28,12 @@ export class ProcessMangerAccessGuard implements CanActivate {
       return true;
     }
 
-    const processManagerWithProcess = await this.processManagerRepository.findByProcessIdAndUserId({
-      processId: String(processId),
-      userId: user.id,
-    });
-
-    if (!processManagerWithProcess) {
-      throw new ForbiddenException();
-    }
-
-    if (processManagerWithProcess.process.deletedAt !== null) {
+    try {
+      await this.processManagerRepository.findByProcessIdAndUserIdOrFail({
+        processId: String(processId),
+        userId: user.id,
+      });
+    } catch (err) {
       throw new ForbiddenException();
     }
 

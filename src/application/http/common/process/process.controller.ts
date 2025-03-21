@@ -1,12 +1,14 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { AuthRoles } from '@applications/decorators/auth-roles.decorator';
 import { ProcessGetAllDto } from '@applications/http/common/process/request/process-get-all.dto';
 import { ProcessGetAllResponse } from '@applications/http/common/process/response/process-get-all.response';
 import { CommonProcessService } from '@domain/process/services/common-process.service';
 import { ReqUser } from '@applications/decorators/req-user.decorator';
 import { UserEntity } from '@domain/user/entities/user.entity';
+import { MyApiOperation } from '@applications/decorators/my-api-operation.decorator';
 
-@AuthRoles()
+@MyApiOperation({
+  anyRole: true,
+})
 @Controller('process')
 export class ProcessController {
   constructor(private readonly commonProcessService: CommonProcessService) {}
