@@ -34,4 +34,13 @@ export class CommonSchemasService {
 
     return this.formSchemaRepository.deleteUserSchemaByFormSchemaIdTransaction(formSchemaId);
   }
+
+  async editUserSchema(dto: { schemaId: number; title: string; schema: SurveySchemaType }) {
+    const schemaForUpdate = await this.formSchemaRepository.findByIdOrFail(dto.schemaId);
+
+    schemaForUpdate.schema = dto.schema;
+    schemaForUpdate.title = dto.title;
+
+    return this.formSchemaRepository.save(schemaForUpdate);
+  }
 }

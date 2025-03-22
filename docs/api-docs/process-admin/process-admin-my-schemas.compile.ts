@@ -58,7 +58,7 @@ export function ProcessAdminMySchemasCompile(): void {
   });
 
   processAdminMySchemasController.addApiMethod('/edit', {
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Редактировать шаблон формы',

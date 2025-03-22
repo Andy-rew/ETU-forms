@@ -12,6 +12,7 @@ import { ProcessAdminMySchemasDeleteDto } from '@applications/http/process-admin
 import { ProcessAdminMySchemasGetAllDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-get-all.dto';
 import { FormSchemaUserTemplateRepository } from '@domain/form-schema/repository/form-schema-user-template.repository';
 import { ProcessAdminMySchemasGetAllResponse } from '@applications/http/process-admin/my-schemas/response/process-admin-my-schemas-get-all.response';
+import { ProcessAdminMySchemasEditDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-edit.dto';
 
 @Controller('process-admin/my-schemas')
 export class ProcessAdminMySchemasController {
@@ -67,6 +68,22 @@ export class ProcessAdminMySchemasController {
   @Post('/delete')
   async deleteSchema(@Body() body: ProcessAdminMySchemasDeleteDto): Promise<void> {
     await this.commonSchemasService.deleteUserSchemaByFormSchemaId(body.schemaId);
+  }
+
+  @MyApiOperation({
+    rights: {
+      schema: {
+        mySchemas: true,
+      },
+    },
+  })
+  @Post('/edit')
+  async editSchema(@Body() body: ProcessAdminMySchemasEditDto): Promise<void> {
+    await this.commonSchemasService.editUserSchema({
+      schemaId: body.schemaId,
+      title: body.title,
+      schema: body.schema,
+    });
   }
 
   @MyApiOperation({

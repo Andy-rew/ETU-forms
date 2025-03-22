@@ -54,11 +54,11 @@ export class FormSchemaUserTemplateRepository {
     }
 
     if (dto.createdAt) {
-      query.andWhere('form_schema_user_template.created_at::date = :createdAt', { createdAt: dto.createdAt });
+      query.andWhere('schema.created_at::date = :createdAt', { createdAt: dto.createdAt });
     }
 
     if (dto.updatedAt) {
-      query.andWhere('form_schema_user_template.updated_at::date = :updatedAt', { updatedAt: dto.updatedAt });
+      query.andWhere('schema.updated_at::date = :updatedAt', { updatedAt: dto.updatedAt });
     }
 
     return query.getManyAndCount();

@@ -4,6 +4,7 @@ import { TextProperty } from '@applications/decorators/api/common/text-property.
 import { FormSchemaUserTemplateEntity } from '@domain/form-schema/entities/form-schema-user-template.entity';
 import { CountProperty } from '@applications/decorators/api/common/count.property.decorator';
 import { ArraySchemasProperty } from '@applications/decorators/api/helpers/array-schemas.property.decorator';
+import { FormSchemaEntity } from '@domain/form-schema/entities/form-schema.entity';
 
 class ProcessAdminGetAllMySchemasSchemaItem {
   @IdProperty({ description: 'Id шаблона для просмотра формы и прикрепления к этапу' })
@@ -18,9 +19,9 @@ class ProcessAdminGetAllMySchemasSchemaItem {
   @DateProperty()
   updatedAt: Date;
 
-  constructor(schema: FormSchemaUserTemplateEntity) {
-    this.formSchemaId = schema.schema.id;
-    this.title = schema.schema.title;
+  constructor(schema: FormSchemaEntity) {
+    this.formSchemaId = schema.id;
+    this.title = schema.title;
     this.createdAt = schema.createdAt;
     this.updatedAt = schema.updatedAt;
   }
@@ -38,6 +39,6 @@ export class ProcessAdminMySchemasGetAllResponse {
 
   constructor(count: number, schemas: FormSchemaUserTemplateEntity[]) {
     this.count = count;
-    this.items = schemas.map((schema) => new ProcessAdminGetAllMySchemasSchemaItem(schema));
+    this.items = schemas.map((schema) => new ProcessAdminGetAllMySchemasSchemaItem(schema.schema));
   }
 }

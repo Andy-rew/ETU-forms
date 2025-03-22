@@ -11,6 +11,10 @@ export class FormSchemaRepository {
     private readonly repo: Repository<FormSchemaEntity>,
   ) {}
 
+  async save(schema: FormSchemaEntity): Promise<FormSchemaEntity> {
+    return this.repo.save(schema);
+  }
+
   async createUserFormSchemaTransaction(
     userFormSchema: FormSchemaUserTemplateEntity,
   ): Promise<FormSchemaUserTemplateEntity> {

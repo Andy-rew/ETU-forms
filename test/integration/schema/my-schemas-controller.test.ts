@@ -12,6 +12,8 @@ import { Repository } from 'typeorm';
 import { FormSchemaEntity } from '@domain/form-schema/entities/form-schema.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ProcessAdminMySchemasGetAllDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-get-all.dto';
+import { ProcessAdminMySchemasEditDto } from '@applications/http/process-admin/my-schemas/request/process-admin-my-schemas-edit.dto';
+import { FormSchemaRepository } from '@domain/form-schema/repository/form-schema.repository';
 
 @suite()
 export class MySchemasControllerTest extends BaseTestClass {
@@ -225,5 +227,34 @@ export class MySchemasControllerTest extends BaseTestClass {
     expect(responseGetAll.status).toBe(200);
     expect(responseGetAll.body.count).toBe(schemaCount);
   }
+
+  @test()
+  async editSchema() {
+    const user = await this.getBuilder(UserBuilder).withRoles([UserRoleEnum.user]).withAllowTemplates(true).build();
+
+    const schemas = await this.generateSchemasForUser({ user, count: 1 });
+
+    const createdSchema = schemas[0];
+
+    const body: ProcessAdminMySchemasEditDto = {
+      schemaId: createdSchema.schema.id,
+      title: 'test',
+      schema: createdSchema.schema.schema,
+    };
+
+    const responseEdit = await this.httpRequest()
+      .withAuth(user)
+      .post('/process-admin/my-schemas/edit')
+      .body(body)
+      .execute();
+
+    expect(responseEdit.status).toBe(201);
+
+    const editedSchema = await this.getService(FormSchemaRepository).findByIdOrFail(body.schemaId);
+
+    expect(editedSchema.title).toBe(body.title);
+    expect(editedSchema.schema).toStrictEqual(body.schema);
+  }
 }
+
 describe('', () => {});
