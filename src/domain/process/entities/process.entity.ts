@@ -28,10 +28,10 @@ export class ProcessEntity {
   @Column()
   title: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamptz' })
   startDate: Date;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamptz' })
   endDate: Date;
 
   @Column({ type: 'text', nullable: true })

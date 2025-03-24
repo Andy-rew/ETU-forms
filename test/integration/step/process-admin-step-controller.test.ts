@@ -14,6 +14,9 @@ import { ProcessUserRoleEnum } from '@domain/process/enums/process-user-role.enu
 import { ProcessAdminGetAllProcessStepsDto } from '@applications/http/process-admin/step/request/process-admin-get-all-process-steps.dto';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { ProcessAdminViewProcessStepDto } from '@applications/http/process-admin/step/request/process-admin-view-process-step.dto';
+import { StepBuilder } from '../../builders/step.builder';
+import { ProcessAdminUpdateProcessStepDto } from '@applications/http/process-admin/step/request/process-admin-update-process-step.dto';
+import { StepRepository } from '@domain/step/repository/step.repository';
 
 @suite()
 export class ProcessAdminStepControllerTest extends BaseTestClass {
@@ -37,11 +40,14 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
 
     const { process } = await this.prepareProcessParticipants({ count: processParticipantsCount, admin });
 
+    const start = dayjs().add(1, 'day');
+    const end = dayjs().add(1, 'day').add(2, 'hours');
+
     const defaultStepData = {
       processId: process.id,
       title: 'Тестовый этап',
-      startTime: dayjs().add(1, 'day').toDate(),
-      endTime: dayjs().add(2, 'day').toDate(),
+      startTime: start.toDate(),
+      endTime: end.toDate(),
       participantsCount: null,
       parentId: null,
     };
@@ -53,6 +59,8 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
 
     const step2 = await this.getService(CommonStepService).create({
       ...defaultStepData,
+      startTime: defaultStepData.endTime,
+      endTime: dayjs(defaultStepData.endTime).add(2, 'hour').toDate(),
       title: 'Тестовый этап 2',
       parentId: step1.id,
       participantsCount: processParticipantsCount,
@@ -60,6 +68,8 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
 
     const step3 = await this.getService(CommonStepService).create({
       ...defaultStepData,
+      startTime: step2.endTime,
+      endTime: dayjs(step2.endTime).add(2, 'hour').toDate(),
       title: 'Тестовый этап 3',
       parentId: step2.id,
       participantsCount: processParticipantsCount - 5,
@@ -150,6 +160,40 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
       .execute();
 
     expect(resGetAll.status).toBe(200);
+  }
+
+  @test()
+  async editStepSuccess() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .build();
+
+    const step = await this.getBuilder(StepBuilder).build();
+
+    const body: ProcessAdminUpdateProcessStepDto = {
+      processId: step.process.id,
+      stepId: step.id,
+      title: 'Тестовый этап измененный',
+      startTime: dayjs().add(1, 'day').toDate(),
+      endTime: dayjs().add(2, 'day').toDate(),
+      participantsCount: null,
+    };
+
+    const resEdit = await this.httpRequest()
+      .withAuth(processAdmin)
+      .post('/process-admin/process/steps/edit')
+      .body(body)
+      .execute();
+
+    expect(resEdit.status).toBe(201);
+
+    const editedStep = await this.getService(StepRepository).findViewById(step.id);
+
+    expect(editedStep.title).toBe(body.title);
+    expect(editedStep.startTime).toEqual(body.startTime);
+    expect(editedStep.endTime).toEqual(body.endTime);
+    expect(editedStep.participantsCount).toBe(body.participantsCount);
   }
 }
 describe('', () => {});

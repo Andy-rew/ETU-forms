@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FormSchemaEntity } from '@domain/form-schema/entities/form-schema.entity';
 import { FormSchemaFilledEntity } from '@domain/form-schema/entities/form-schema-filled.entity';
@@ -18,7 +18,7 @@ import { StepModule } from '@domain/step/step.module';
     TypeOrmModule.forFeature([FormSchemaEntity, FormSchemaFilledEntity, FormSchemaUserTemplateEntity]),
     AuthJwtAccessTokenModule,
     UserModule,
-    StepModule,
+    forwardRef(() => StepModule),
   ],
   providers: [FormSchemaRepository, CommonSchemasService, CommonSchemasManager, FormSchemaUserTemplateRepository],
   exports: [FormSchemaRepository, CommonSchemasService, FormSchemaUserTemplateRepository],

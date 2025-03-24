@@ -52,4 +52,38 @@ export class StepRepository {
       .withDeleted()
       .getOne();
   }
+
+  async findOneByIdAndProcessId(dto: { stepId: number; processId: string }): Promise<StepEntity | null> {
+    return this.repo
+      .createQueryBuilder('step')
+      .innerJoinAndSelect('step.process', 'process')
+      .leftJoinAndSelect('step.parent', 'parent')
+      .where('step.id = :stepId', { stepId: dto.stepId })
+      .andWhere('process.id = :processId', { processId: dto.processId })
+      .getOne();
+  }
+
+  async findOneByIdAndProcessIdOrFail(dto: { stepId: number; processId: string }): Promise<StepEntity> {
+    const step = await this.findOneByIdAndProcessId(dto);
+    if (!step) {
+      throw new NotFoundException('Step not found');
+    }
+    return step;
+  }
+
+  async commonUpdate(step: StepEntity): Promise<StepEntity> {
+    await this.repo.update(
+      { id: step.id },
+      {
+        title: step.title,
+        startTime: step.startTime,
+        endTime: step.endTime,
+        participantsCount: step.participantsCount,
+        formSchema: step.formSchema ?? null,
+        formAcceptSchema: step.formAcceptSchema ?? null,
+        formDeclineSchema: step.formDeclineSchema ?? null,
+      },
+    );
+    return this.findOneWithProcessById(step.id);
+  }
 }

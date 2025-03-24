@@ -8,7 +8,7 @@ export class ProcessAdminUpdateProcessStepDto {
   processId: string;
 
   @IdProperty({ description: 'Id этапа' })
-  id: number;
+  stepId: number;
 
   @TextProperty({ description: 'Название этапа' })
   title: string;
@@ -24,13 +24,4 @@ export class ProcessAdminUpdateProcessStepDto {
     nullable: true,
   })
   participantsCount: number | null;
-
-  @IdProperty({ description: 'Id шаблона подтверждения', nullable: true })
-  acceptFormId: number | null;
-
-  @IdProperty({ description: 'Id шаблона отклонения', nullable: true })
-  declineFormId: number | null;
-
-  @IdProperty({ description: 'Id шаблона этапа', nullable: true })
-  formId: number | null;
 }

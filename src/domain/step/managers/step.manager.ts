@@ -21,4 +21,19 @@ export class StepManager {
     step.parent = dto.parent;
     return step;
   }
+
+  updateEntity(dto: {
+    step: StepEntity;
+    title: string;
+    startTime: Date;
+    endTime: Date;
+    participantsCount: number | null;
+  }) {
+    const step = dto.step;
+    step.title = dto.title;
+    step.startTime = dto.startTime;
+    step.endTime = dto.endTime;
+    step.participantsCount = dto.participantsCount;
+    return step;
+  }
 }

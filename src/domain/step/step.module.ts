@@ -12,6 +12,7 @@ import { StepExpertsParticipantsEntity } from '@domain/step/entities/step-expert
 import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
 import { StepExpertsRepository } from '@domain/step/repository/step-experts.repository';
 import { StepRepository } from '@domain/step/repository/step.repository';
+import { FormSchemaModule } from '@domain/form-schema/form-schema.module';
 
 @Module({
   controllers: [ProcessAdminProcessStepController],
@@ -26,6 +27,7 @@ import { StepRepository } from '@domain/step/repository/step.repository';
     forwardRef(() => ProcessModule),
     AuthJwtAccessTokenModule,
     UserModule,
+    FormSchemaModule,
   ],
   providers: [StepRepository, StepExpertsRepository, CommonStepService, StepManager],
   exports: [StepRepository, CommonStepService, StepExpertsRepository],

@@ -22,6 +22,10 @@ export class MySchemaManageGuard implements CanActivate {
 
     const schemaId = request.query['schemaId'] || request.body['schemaId'];
 
+    if (schemaId === null) {
+      return true;
+    }
+
     if (!schemaId) {
       throw new ValidationException('Parameter "schemaId" is required in query or body');
     }

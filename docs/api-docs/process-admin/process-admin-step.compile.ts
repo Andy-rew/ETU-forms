@@ -12,6 +12,7 @@ import { ProcessAdminProcessStepParticipantsDto } from '@applications/http/proce
 import { ProcessAdminProcessStepParticipantsResponse } from '@applications/http/process-admin/step/response/process-admin-process-step-participants.response';
 import { ProcessAdminProcessStepParticipantFormDto } from '@applications/http/process-admin/step/request/process-admin-process-step-participant-form.dto';
 import { ProcessAdminProcessStepParticipantFormResponse } from '@applications/http/process-admin/step/response/process-admin-process-step-participant-form.response';
+import { ProcessAdminUpdateProcessStepSchemaDto } from '@applications/http/process-admin/step/request/process-admin-update-process-step-schema.dto';
 
 export function ProcessAdminStepCompile(): void {
   const processAdminStepController = processAdminBaseController.createController('/process/steps', []);
@@ -65,7 +66,7 @@ export function ProcessAdminStepCompile(): void {
     },
   });
 
-  processAdminStepController.addApiMethod('/update', {
+  processAdminStepController.addApiMethod('/edit', {
     tags: [appProcessAdminStepsTag],
     isImplemented: false,
     method: 'POST',
@@ -73,6 +74,18 @@ export function ProcessAdminStepCompile(): void {
     title: 'Обновить этап процесса',
     description: 'Отправлять старое значение, если оно не изменилось',
     requestBody: ProcessAdminUpdateProcessStepDto,
+    responses: {
+      '201': [],
+    },
+  });
+
+  processAdminStepController.addApiMethod('/edit/schema', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Обновить шаблон формы этапа процесса',
+    requestBody: ProcessAdminUpdateProcessStepSchemaDto,
     responses: {
       '201': [],
     },
