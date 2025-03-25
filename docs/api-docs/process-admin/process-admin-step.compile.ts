@@ -93,10 +93,10 @@ export function ProcessAdminStepCompile(): void {
 
   processAdminStepController.addApiMethod('/expert/main', {
     tags: [appProcessAdminStepsTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
-    title: 'Сделать эксперта ответственным за этап процесса',
+    title: 'Назначить/убрать главного эксперта этапа процесса',
     requestBody: ProcessAdminProcessStepExpertMainDto,
     responses: {
       '201': [],
@@ -105,7 +105,7 @@ export function ProcessAdminStepCompile(): void {
 
   processAdminStepController.addApiMethod('/participants', {
     tags: [appProcessAdminStepsTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить участников этапа',

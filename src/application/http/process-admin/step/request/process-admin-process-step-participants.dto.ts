@@ -1,6 +1,8 @@
 import { IdProperty } from '@applications/decorators/api/common/id.property.decorator';
 import { UuidProperty } from '@applications/decorators/api/common/uuid.property.decorator';
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
+import { LimitProperty } from '@applications/decorators/api/common/limit.property.decorator';
+import { OffsetProperty } from '@applications/decorators/api/common/offset.property.decorator';
 
 export class ProcessAdminProcessStepParticipantsDto {
   @IdProperty({ description: 'Id этапа' })
@@ -8,6 +10,12 @@ export class ProcessAdminProcessStepParticipantsDto {
 
   @UuidProperty()
   processId: string;
+
+  @LimitProperty()
+  limit: number;
+
+  @OffsetProperty()
+  offset: number;
 
   @TextProperty({ description: 'Фильтр по имени', example: 'Иван', isOptional: true })
   nameFilter?: string;

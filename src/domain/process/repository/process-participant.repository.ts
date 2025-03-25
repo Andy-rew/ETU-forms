@@ -9,6 +9,10 @@ export class ProcessParticipantRepository {
     @InjectRepository(ProcessParticipantEntity) private readonly repo: Repository<ProcessParticipantEntity>,
   ) {}
 
+  async saveMany(processParticipants: ProcessParticipantEntity[]): Promise<ProcessParticipantEntity[]> {
+    return this.repo.save(processParticipants);
+  }
+
   async findByProcessIdAndUserId(dto: { processId: string; userId: number }): Promise<ProcessParticipantEntity | null> {
     return this.repo.findOne({
       where: { process: { id: dto.processId }, user: { id: dto.userId } },

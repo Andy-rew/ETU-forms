@@ -28,4 +28,8 @@ export class StepExpertsRepository {
     }
     return stepExpert;
   }
+
+  public async save(stepExpert: StepExpertsEntity): Promise<StepExpertsEntity> {
+    return this.repo.save(stepExpert);
+  }
 }

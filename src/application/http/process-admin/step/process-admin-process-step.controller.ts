@@ -10,6 +10,11 @@ import { StepRepository } from '@domain/step/repository/step.repository';
 import { MyApiOperation } from '@applications/decorators/my-api-operation.decorator';
 import { ProcessAdminUpdateProcessStepDto } from '@applications/http/process-admin/step/request/process-admin-update-process-step.dto';
 import { ProcessAdminUpdateProcessStepSchemaDto } from '@applications/http/process-admin/step/request/process-admin-update-process-step-schema.dto';
+import { ProcessAdminProcessStepExpertMainDto } from '@applications/http/process-admin/step/request/process-admin-process-step-expert-main.dto';
+import { StepExpertsService } from '@domain/step/services/step-experts.service';
+import { ProcessAdminProcessStepParticipantsDto } from '@applications/http/process-admin/step/request/process-admin-process-step-participants.dto';
+import { StepParticipantsRepository } from '@domain/step/repository/step-participants.repository';
+import { ProcessAdminProcessStepParticipantsResponse } from '@applications/http/process-admin/step/response/process-admin-process-step-participants.response';
 
 @MyApiOperation({
   rights: {
@@ -20,7 +25,12 @@ import { ProcessAdminUpdateProcessStepSchemaDto } from '@applications/http/proce
 })
 @Controller('process-admin/process/steps')
 export class ProcessAdminProcessStepController {
-  constructor(private readonly commonStepService: CommonStepService, private readonly stepRepository: StepRepository) {}
+  constructor(
+    private readonly commonStepService: CommonStepService,
+    private readonly stepRepository: StepRepository,
+    private readonly stepExpertsService: StepExpertsService,
+    private readonly stepParticipantsRepository: StepParticipantsRepository,
+  ) {}
 
   @Post('/create')
   async create(@Body() body: ProcessAdminCreateProcessStepDto) {
@@ -57,6 +67,34 @@ export class ProcessAdminProcessStepController {
       endTime: body.endTime,
       participantsCount: body.participantsCount,
     });
+  }
+
+  @Post('/expert/main')
+  async setMainStepExpert(@Body() body: ProcessAdminProcessStepExpertMainDto) {
+    await this.stepExpertsService.settMainStepExpert({
+      processId: body.processId,
+      stepId: body.stepId,
+      userId: body.userId,
+      isMain: body.isMain,
+    });
+  }
+
+  @Get('/participants')
+  async getStepParticipants(
+    @Query() query: ProcessAdminProcessStepParticipantsDto,
+  ): Promise<ProcessAdminProcessStepParticipantsResponse> {
+    const [res, count] = await this.stepParticipantsRepository.findAndCountStepParticipantsByStepId({
+      stepId: query.stepId,
+      processId: query.processId,
+      limit: query.limit,
+      offset: query.offset,
+      nameFilter: query.nameFilter,
+      surnameFilter: query.surnameFilter,
+      patronymicFilter: query.patronymicFilter,
+      emailFilter: query.emailFilter,
+    });
+
+    return new ProcessAdminProcessStepParticipantsResponse(res, count);
   }
 
   @MyApiOperation({
