@@ -17,6 +17,10 @@ import { ProcessAdminViewProcessStepDto } from '@applications/http/process-admin
 import { StepBuilder } from '../../builders/step.builder';
 import { ProcessAdminUpdateProcessStepDto } from '@applications/http/process-admin/step/request/process-admin-update-process-step.dto';
 import { StepRepository } from '@domain/step/repository/step.repository';
+import { ProcessAdminUpdateProcessStepSchemaDto } from '@applications/http/process-admin/step/request/process-admin-update-process-step-schema.dto';
+import { SchemaType } from '@domain/form-schema/enums/schema-type.enum';
+import * as fs from 'node:fs/promises';
+import { CommonSchemasService } from '@domain/form-schema/service/common-schemas.service';
 
 @suite()
 export class ProcessAdminStepControllerTest extends BaseTestClass {
@@ -194,6 +198,45 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
     expect(editedStep.startTime).toEqual(body.startTime);
     expect(editedStep.endTime).toEqual(body.endTime);
     expect(editedStep.participantsCount).toBe(body.participantsCount);
+  }
+
+  @test()
+  async editStepSchemaSuccess() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .withAllowTemplates(true)
+      .build();
+
+    const step = await this.getBuilder(StepBuilder).build();
+
+    const file = await fs.readFile(`./test/data/survey-test-schema.json`, 'utf-8');
+    const schema = JSON.parse(file);
+
+    const userSchemaTemplate = await this.getService(CommonSchemasService).createUserSchema({
+      user: processAdmin,
+      title: 'fff',
+      type: SchemaType.form,
+      schema,
+    });
+
+    const body: ProcessAdminUpdateProcessStepSchemaDto = {
+      processId: step.process.id,
+      stepId: step.id,
+      type: SchemaType.form,
+      schemaId: userSchemaTemplate.schema.id,
+    };
+
+    const resEdit = await this.httpRequest()
+      .withAuth(processAdmin)
+      .post('/process-admin/process/steps/edit/schema')
+      .body(body)
+      .execute();
+
+    expect(resEdit.status).toBe(201);
+
+    const editedStep = await this.getService(StepRepository).findViewById(step.id);
+    expect(editedStep.formSchema.id).toBe(userSchemaTemplate.schema.id);
   }
 }
 describe('', () => {});

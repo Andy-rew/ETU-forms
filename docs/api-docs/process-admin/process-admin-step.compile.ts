@@ -68,7 +68,7 @@ export function ProcessAdminStepCompile(): void {
 
   processAdminStepController.addApiMethod('/edit', {
     tags: [appProcessAdminStepsTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Обновить этап процесса',
@@ -81,7 +81,7 @@ export function ProcessAdminStepCompile(): void {
 
   processAdminStepController.addApiMethod('/edit/schema', {
     tags: [appProcessAdminStepsTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Обновить шаблон формы этапа процесса',
