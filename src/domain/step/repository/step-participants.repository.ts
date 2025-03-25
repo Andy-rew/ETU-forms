@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
 import { Repository } from 'typeorm';
@@ -50,5 +50,34 @@ export class StepParticipantsRepository {
     }
 
     return query.getManyAndCount();
+  }
+
+  async findAllByUserIds(dto: {
+    stepId: number;
+    processId: string;
+    userIds?: number[] | null;
+  }): Promise<StepParticipantsEntity[]> {
+    const query = this.repo
+      .createQueryBuilder('step_participants')
+      .innerJoinAndSelect('step_participants.processParticipant', 'processParticipant')
+      .innerJoinAndSelect('processParticipant.user', 'user')
+      .innerJoinAndSelect('step_participants.step', 'step')
+      .where('step.id = :stepId', { stepId: dto.stepId })
+      .andWhere('step.process_id = :processId', { processId: dto.processId });
+
+    if (dto.userIds && dto.userIds.length) {
+      query.andWhere('processParticipant.user_id IN (:...userIds)', { userIds: dto.userIds });
+    }
+    return query.getMany();
+  }
+
+  async findAllByUserIdsOrFail(dto: { stepId: number; processId: string; userIds?: number[] | null }) {
+    const stepParticipants = await this.findAllByUserIds(dto);
+    if (!stepParticipants.length) {
+      throw new NotFoundException(
+        `Step participants not found for stepId: ${dto.stepId} and processId: ${dto.processId}`,
+      );
+    }
+    return stepParticipants;
   }
 }

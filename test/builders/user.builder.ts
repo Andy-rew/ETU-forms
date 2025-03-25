@@ -4,6 +4,7 @@ import { UserStatusEnum } from '@domain/user/enums/user-status.enum';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
+import { randomInt } from 'node:crypto';
 
 export class UserBuilder {
   constructor(private readonly app: INestApplication) {}
@@ -11,7 +12,7 @@ export class UserBuilder {
   private name = 'Иван';
   private surname = 'Иванов';
   private patronymic = 'Иванович';
-  private email = `test${new Date().getTime()}@mail.ru`;
+  private email = `test${new Date().getTime()}${randomInt(100000)}@mail.ru`;
   private status = UserStatusEnum.activated;
   private roles = [UserRoleEnum.processAdmin];
   private allowTemplates = false;

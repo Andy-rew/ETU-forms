@@ -15,6 +15,7 @@ import { StepExpertsService } from '@domain/step/services/step-experts.service';
 import { ProcessAdminProcessStepParticipantsDto } from '@applications/http/process-admin/step/request/process-admin-process-step-participants.dto';
 import { StepParticipantsRepository } from '@domain/step/repository/step-participants.repository';
 import { ProcessAdminProcessStepParticipantsResponse } from '@applications/http/process-admin/step/response/process-admin-process-step-participants.response';
+import { ProcessAdminProcessStepExpertParticipantsDto } from '@applications/http/process-admin/step/request/process-admin-process-step-expert-participants.dto';
 
 @MyApiOperation({
   rights: {
@@ -76,6 +77,17 @@ export class ProcessAdminProcessStepController {
       stepId: body.stepId,
       userId: body.userId,
       isMain: body.isMain,
+    });
+  }
+
+  @Post('/expert/participants')
+  async setParticipantsForExpert(@Body() body: ProcessAdminProcessStepExpertParticipantsDto) {
+    await this.stepExpertsService.setParticipantsForExpert({
+      processId: body.processId,
+      stepId: body.stepId,
+      allParticipants: body.allParticipants,
+      userParticipantsIds: body.userParticipantsIds,
+      userExpertId: body.userExpertId,
     });
   }
 

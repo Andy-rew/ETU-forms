@@ -28,12 +28,23 @@ import { ProcessParticipantRepository } from '@domain/process/repository/process
 import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
 import { StepParticipantsRepository } from '@domain/step/repository/step-participants.repository';
 import { ProcessAdminProcessStepParticipantsDto } from '@applications/http/process-admin/step/request/process-admin-process-step-participants.dto';
+import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
+import { ProcessAdminProcessStepExpertParticipantsDto } from '@applications/http/process-admin/step/request/process-admin-process-step-expert-participants.dto';
+import { StepExpertsParticipantsRepository } from '@domain/step/repository/step-experts-participants.repository';
 
 @suite()
 export class ProcessAdminStepControllerTest extends BaseTestClass {
-  private async prepareProcessStepParticipants(dto: { count: number; admin: UserEntity }) {
+  private async prepareProcessStepParticipantsWithExperts(dto: {
+    count: number;
+    admin: UserEntity;
+    countExperts?: number;
+  }) {
+    const countExperts = dto.countExperts || 5;
+
     const process = await this.getBuilder(ProcessBuilder).withProcessAdmin(dto.admin).build();
     const usersToAdd = await this.getBuilder(UserBuilder).buildMany(dto.count);
+
+    const expertsToAdd = await this.getBuilder(UserBuilder).buildMany(countExperts);
 
     const processParticipants: ProcessParticipantEntity[] = [];
 
@@ -59,7 +70,18 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
 
     const stepParticipantsSaved = await this.getService(StepParticipantsRepository).saveMany(stepParticipants);
 
-    return { process, step, stepParticipants: stepParticipantsSaved };
+    const stepExperts: StepExpertsEntity[] = [];
+
+    expertsToAdd.forEach((expert) => {
+      const stepExpert = new StepExpertsEntity();
+      stepExpert.user = expert;
+      stepExpert.step = step;
+      stepExperts.push(stepExpert);
+    });
+
+    const stepExpertsSaved = await this.getService(StepExpertsRepository).saveMany(stepExperts);
+
+    return { process, step, stepParticipants: stepParticipantsSaved, stepExperts: stepExpertsSaved };
   }
 
   private async prepareProcessParticipants(dto: { count: number; admin: UserEntity }) {
@@ -239,7 +261,7 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
   }
 
   @test()
-  async addExpertsToStepSuccess() {
+  async addMainExpertToStepSuccess() {
     const processAdmin = await this.getBuilder(UserBuilder)
       .withRoles([UserRoleEnum.processAdmin])
       .withStatus(UserStatusEnum.activated)
@@ -330,7 +352,7 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
       .withAllowTemplates(true)
       .build();
 
-    const { process, step } = await this.prepareProcessStepParticipants({ count: 50, admin: processAdmin });
+    const { process, step } = await this.prepareProcessStepParticipantsWithExperts({ count: 50, admin: processAdmin });
 
     const query: ProcessAdminProcessStepParticipantsDto = {
       processId: process.id,
@@ -348,6 +370,49 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
     expect(resGet.status).toBe(200);
 
     expect(resGet.body.count).toBe(50);
+  }
+
+  @test()
+  async setExpertParticipantsSuccess() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .withAllowTemplates(true)
+      .build();
+
+    const { process, step, stepExperts, stepParticipants } = await this.prepareProcessStepParticipantsWithExperts({
+      count: 50,
+      admin: processAdmin,
+    });
+
+    const body: ProcessAdminProcessStepExpertParticipantsDto = {
+      processId: process.id,
+      stepId: step.id,
+      allParticipants: false,
+      userParticipantsIds: stepParticipants.map((participant) => participant.processParticipant.user.id).slice(0, 10),
+      userExpertId: stepExperts[0].user.id,
+    };
+
+    const res = await this.httpRequest()
+      .withAuth(processAdmin)
+      .post('/process-admin/process/steps/expert/participants')
+      .body(body)
+      .execute();
+
+    expect(res.status).toBe(201);
+
+    const [stepExpertParticipants, count] = await this.getService(
+      StepExpertsParticipantsRepository,
+    ).getParticipantsForExpert({
+      stepId: step.id,
+      processId: process.id,
+      userExpertId: stepExperts[0].user.id,
+      limit: 100,
+      offset: 0,
+    });
+
+    expect(count).toBe(10);
+    expect(stepExpertParticipants.length).toBe(10);
   }
 }
 describe('', () => {});

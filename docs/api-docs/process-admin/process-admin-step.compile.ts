@@ -13,6 +13,7 @@ import { ProcessAdminProcessStepParticipantsResponse } from '@applications/http/
 import { ProcessAdminProcessStepParticipantFormDto } from '@applications/http/process-admin/step/request/process-admin-process-step-participant-form.dto';
 import { ProcessAdminProcessStepParticipantFormResponse } from '@applications/http/process-admin/step/response/process-admin-process-step-participant-form.response';
 import { ProcessAdminUpdateProcessStepSchemaDto } from '@applications/http/process-admin/step/request/process-admin-update-process-step-schema.dto';
+import { ProcessAdminProcessStepExpertParticipantsDto } from '@applications/http/process-admin/step/request/process-admin-process-step-expert-participants.dto';
 
 export function ProcessAdminStepCompile(): void {
   const processAdminStepController = processAdminBaseController.createController('/process/steps', []);
@@ -98,6 +99,18 @@ export function ProcessAdminStepCompile(): void {
     requiresAuthorization: true,
     title: 'Назначить/убрать главного эксперта этапа процесса',
     requestBody: ProcessAdminProcessStepExpertMainDto,
+    responses: {
+      '201': [],
+    },
+  });
+
+  processAdminStepController.addApiMethod('/expert/participants', {
+    tags: [appProcessAdminStepsTag],
+    isImplemented: true,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Редактировать участников для эксперта этапа процесса',
+    requestBody: ProcessAdminProcessStepExpertParticipantsDto,
     responses: {
       '201': [],
     },

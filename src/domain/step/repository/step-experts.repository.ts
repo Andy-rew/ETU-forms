@@ -7,6 +7,10 @@ import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
 export class StepExpertsRepository {
   constructor(@InjectRepository(StepExpertsEntity) private readonly repo: Repository<StepExpertsEntity>) {}
 
+  public async saveMany(stepExperts: StepExpertsEntity[]): Promise<StepExpertsEntity[]> {
+    return this.repo.manager.save(StepExpertsEntity, stepExperts);
+  }
+
   public async findByStepIdAndProcessId(dto: {
     stepId: number;
     processId: string;
