@@ -184,7 +184,7 @@ export class ProcessControllerTest extends BaseTestClass {
 
     const query: ProcessGetAllDto = {
       role: ProcessGetAllByRoleEnum.all,
-      startDate: dayjs().add(1, 'day').toDate(),
+      startDate: dayjs().toDate(),
       endDate: dayjs().add(3, 'day').toDate(),
       limit: 10,
       offset: 0,

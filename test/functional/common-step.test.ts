@@ -35,7 +35,7 @@ export class CommonStepTest extends BaseTestClass {
       processId: process.id,
       title: 'Тестовый этап',
       startTime: dayjs().add(1, 'day').toDate(),
-      endTime: dayjs().add(2, 'day').toDate(),
+      endTime: dayjs().add(1, 'day').add(3, 'hours').toDate(),
       participantsCount: null,
       parentId: null,
     };
@@ -50,6 +50,8 @@ export class CommonStepTest extends BaseTestClass {
     const step2 = await this.getService(CommonStepService).create({
       ...defaultStepData,
       title: 'Тестовый этап 2',
+      startTime: defaultStepData.endTime,
+      endTime: dayjs(defaultStepData.endTime).add(2, 'hour').toDate(),
       parentId: step1.id,
       participantsCount: processParticipantsCount,
     });
@@ -59,6 +61,8 @@ export class CommonStepTest extends BaseTestClass {
     const step3 = await this.getService(CommonStepService).create({
       ...defaultStepData,
       title: 'Тестовый этап 3',
+      startTime: step2.endTime,
+      endTime: dayjs(step2.endTime).add(2, 'hour').toDate(),
       parentId: step2.id,
       participantsCount: processParticipantsCount - 5,
     });

@@ -187,7 +187,7 @@ export class ProcessAdminProcessControllerTest extends BaseTestClass {
     const dataForCreation = {
       title: 'Тестовый процесс',
       startDate: new Date(),
-      endDate: new Date(),
+      endDate: dayjs().add(5, 'day').toDate(),
     };
 
     const process = await this.getService(CommonProcessService).create({
