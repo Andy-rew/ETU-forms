@@ -137,7 +137,7 @@ export class ProcessAdminProcessController {
       offset: query.offset,
       processId: query.processId,
       stepId: query.stepId,
-      invited: query.invited,
+      userStatus: query.userStatus,
       nameFilter: query.nameFilter,
       surnameFilter: query.surnameFilter,
       patronymicFilter: query.patronymicFilter,

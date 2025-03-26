@@ -12,16 +12,38 @@ import { AuthModule } from '@domain/auth/auth.module';
 import { MailerModule } from '@domain/mailer/mailer.module';
 import { SystemAdminUserController } from '@applications/http/system-admin/user/system-admin-user.controller';
 import { AuthJwtAccessTokenModule } from '@infrastructure/module/auth-jwt-access-token.module';
+import { UserDepartmentsEntity } from '@domain/user/entities/user-departments.entity';
+import { UserDepartmentsRepository } from '@domain/user/repository/user-departments.repository';
+import { EducationEntity } from '@domain/user/entities/education.entity';
 
 @Module({
   controllers: [SystemAdminUserController],
   imports: [
-    TypeOrmModule.forFeature([UserEntity, UserAuthTokensEntity, UserPasswordEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      UserAuthTokensEntity,
+      UserPasswordEntity,
+      UserDepartmentsEntity,
+      EducationEntity,
+    ]),
     AuthModule,
     MailerModule,
     AuthJwtAccessTokenModule,
   ],
-  providers: [UserRepository, UserAuthTokensRepository, UserPasswordRepository, CommonUserService, UserManager],
-  exports: [UserRepository, UserAuthTokensRepository, UserPasswordRepository, CommonUserService],
+  providers: [
+    UserRepository,
+    UserAuthTokensRepository,
+    UserPasswordRepository,
+    CommonUserService,
+    UserManager,
+    UserDepartmentsRepository,
+  ],
+  exports: [
+    UserRepository,
+    UserAuthTokensRepository,
+    UserPasswordRepository,
+    CommonUserService,
+    UserDepartmentsRepository,
+  ],
 })
 export class UserModule {}

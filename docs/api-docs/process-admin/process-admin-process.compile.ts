@@ -132,7 +132,12 @@ export function ProcessAdminProcessCompile(): void {
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить список пользователей',
-    description: 'Для добавления в процесс/ менеджеры или эксперты или участники процесса/ приглашенные',
+    description:
+      'Для любого запроса необходим <strong>processId</strong>, с которым ведется текущее взаимодействие <br>' +
+      `Получить всех пользователей для добавления в процесс: userStatus=activated, userType=(student | worker | all) <br>` +
+      `Получить всех пользователей-участников/менеджеров процесса: userStatus=activated, role=(manager | participant) <br>` +
+      'Получить всех экспертов этапа процесса: userStatus=activated, role=expert, stepId=(id) <br>' +
+      'Чтобы получить приглашенных экспертов/менеджеров/участников, нужно передать userStatus=invited ',
     query: ProcessAdminProcessUsersGetAllDto,
     responses: {
       '200': [ProcessAdminProcessUsersGetAllResponse],

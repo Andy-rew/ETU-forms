@@ -2,11 +2,11 @@ import { ProcessUserRoleEnum } from '@domain/process/enums/process-user-role.enu
 import { EnumApiProperty } from '@applications/decorators/api/common/enum-api.property';
 import { ProcessUsersTypeEnum } from '@domain/process/enums/process-users-type.enum';
 import { IdProperty } from '@applications/decorators/api/common/id.property.decorator';
-import { BoolQueryProperty } from '@applications/decorators/api/common/bool-query.property.decorator';
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
 import { LimitProperty } from '@applications/decorators/api/common/limit.property.decorator';
 import { OffsetProperty } from '@applications/decorators/api/common/offset.property.decorator';
 import { UuidProperty } from '@applications/decorators/api/common/uuid.property.decorator';
+import { UserStatusEnum } from '@domain/user/enums/user-status.enum';
 
 export class ProcessAdminProcessUsersGetAllDto {
   @UuidProperty('Процесс, в рамках которого работаем (необходим для проверки прав доступа)')
@@ -15,7 +15,7 @@ export class ProcessAdminProcessUsersGetAllDto {
   @EnumApiProperty({ enum: ProcessUserRoleEnum, description: 'Роль пользователя в процессе', isOptional: true })
   role?: ProcessUserRoleEnum;
 
-  @EnumApiProperty({ enum: ProcessUsersTypeEnum, description: 'Тип пользователей в процессе', isOptional: true })
+  @EnumApiProperty({ enum: ProcessUsersTypeEnum, description: 'Тип пользователей в системе', isOptional: true })
   userType?: ProcessUsersTypeEnum;
 
   @LimitProperty()
@@ -27,11 +27,8 @@ export class ProcessAdminProcessUsersGetAllDto {
   @IdProperty({ description: 'Id этапа процесса, Передавать только если role = expert', isOptional: true })
   stepId?: number;
 
-  @BoolQueryProperty({
-    description: 'Признак приглашенных пользователей, Передавать только если userType = external',
-    isOptional: true,
-  })
-  invited?: boolean;
+  @EnumApiProperty({ enum: UserStatusEnum, description: 'Статус пользователя', isOptional: true })
+  userStatus?: UserStatusEnum;
 
   @TextProperty({ description: 'Фильтр по имени', example: 'Иван', isOptional: true })
   nameFilter?: string;

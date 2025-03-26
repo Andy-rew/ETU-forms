@@ -84,7 +84,7 @@ export class UserRepository {
     role?: ProcessUserRoleEnum;
     userType?: ProcessUsersTypeEnum;
     stepId?: number;
-    invited?: boolean;
+    userStatus?: UserStatusEnum;
     nameFilter?: string;
     surnameFilter?: string;
     patronymicFilter?: string;
@@ -122,6 +122,14 @@ export class UserRepository {
     if (dto.userType) {
       switch (dto.userType) {
         case ProcessUsersTypeEnum.all:
+          qb.leftJoinAndSelect('user.educations', 'education');
+          qb.leftJoinAndSelect('education.group', 'group');
+          qb.leftJoinAndSelect('group.specialty', 'specialty');
+          qb.leftJoinAndSelect('group.department', 'department1');
+          qb.leftJoinAndSelect('user.userDepartments', 'userDepartments');
+          qb.leftJoinAndSelect('userDepartments.department', 'department2');
+          qb.leftJoinAndSelect('userDepartments.position', 'position');
+          qb.leftJoinAndSelect('userDepartments.category', 'category');
           break;
         case ProcessUsersTypeEnum.external:
           qb.where('user.etuId IS NULL');
@@ -163,8 +171,8 @@ export class UserRepository {
       }
     }
 
-    if (dto.invited) {
-      qb.where('user.status = :status', { status: UserStatusEnum.invited });
+    if (dto.userStatus) {
+      qb.where('user.status = :status', { status: dto.userStatus });
     }
 
     if (dto.nameFilter) {

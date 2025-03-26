@@ -76,10 +76,10 @@ export class ProcessAdminProcessUsersGetAllUserItem {
     this.surname = user.surname;
     this.patronymic = user.patronymic;
     this.email = user.email;
-    this.userDepartments = user.userDepartments.map(
+    this.userDepartments = user.userDepartments?.map(
       (dep) => new ProcessAdminProcessUsersGetAllUserDepartmentsItem(dep),
     );
-    this.educations = user.educations.map((edu) => new ProcessAdminProcessUsersGetAllUserEducationItem(edu));
+    this.educations = user.educations?.map((edu) => new ProcessAdminProcessUsersGetAllUserEducationItem(edu));
   }
 }
 

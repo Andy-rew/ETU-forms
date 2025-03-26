@@ -10,6 +10,9 @@ import { ProcessAdminProcessEditDto } from '@applications/http/process-admin/pro
 import { ProcessAdminProcessUsersAddDto } from '@applications/http/process-admin/process/request/process-admin-process-users-add.dto';
 import { ProcessUserRoleEnum } from '@domain/process/enums/process-user-role.enum';
 import { CommonStepService } from '@domain/step/services/common-step.service';
+import { UserDataGenerator } from '../../generators/user-data.generator';
+import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-users-get-all.dto';
+import { ProcessUsersTypeEnum } from '@domain/process/enums/process-users-type.enum';
 
 @suite()
 export class ProcessAdminProcessControllerTest extends BaseTestClass {
@@ -251,6 +254,42 @@ export class ProcessAdminProcessControllerTest extends BaseTestClass {
   }
 
   @test()
-  async getUsersForProcess() {}
+  async getUsersForProcess() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .build();
+
+    const dataForCreation = {
+      title: 'Тестовый процесс',
+      startDate: new Date(),
+      endDate: dayjs().add(5, 'day').toDate(),
+    };
+
+    const process = await this.getService(CommonProcessService).create({
+      title: dataForCreation.title,
+      startDate: dataForCreation.startDate,
+      endDate: dataForCreation.endDate,
+      processAdmin: processAdmin,
+    });
+
+    await this.getBuilder(UserDataGenerator).generateSomeUsers();
+
+    const query: ProcessAdminProcessUsersGetAllDto = {
+      processId: process.id,
+      userStatus: UserStatusEnum.activated,
+      userType: ProcessUsersTypeEnum.all,
+      limit: 50,
+      offset: 0,
+    };
+
+    const res = await this.httpRequest()
+      .withAuth(processAdmin)
+      .get('/process-admin/process/users/all')
+      .query(query)
+      .execute();
+
+    expect(res.status).toBe(200);
+  }
 }
 describe('', () => {});

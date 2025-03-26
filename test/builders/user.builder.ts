@@ -16,6 +16,7 @@ export class UserBuilder {
   private status = UserStatusEnum.activated;
   private roles = [UserRoleEnum.processAdmin];
   private allowTemplates = false;
+  private withEtuIdFlag = false;
 
   public withName(name: string): this {
     this.name = name;
@@ -47,6 +48,11 @@ export class UserBuilder {
     return this;
   }
 
+  public withEtuId(): this {
+    this.withEtuIdFlag = true;
+    return this;
+  }
+
   public withAllowTemplates(allowTemplates: boolean): this {
     this.allowTemplates = allowTemplates;
     return this;
@@ -61,6 +67,7 @@ export class UserBuilder {
     user.status = this.status;
     user.roles = this.roles;
     user.allowTemplates = this.allowTemplates;
+    user.etuId = this.withEtuIdFlag ? randomInt(1000000) : null;
     return user;
   }
 
