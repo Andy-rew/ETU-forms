@@ -16,6 +16,8 @@ import { ProcessAdminProcessStepParticipantsDto } from '@applications/http/proce
 import { StepParticipantsRepository } from '@domain/step/repository/step-participants.repository';
 import { ProcessAdminProcessStepParticipantsResponse } from '@applications/http/process-admin/step/response/process-admin-process-step-participants.response';
 import { ProcessAdminProcessStepExpertParticipantsDto } from '@applications/http/process-admin/step/request/process-admin-process-step-expert-participants.dto';
+import { ProcessAdminProcessStepParticipantFormDto } from '@applications/http/process-admin/step/request/process-admin-process-step-participant-form.dto';
+import { ProcessAdminProcessStepParticipantFormResponse } from '@applications/http/process-admin/step/response/process-admin-process-step-participant-form.response';
 
 @MyApiOperation({
   rights: {
@@ -107,6 +109,19 @@ export class ProcessAdminProcessStepController {
     });
 
     return new ProcessAdminProcessStepParticipantsResponse(res, count);
+  }
+
+  @Get('/participant-form')
+  async getStepParticipantForm(
+    @Query() query: ProcessAdminProcessStepParticipantFormDto,
+  ): Promise<ProcessAdminProcessStepParticipantFormResponse> {
+    const res = await this.stepParticipantsRepository.findWithReactionAndFormOrFail({
+      processId: query.processId,
+      stepId: query.stepId,
+      userId: query.userId,
+    });
+
+    return new ProcessAdminProcessStepParticipantFormResponse(res);
   }
 
   @MyApiOperation({

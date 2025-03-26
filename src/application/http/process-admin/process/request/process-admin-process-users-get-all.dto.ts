@@ -4,13 +4,25 @@ import { ProcessUsersTypeEnum } from '@domain/process/enums/process-users-type.e
 import { IdProperty } from '@applications/decorators/api/common/id.property.decorator';
 import { BoolQueryProperty } from '@applications/decorators/api/common/bool-query.property.decorator';
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
+import { LimitProperty } from '@applications/decorators/api/common/limit.property.decorator';
+import { OffsetProperty } from '@applications/decorators/api/common/offset.property.decorator';
+import { UuidProperty } from '@applications/decorators/api/common/uuid.property.decorator';
 
 export class ProcessAdminProcessUsersGetAllDto {
-  @EnumApiProperty({ enum: ProcessUserRoleEnum, description: 'Роль пользователя в процессе' })
-  role: ProcessUserRoleEnum;
+  @UuidProperty('Процесс, в рамках которого работаем (необходим для проверки прав доступа)')
+  processId: string;
 
-  @EnumApiProperty({ enum: ProcessUsersTypeEnum, description: 'Тип пользователей в процессе' })
-  userType: ProcessUsersTypeEnum;
+  @EnumApiProperty({ enum: ProcessUserRoleEnum, description: 'Роль пользователя в процессе', isOptional: true })
+  role?: ProcessUserRoleEnum;
+
+  @EnumApiProperty({ enum: ProcessUsersTypeEnum, description: 'Тип пользователей в процессе', isOptional: true })
+  userType?: ProcessUsersTypeEnum;
+
+  @LimitProperty()
+  limit: number;
+
+  @OffsetProperty()
+  offset: number;
 
   @IdProperty({ description: 'Id этапа процесса, Передавать только если role = expert', isOptional: true })
   stepId?: number;

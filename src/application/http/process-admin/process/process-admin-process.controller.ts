@@ -14,6 +14,10 @@ import { ProcessAdminProcessUsersAddDto } from '@applications/http/process-admin
 import { ProcessUsersService } from '@domain/process/services/process-users.service';
 import { MyApiOperation } from '@applications/decorators/my-api-operation.decorator';
 import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
+import { ProcessStatusService } from '@domain/process/services/process-status.service';
+import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-users-get-all.dto';
+import { ProcessAdminProcessUsersGetAllResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-get-all.response';
+import { UserRepository } from '@domain/user/repository/user.repository';
 
 @Controller('process-admin/process')
 export class ProcessAdminProcessController {
@@ -21,7 +25,9 @@ export class ProcessAdminProcessController {
     private readonly commonProcessService: CommonProcessService,
     private readonly fileRepository: FileRepository,
     private readonly processRepository: ProcessRepository,
+    private readonly userRepository: UserRepository,
     private readonly processUsersService: ProcessUsersService,
+    private readonly processStatusService: ProcessStatusService,
   ) {}
 
   @MyApiOperation({
@@ -65,6 +71,7 @@ export class ProcessAdminProcessController {
   @Get('/view')
   async viewProcess(@Query() query: ProcessAdminProcessViewDto) {
     const res = await this.processRepository.findByIdOrFail(query.processId);
+    await this.processStatusService.resolveStatus([res]);
 
     return new ProcessAdminProcessViewResponse(res);
   }
@@ -110,5 +117,38 @@ export class ProcessAdminProcessController {
       stepId: body.stepId,
       currentUser: user,
     });
+  }
+
+  @MyApiOperation({
+    rights: {
+      process: {
+        manager: true,
+      },
+    },
+  })
+  @Get('/users/all')
+  async getAllProcessUsers(
+    @Query() query: ProcessAdminProcessUsersGetAllDto,
+  ): Promise<ProcessAdminProcessUsersGetAllResponse> {
+    const [res, count] = await this.userRepository.getAllForProcess({
+      role: query.role,
+      userType: query.userType,
+      limit: query.limit,
+      offset: query.offset,
+      processId: query.processId,
+      stepId: query.stepId,
+      invited: query.invited,
+      nameFilter: query.nameFilter,
+      surnameFilter: query.surnameFilter,
+      patronymicFilter: query.patronymicFilter,
+      emailFilter: query.emailFilter,
+      departmentFilter: query.departmentFilter,
+      groupFilter: query.groupFilter,
+      specialtyFilter: query.specialtyFilter,
+      positionFilter: query.positionFilter,
+      categoryFilter: query.categoryFilter,
+    });
+
+    return new ProcessAdminProcessUsersGetAllResponse(res, count);
   }
 }

@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { SpecialtyEntity } from '@domain/dicts/entities/specialty.entity';
 import { EducationEntity } from '@domain/user/entities/education.entity';
+import { DepartmentEntity } from '@domain/dicts/entities/department.entity';
 
 @Entity('groups')
 export class GroupEntity {
@@ -12,6 +13,9 @@ export class GroupEntity {
 
   @ManyToOne(() => SpecialtyEntity, (specialty: SpecialtyEntity) => specialty.groups, { nullable: false })
   specialty: SpecialtyEntity;
+
+  @ManyToOne(() => DepartmentEntity, (department: DepartmentEntity) => department.groups, { nullable: false })
+  department: DepartmentEntity;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -249,5 +249,8 @@ export class ProcessAdminProcessControllerTest extends BaseTestClass {
 
     expect(resCheckExpertsAdd.status).toBe(201);
   }
+
+  @test()
+  async getUsersForProcess() {}
 }
 describe('', () => {});

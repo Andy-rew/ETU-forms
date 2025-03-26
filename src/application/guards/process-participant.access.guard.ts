@@ -4,11 +4,13 @@ import { ValidationException } from '@app/exceptions/inherited-exceptions/common
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
 import { ProcessParticipantRepository } from '@domain/process/repository/process-participant.repository';
+import { ProcessRepository } from '@domain/process/repository/process.repository';
 
 @Injectable()
 export class ProcessParticipantAccessGuard implements CanActivate {
   constructor(
     @Inject(ProcessParticipantRepository) private readonly processParticipantRepository: ProcessParticipantRepository,
+    @Inject(ProcessRepository) private readonly processRepository: ProcessRepository,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -31,6 +33,11 @@ export class ProcessParticipantAccessGuard implements CanActivate {
     }
 
     try {
+      const process = await this.processRepository.findByIdOrFail(processId);
+      if (process.linkAccess) {
+        return true;
+      }
+
       await this.processParticipantRepository.findByProcessIdAndUserIdOrFail({
         processId: String(processId),
         userId: user.id,

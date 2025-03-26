@@ -130,11 +130,11 @@ export function ProcessAdminStepCompile(): void {
 
   processAdminStepController.addApiMethod('/participant-form', {
     tags: [appProcessAdminStepsTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить заполненную форму участника этапа(если есть) + реакция(если есть)',
-    description: 'Получить заполненную форму и реакцию эксперта на нее по id участника этапа',
+    description: 'Получить заполненную форму и реакцию эксперта на нее',
     query: ProcessAdminProcessStepParticipantFormDto,
     responses: {
       '200': [ProcessAdminProcessStepParticipantFormResponse],

@@ -17,9 +17,9 @@ class ProcessAdminProcessUsersGetAllUserDepartmentsItem {
   categoryTitle: string;
 
   constructor(userDepartment: UserDepartmentsEntity) {
-    this.categoryTitle = userDepartment.category.title;
-    this.departmentTitle = userDepartment.department.title;
-    this.positionTitle = userDepartment.position.title;
+    this.categoryTitle = userDepartment?.category?.title;
+    this.departmentTitle = userDepartment?.department?.title;
+    this.positionTitle = userDepartment?.position?.title;
   }
 }
 
@@ -34,10 +34,9 @@ class ProcessAdminProcessUsersGetAllUserEducationItem {
   departmentTitle: string;
 
   constructor(education: EducationEntity) {
-    this.groupTitle = education.group.title;
-    this.specialtyCipher = education.group.specialty.cipher;
-    //todo кафедра
-    // this.departmentTitle = education.department.title;
+    this.groupTitle = education?.group?.title;
+    this.specialtyCipher = education?.group?.specialty?.cipher;
+    this.departmentTitle = education?.group?.department?.title;
   }
 }
 

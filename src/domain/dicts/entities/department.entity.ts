@@ -1,5 +1,14 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { FacultyEntity } from '@domain/dicts/entities/faculty.entity';
+import { GroupEntity } from '@domain/dicts/entities/group.entity';
 
 @Entity('departments')
 export class DepartmentEntity {
@@ -14,6 +23,9 @@ export class DepartmentEntity {
 
   @Column()
   lkId: number;
+
+  @OneToMany(() => GroupEntity, (group: GroupEntity) => group.department)
+  groups: GroupEntity[];
 
   @ManyToOne(() => FacultyEntity, (faculty: FacultyEntity) => faculty.departments, { nullable: false })
   faculty: FacultyEntity;

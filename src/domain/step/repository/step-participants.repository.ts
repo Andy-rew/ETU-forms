@@ -80,4 +80,32 @@ export class StepParticipantsRepository {
     }
     return stepParticipants;
   }
+
+  async findWithReactionAndForm(dto: {
+    processId: string;
+    stepId: number;
+    userId: number;
+  }): Promise<StepParticipantsEntity | null> {
+    return this.repo
+      .createQueryBuilder('step_participants')
+      .innerJoinAndSelect('step_participants.processParticipant', 'processParticipant')
+      .innerJoinAndSelect('processParticipant.user', 'user')
+      .innerJoinAndSelect('step_participants.step', 'step')
+      .leftJoinAndSelect('step_participants.filledForm', 'filledForm')
+      .leftJoinAndSelect('step_participants.mainReaction', 'mainReaction')
+      .where('step.id = :stepId', { stepId: dto.stepId })
+      .andWhere('step.process_id = :processId', { processId: dto.processId })
+      .andWhere('processParticipant.user_id = :userId', { userId: dto.userId })
+      .getOne();
+  }
+
+  async findWithReactionAndFormOrFail(dto: { processId: string; stepId: number; userId: number }) {
+    const stepParticipant = await this.findWithReactionAndForm(dto);
+    if (!stepParticipant) {
+      throw new NotFoundException(
+        `Step participant not found for stepId: ${dto.stepId} and processId: ${dto.processId}`,
+      );
+    }
+    return stepParticipant;
+  }
 }

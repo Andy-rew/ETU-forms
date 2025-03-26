@@ -21,6 +21,7 @@ import { ProcessAdminProcessFormTemplateViewDto } from '@applications/http/proce
 import { ProcessAdminProcessFormTemplateViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-template-view.response';
 import { ProcessAdminProcessFormFilledViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-filled-view.dto';
 import { ProcessAdminProcessFormFilledViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-filled-view.response';
+import { ProcessAdminProcessStatusChangeDto } from '@applications/http/process-admin/process/request/process-admin-process-status-change.dto';
 
 export function ProcessAdminProcessCompile(): void {
   const processAdminProcessController = processAdminBaseController.createController('/process', []);
@@ -59,6 +60,18 @@ export function ProcessAdminProcessCompile(): void {
     requestBody: ProcessAdminProcessCreateDto,
     responses: {
       '201': [ProcessAdminProcessCreateResponse],
+    },
+  });
+
+  processAdminProcessController.addApiMethod('/status/change', {
+    tags: [appProcessAdminProcessTag],
+    isImplemented: false,
+    method: 'POST',
+    requiresAuthorization: true,
+    title: 'Изменить статус процесса',
+    requestBody: ProcessAdminProcessStatusChangeDto,
+    responses: {
+      '201': [],
     },
   });
 
@@ -118,7 +131,8 @@ export function ProcessAdminProcessCompile(): void {
     isImplemented: false,
     method: 'GET',
     requiresAuthorization: true,
-    title: 'Получить актуальный список пользователей процесса',
+    title: 'Получить список пользователей',
+    description: 'Для добавления в процесс/ менеджеры или эксперты или участники процесса/ приглашенные',
     query: ProcessAdminProcessUsersGetAllDto,
     responses: {
       '200': [ProcessAdminProcessUsersGetAllResponse],

@@ -31,6 +31,7 @@ import { ProcessAdminProcessStepParticipantsDto } from '@applications/http/proce
 import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
 import { ProcessAdminProcessStepExpertParticipantsDto } from '@applications/http/process-admin/step/request/process-admin-process-step-expert-participants.dto';
 import { StepExpertsParticipantsRepository } from '@domain/step/repository/step-experts-participants.repository';
+import { ProcessAdminProcessStepParticipantFormDto } from '@applications/http/process-admin/step/request/process-admin-process-step-participant-form.dto';
 
 @suite()
 export class ProcessAdminStepControllerTest extends BaseTestClass {
@@ -413,6 +414,34 @@ export class ProcessAdminStepControllerTest extends BaseTestClass {
 
     expect(count).toBe(10);
     expect(stepExpertParticipants.length).toBe(10);
+  }
+
+  @test()
+  async getParticipantFormSuccess() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .withAllowTemplates(true)
+      .build();
+
+    const { process, step, stepParticipants } = await this.prepareProcessStepParticipantsWithExperts({
+      count: 1,
+      admin: processAdmin,
+    });
+
+    const query: ProcessAdminProcessStepParticipantFormDto = {
+      processId: process.id,
+      stepId: step.id,
+      userId: stepParticipants[0].processParticipant.user.id,
+    };
+
+    const resGet = await this.httpRequest()
+      .withAuth(processAdmin)
+      .get('/process-admin/process/steps/participant-form')
+      .query(query)
+      .execute();
+
+    expect(resGet.status).toBe(200);
   }
 }
 describe('', () => {});
