@@ -86,4 +86,28 @@ export class StepRepository {
     );
     return this.findOneWithProcessById(step.id);
   }
+
+  async findByProcessAndFormSchemaId(dto: { processId: string; formSchemaId: number }): Promise<StepEntity | null> {
+    return this.repo
+      .createQueryBuilder('step')
+      .where('step.process_id = :processId')
+      .andWhere((qb) => {
+        qb.where('step.form_schema_id = :formSchemaId')
+          .orWhere('step.form_accept_schema_id = :formSchemaId')
+          .orWhere('step.form_decline_schema_id = :formSchemaId');
+      })
+      .setParameters({
+        processId: dto.processId,
+        formSchemaId: dto.formSchemaId,
+      })
+      .getOne();
+  }
+
+  async findByProcessAndFormSchemaIdOrFail(dto: { processId: string; formSchemaId: number }): Promise<StepEntity> {
+    const step = await this.findByProcessAndFormSchemaId(dto);
+    if (!step) {
+      throw new NotFoundException('Step for schema and process not found');
+    }
+    return step;
+  }
 }

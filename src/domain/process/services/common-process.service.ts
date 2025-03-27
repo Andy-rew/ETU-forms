@@ -115,4 +115,38 @@ export class CommonProcessService {
       count,
     };
   }
+
+  async changeStatus(dto: { processId: string; status: ProcessStatusEnum }) {
+    const process = await this.processRepository.findByIdOrFail(dto.processId);
+    await this.processStatusService.resolveStatus([process]);
+
+    if (process.status === dto.status) {
+      throw new BadRequestException('Process is already in this status');
+    }
+
+    switch (dto.status) {
+      case ProcessStatusEnum.draft:
+        if (process.status === ProcessStatusEnum.finished) {
+          throw new BadRequestException('Process is finished, you cannot change status to draft');
+        }
+        process.status = ProcessStatusEnum.draft;
+        break;
+      case ProcessStatusEnum.test:
+        throw new Error('Method is not implemented yet');
+        break;
+      case ProcessStatusEnum.inProgress:
+        if (process.status === ProcessStatusEnum.finished) {
+          throw new BadRequestException('Process is finished, you cannot change status to inProgress');
+        }
+        process.status = ProcessStatusEnum.inProgress;
+        break;
+      case ProcessStatusEnum.finished:
+        process.status = ProcessStatusEnum.finished;
+        break;
+      default:
+        throw new BadRequestException('Unknown status');
+    }
+
+    await this.processRepository.updateStatus(process);
+  }
 }

@@ -13,6 +13,18 @@ import { CommonStepService } from '@domain/step/services/common-step.service';
 import { UserDataGenerator } from '../../generators/user-data.generator';
 import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-users-get-all.dto';
 import { ProcessUsersTypeEnum } from '@domain/process/enums/process-users-type.enum';
+import { ProcessStatusEnum } from '@domain/process/enums/process-status.enum';
+import { ProcessAdminProcessStatusChangeDto } from '@applications/http/process-admin/process/request/process-admin-process-status-change.dto';
+import { ProcessRepository } from '@domain/process/repository/process.repository';
+import { UserEntity } from '@domain/user/entities/user.entity';
+import * as fs from 'node:fs/promises';
+import { FormSchemaEntity } from '@domain/form-schema/entities/form-schema.entity';
+import { Repository } from 'typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { FormSchemaFilledEntity } from '@domain/form-schema/entities/form-schema-filled.entity';
+import { StepBuilder } from '../../builders/step.builder';
+import { ProcessAdminProcessFormTemplateViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-template-view.dto';
+import { ProcessAdminProcessFormFilledViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-filled-view.dto';
 
 @suite()
 export class ProcessAdminProcessControllerTest extends BaseTestClass {
@@ -286,6 +298,218 @@ export class ProcessAdminProcessControllerTest extends BaseTestClass {
     const res = await this.httpRequest()
       .withAuth(processAdmin)
       .get('/process-admin/process/users/all')
+      .query(query)
+      .execute();
+
+    expect(res.status).toBe(200);
+  }
+
+  @test()
+  async getStudentUsersForProcess() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .build();
+
+    const dataForCreation = {
+      title: 'Тестовый процесс',
+      startDate: new Date(),
+      endDate: dayjs().add(5, 'day').toDate(),
+    };
+
+    const process = await this.getService(CommonProcessService).create({
+      title: dataForCreation.title,
+      startDate: dataForCreation.startDate,
+      endDate: dataForCreation.endDate,
+      processAdmin: processAdmin,
+    });
+
+    await this.getBuilder(UserDataGenerator).generateSomeUsers();
+
+    const query: ProcessAdminProcessUsersGetAllDto = {
+      processId: process.id,
+      userStatus: UserStatusEnum.activated,
+      userType: ProcessUsersTypeEnum.students,
+      limit: 50,
+      offset: 0,
+    };
+
+    const res = await this.httpRequest()
+      .withAuth(processAdmin)
+      .get('/process-admin/process/users/all')
+      .query(query)
+      .execute();
+
+    expect(res.status).toBe(200);
+    res.body.items.forEach((item) => {
+      expect(item.educations).toHaveLength(1);
+    });
+  }
+
+  @test()
+  async getWorkerUsersForProcess() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .build();
+
+    const dataForCreation = {
+      title: 'Тестовый процесс',
+      startDate: new Date(),
+      endDate: dayjs().add(5, 'day').toDate(),
+    };
+
+    const process = await this.getService(CommonProcessService).create({
+      title: dataForCreation.title,
+      startDate: dataForCreation.startDate,
+      endDate: dataForCreation.endDate,
+      processAdmin: processAdmin,
+    });
+
+    await this.getBuilder(UserDataGenerator).generateSomeUsers();
+
+    const query: ProcessAdminProcessUsersGetAllDto = {
+      processId: process.id,
+      userStatus: UserStatusEnum.activated,
+      userType: ProcessUsersTypeEnum.workers,
+      limit: 50,
+      offset: 0,
+    };
+
+    const res = await this.httpRequest()
+      .withAuth(processAdmin)
+      .get('/process-admin/process/users/all')
+      .query(query)
+      .execute();
+
+    expect(res.status).toBe(200);
+    res.body.items.forEach((item) => {
+      expect(item.userDepartments).toHaveLength(1);
+    });
+  }
+
+  @test()
+  async changeProcessStatus() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .build();
+
+    const dataForCreation = {
+      title: 'Тестовый процесс',
+      startDate: new Date(),
+      endDate: dayjs().add(5, 'day').toDate(),
+    };
+
+    const process = await this.getService(CommonProcessService).create({
+      title: dataForCreation.title,
+      startDate: dataForCreation.startDate,
+      endDate: dataForCreation.endDate,
+      processAdmin: processAdmin,
+    });
+
+    const body: ProcessAdminProcessStatusChangeDto = {
+      processId: process.id,
+      status: ProcessStatusEnum.inProgress,
+    };
+
+    const res = await this.httpRequest()
+      .withAuth(processAdmin)
+      .post('/process-admin/process/status/change')
+      .body(body)
+      .execute();
+
+    expect(res.status).toBe(201);
+
+    const updatedProcess = await this.getService(ProcessRepository).findByIdOrFail(process.id);
+
+    expect(updatedProcess.status).toBe(ProcessStatusEnum.inProgress);
+  }
+
+  async prepareStepAndProcessWithSchemas(admin: UserEntity) {
+    const fileSchema = await fs.readFile(`./test/data/survey-test-schema.json`, 'utf-8');
+    const fileResult = await fs.readFile(`./test/data/survey-test-schema-result.json`, 'utf-8');
+    const schema = JSON.parse(fileSchema);
+    const result = JSON.parse(fileResult);
+
+    const schemaEntity = new FormSchemaEntity();
+    schemaEntity.schema = schema;
+    schemaEntity.title = 'test';
+
+    await this.app.get<Repository<FormSchemaEntity>>(getRepositoryToken(FormSchemaEntity)).save(schemaEntity);
+
+    const resultEntity = new FormSchemaFilledEntity();
+    resultEntity.schema = schemaEntity;
+    resultEntity.filledSchema = result;
+
+    await this.app
+      .get<Repository<FormSchemaFilledEntity>>(getRepositoryToken(FormSchemaFilledEntity))
+      .save(resultEntity);
+
+    const dataForCreation = {
+      title: 'Тестовый процесс',
+      startDate: new Date(),
+      endDate: dayjs().add(5, 'day').toDate(),
+    };
+
+    const process = await this.getService(CommonProcessService).create({
+      title: dataForCreation.title,
+      startDate: dataForCreation.startDate,
+      endDate: dataForCreation.endDate,
+      processAdmin: admin,
+    });
+
+    const step = await this.getBuilder(StepBuilder)
+      .withAcceptFormSchema(schemaEntity)
+      .withDeclineFormSchema(schemaEntity)
+      .withFormSchema(schemaEntity)
+      .withProcess(process)
+      .build();
+
+    return { step, formFilled: resultEntity, schema: schemaEntity };
+  }
+
+  @test()
+  async getFormSchema() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .build();
+
+    const { step, schema } = await this.prepareStepAndProcessWithSchemas(processAdmin);
+
+    const query: ProcessAdminProcessFormTemplateViewDto = {
+      processId: step.process.id,
+      formSchemaId: schema.id,
+    };
+
+    const res = await this.httpRequest()
+      .withAuth(processAdmin)
+      .get('/process-admin/process/form-schema')
+      .query(query)
+      .execute();
+
+    expect(res.status).toBe(200);
+  }
+
+  @test()
+  async getFilledFormSchema() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .build();
+
+    const { step, formFilled, schema } = await this.prepareStepAndProcessWithSchemas(processAdmin);
+
+    const query: ProcessAdminProcessFormFilledViewDto = {
+      processId: step.process.id,
+      formSchemaId: schema.id,
+      filledFormId: formFilled.id,
+    };
+
+    const res = await this.httpRequest()
+      .withAuth(processAdmin)
+      .get('/process-admin/process/form-filled')
       .query(query)
       .execute();
 

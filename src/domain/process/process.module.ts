@@ -17,6 +17,7 @@ import { ProcessParticipantEntity } from '@domain/process/entities/process-parti
 import { ProcessController } from '@applications/http/common/process/process.controller';
 import { ProcessStatusService } from '@domain/process/services/process-status.service';
 import { ProcessParticipantRepository } from '@domain/process/repository/process-participant.repository';
+import { FormSchemaModule } from '@domain/form-schema/form-schema.module';
 
 @Module({
   controllers: [ProcessAdminProcessController, ProcessController],
@@ -26,6 +27,7 @@ import { ProcessParticipantRepository } from '@domain/process/repository/process
     AuthJwtAccessTokenModule,
     UserModule,
     StepModule,
+    FormSchemaModule,
   ],
   providers: [
     ProcessRepository,

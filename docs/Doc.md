@@ -1,5 +1,17 @@
 ## ETU-forms
 
+
+### Доска в miro
+
+- Прототипы возможных экранных форм
+- ERD
+- Диаграммы процессов
+
+<div>
+<iframe width="768" height="432" src="https://miro.com/app/live-embed/uXjVLz_ZkMI=/?moveToViewport=-2703,-21086,14742,9227&embedId=346873036779" frameborder="0" scrolling="no" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen></iframe>
+</div>
+
+
 ### Приглашение и регистрация новых пользователей
 
 Приглашать новых пользователей может:

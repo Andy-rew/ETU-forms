@@ -5,6 +5,9 @@ import { INestApplication } from '@nestjs/common';
 import { CommonStepService } from '@domain/step/services/common-step.service';
 import { ProcessBuilder } from './process.builder';
 import { UserEntity } from '@domain/user/entities/user.entity';
+import { FormSchemaEntity } from '@domain/form-schema/entities/form-schema.entity';
+import { Repository } from 'typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 export class StepBuilder {
   constructor(private readonly app: INestApplication) {}
@@ -16,6 +19,9 @@ export class StepBuilder {
   private parent: StepEntity | null = null;
   private process: ProcessEntity | null = null;
   private experts: UserEntity[] | null = null;
+  private acceptFormSchema: FormSchemaEntity = null;
+  private declineFormSchema: FormSchemaEntity = null;
+  private formSchema: FormSchemaEntity = null;
 
   public withProcess(process: ProcessEntity): this {
     this.process = process;
@@ -27,6 +33,21 @@ export class StepBuilder {
     return this;
   }
 
+  public withAcceptFormSchema(acceptFormSchema: FormSchemaEntity): this {
+    this.acceptFormSchema = acceptFormSchema;
+    return this;
+  }
+
+  public withDeclineFormSchema(declineFormSchema: FormSchemaEntity): this {
+    this.declineFormSchema = declineFormSchema;
+    return this;
+  }
+
+  public withFormSchema(formSchema: FormSchemaEntity): this {
+    this.formSchema = formSchema;
+    return this;
+  }
+
   buildEntity() {
     const step = new StepEntity();
     step.title = this.title;
@@ -35,6 +56,9 @@ export class StepBuilder {
     step.participantsCount = this.participantsCount;
     step.parent = this.parent;
     step.process = this.process;
+    step.formSchema = this.formSchema;
+    step.formAcceptSchema = this.acceptFormSchema;
+    step.formDeclineSchema = this.declineFormSchema;
     return step;
   }
 
@@ -44,7 +68,7 @@ export class StepBuilder {
     }
 
     const step = this.buildEntity();
-    return this.app.get(CommonStepService).create({
+    const stepCreated = await this.app.get(CommonStepService).create({
       processId: this.process.id,
       title: step.title,
       startTime: step.startTime,
@@ -52,5 +76,11 @@ export class StepBuilder {
       participantsCount: step.participantsCount,
       parentId: step.parent?.id || null,
     });
+
+    stepCreated.formSchema = this.formSchema;
+    stepCreated.formAcceptSchema = this.acceptFormSchema;
+    stepCreated.formDeclineSchema = this.declineFormSchema;
+
+    return this.app.get<Repository<StepEntity>>(getRepositoryToken(StepEntity)).save(stepCreated);
   }
 }

@@ -169,6 +169,8 @@ export class UserRepository {
 
           break;
       }
+
+      //todo условие чтобы не показывались пользователи которые уже были добавлены в данный процесс
     }
 
     if (dto.userStatus) {

@@ -11,6 +11,7 @@ import { AuthJwtAccessTokenModule } from '@infrastructure/module/auth-jwt-access
 import { UserModule } from '@domain/user/user.module';
 import { FormSchemaUserTemplateRepository } from '@domain/form-schema/repository/form-schema-user-template.repository';
 import { StepModule } from '@domain/step/step.module';
+import { FormSchemaFilledRepository } from '@domain/form-schema/repository/form-schema-filled.repository';
 
 @Module({
   controllers: [ProcessAdminMySchemasController],
@@ -20,7 +21,13 @@ import { StepModule } from '@domain/step/step.module';
     UserModule,
     forwardRef(() => StepModule),
   ],
-  providers: [FormSchemaRepository, CommonSchemasService, CommonSchemasManager, FormSchemaUserTemplateRepository],
-  exports: [FormSchemaRepository, CommonSchemasService, FormSchemaUserTemplateRepository],
+  providers: [
+    FormSchemaRepository,
+    CommonSchemasService,
+    CommonSchemasManager,
+    FormSchemaUserTemplateRepository,
+    FormSchemaFilledRepository,
+  ],
+  exports: [FormSchemaRepository, CommonSchemasService, FormSchemaUserTemplateRepository, FormSchemaFilledRepository],
 })
 export class FormSchemaModule {}

@@ -236,4 +236,8 @@ export class ProcessRepository {
 
     return query.getManyAndCount();
   }
+
+  async updateStatus(process: ProcessEntity) {
+    await this.repo.update(process.id, { status: process.status });
+  }
 }

@@ -18,6 +18,14 @@ import { ProcessStatusService } from '@domain/process/services/process-status.se
 import { ProcessAdminProcessUsersGetAllDto } from '@applications/http/process-admin/process/request/process-admin-process-users-get-all.dto';
 import { ProcessAdminProcessUsersGetAllResponse } from '@applications/http/process-admin/process/response/process-admin-process-users-get-all.response';
 import { UserRepository } from '@domain/user/repository/user.repository';
+import { ProcessAdminProcessStatusChangeDto } from '@applications/http/process-admin/process/request/process-admin-process-status-change.dto';
+import { ProcessAdminProcessFormTemplateViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-template-view.dto';
+import { FormSchemaRepository } from '@domain/form-schema/repository/form-schema.repository';
+import { ProcessAdminProcessFormTemplateViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-template-view.response';
+import { StepRepository } from '@domain/step/repository/step.repository';
+import { ProcessAdminProcessFormFilledViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-filled-view.dto';
+import { ProcessAdminProcessFormFilledViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-filled-view.response';
+import { FormSchemaFilledRepository } from '@domain/form-schema/repository/form-schema-filled.repository';
 
 @Controller('process-admin/process')
 export class ProcessAdminProcessController {
@@ -28,6 +36,9 @@ export class ProcessAdminProcessController {
     private readonly userRepository: UserRepository,
     private readonly processUsersService: ProcessUsersService,
     private readonly processStatusService: ProcessStatusService,
+    private readonly formSchemaRepository: FormSchemaRepository,
+    private readonly stepRepository: StepRepository,
+    private readonly formSchemaFilledRepository: FormSchemaFilledRepository,
   ) {}
 
   @MyApiOperation({
@@ -150,5 +161,59 @@ export class ProcessAdminProcessController {
     });
 
     return new ProcessAdminProcessUsersGetAllResponse(res, count);
+  }
+
+  @MyApiOperation({
+    rights: {
+      process: {
+        manager: true,
+      },
+    },
+  })
+  @Post('/status/change')
+  async changeStatus(@Body() body: ProcessAdminProcessStatusChangeDto): Promise<void> {
+    await this.commonProcessService.changeStatus({ processId: body.processId, status: body.status });
+  }
+
+  @MyApiOperation({
+    rights: {
+      process: {
+        manager: true,
+      },
+    },
+  })
+  @Get('/form-schema')
+  async getProcessFormSchema(@Query() query: ProcessAdminProcessFormTemplateViewDto) {
+    // валидация что схема принадлежит процессу
+    await this.stepRepository.findByProcessAndFormSchemaIdOrFail({
+      processId: query.processId,
+      formSchemaId: query.formSchemaId,
+    });
+    const res = await this.formSchemaRepository.findByIdOrFail(query.formSchemaId);
+    return new ProcessAdminProcessFormTemplateViewResponse(res);
+  }
+
+  @MyApiOperation({
+    rights: {
+      process: {
+        manager: true,
+      },
+    },
+  })
+  @Get('/form-filled')
+  async getProcessFormSchemaFilled(
+    @Query() query: ProcessAdminProcessFormFilledViewDto,
+  ): Promise<ProcessAdminProcessFormFilledViewResponse> {
+    // валидация что схема принадлежит процессу
+    await this.stepRepository.findByProcessAndFormSchemaIdOrFail({
+      processId: query.processId,
+      formSchemaId: query.formSchemaId,
+    });
+
+    const res = await this.formSchemaFilledRepository.findByIdAndSchemaIdOrFail({
+      schemaId: query.formSchemaId,
+      filledFormId: query.filledFormId,
+    });
+    return new ProcessAdminProcessFormFilledViewResponse(res);
   }
 }

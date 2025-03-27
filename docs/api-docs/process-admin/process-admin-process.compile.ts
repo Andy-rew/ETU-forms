@@ -20,8 +20,8 @@ import { ProcessAdminProcessLinkAccessDto } from '@applications/http/process-adm
 import { ProcessAdminProcessFormTemplateViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-template-view.dto';
 import { ProcessAdminProcessFormTemplateViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-template-view.response';
 import { ProcessAdminProcessFormFilledViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-filled-view.dto';
-import { ProcessAdminProcessFormFilledViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-filled-view.response';
 import { ProcessAdminProcessStatusChangeDto } from '@applications/http/process-admin/process/request/process-admin-process-status-change.dto';
+import { ProcessAdminProcessFormFilledViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-filled-view.response';
 
 export function ProcessAdminProcessCompile(): void {
   const processAdminProcessController = processAdminBaseController.createController('/process', []);
@@ -65,7 +65,7 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/status/change', {
     tags: [appProcessAdminProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Изменить статус процесса',
@@ -159,7 +159,7 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/form-schema', {
     tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить шаблон формы процесса',
@@ -172,7 +172,7 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/form-filled', {
     tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить заполненный шаблон формы процесса',

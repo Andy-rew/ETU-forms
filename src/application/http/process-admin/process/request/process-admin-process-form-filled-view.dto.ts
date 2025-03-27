@@ -7,4 +7,7 @@ export class ProcessAdminProcessFormFilledViewDto {
 
   @IdProperty()
   filledFormId: number;
+
+  @IdProperty()
+  formSchemaId: number;
 }
