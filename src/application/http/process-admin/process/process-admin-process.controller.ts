@@ -26,6 +26,7 @@ import { StepRepository } from '@domain/step/repository/step.repository';
 import { ProcessAdminProcessFormFilledViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-filled-view.dto';
 import { ProcessAdminProcessFormFilledViewResponse } from '@applications/http/process-admin/process/response/process-admin-process-form-filled-view.response';
 import { FormSchemaFilledRepository } from '@domain/form-schema/repository/form-schema-filled.repository';
+import { ProcessAdminProcessLinkAccessDto } from '@applications/http/process-admin/process/request/process-admin-process-link-access.dto';
 
 @Controller('process-admin/process')
 export class ProcessAdminProcessController {
@@ -215,5 +216,17 @@ export class ProcessAdminProcessController {
       filledFormId: query.filledFormId,
     });
     return new ProcessAdminProcessFormFilledViewResponse(res);
+  }
+
+  @MyApiOperation({
+    rights: {
+      process: {
+        manager: true,
+      },
+    },
+  })
+  @Post('/link-access')
+  async linkAccess(@Body() body: ProcessAdminProcessLinkAccessDto) {
+    await this.processRepository.setLinkAccess({ linkAccess: body.linkAccess, processId: body.processId });
   }
 }

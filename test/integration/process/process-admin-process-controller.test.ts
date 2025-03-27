@@ -25,6 +25,7 @@ import { FormSchemaFilledEntity } from '@domain/form-schema/entities/form-schema
 import { StepBuilder } from '../../builders/step.builder';
 import { ProcessAdminProcessFormTemplateViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-template-view.dto';
 import { ProcessAdminProcessFormFilledViewDto } from '@applications/http/process-admin/process/request/process-admin-process-form-filled-view.dto';
+import { ProcessAdminProcessLinkAccessDto } from '@applications/http/process-admin/process/request/process-admin-process-link-access.dto';
 
 @suite()
 export class ProcessAdminProcessControllerTest extends BaseTestClass {
@@ -514,6 +515,43 @@ export class ProcessAdminProcessControllerTest extends BaseTestClass {
       .execute();
 
     expect(res.status).toBe(200);
+  }
+
+  @test()
+  async setLinkAccess() {
+    const processAdmin = await this.getBuilder(UserBuilder)
+      .withRoles([UserRoleEnum.processAdmin])
+      .withStatus(UserStatusEnum.activated)
+      .build();
+
+    const dataForCreation = {
+      title: 'Тестовый процесс',
+      startDate: new Date(),
+      endDate: dayjs().add(5, 'day').toDate(),
+    };
+
+    const process = await this.getService(CommonProcessService).create({
+      title: dataForCreation.title,
+      startDate: dataForCreation.startDate,
+      endDate: dataForCreation.endDate,
+      processAdmin: processAdmin,
+    });
+
+    const body: ProcessAdminProcessLinkAccessDto = {
+      processId: process.id,
+      linkAccess: true,
+    };
+
+    const res = await this.httpRequest()
+      .withAuth(processAdmin)
+      .post('/process-admin/process/link-access')
+      .body(body)
+      .execute();
+
+    expect(res.status).toBe(201);
+    const updatedProcess = await this.getService(ProcessRepository).findByIdOrFail(process.id);
+
+    expect(updatedProcess.linkAccess).toBe(true);
   }
 }
 describe('', () => {});

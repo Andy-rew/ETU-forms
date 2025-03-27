@@ -90,7 +90,7 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/link-access', {
     tags: [appProcessAdminProcessTag, appUserManagerProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Установить/убрать доступ к процессу по ссылке',
@@ -128,7 +128,7 @@ export function ProcessAdminProcessCompile(): void {
 
   processAdminProcessController.addApiMethod('/users/all', {
     tags: [appProcessAdminProcessUsersTag, appUserManagerProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить список пользователей',

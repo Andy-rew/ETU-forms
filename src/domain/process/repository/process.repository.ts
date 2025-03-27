@@ -240,4 +240,8 @@ export class ProcessRepository {
   async updateStatus(process: ProcessEntity) {
     await this.repo.update(process.id, { status: process.status });
   }
+
+  async setLinkAccess(dto: { linkAccess: boolean; processId: string }) {
+    await this.repo.update(dto.processId, { linkAccess: dto.linkAccess });
+  }
 }
