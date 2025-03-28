@@ -7,6 +7,10 @@ import { Repository } from 'typeorm';
 export class ReactionRepository {
   constructor(@InjectRepository(ReactionEntity) private readonly repo: Repository<ReactionEntity>) {}
 
+  async save(reaction: ReactionEntity) {
+    return this.repo.save(reaction);
+  }
+
   async findOneByUserStepProcess(dto: { userId: number; stepId: number; processId: string }) {
     return this.repo
       .createQueryBuilder('reaction')

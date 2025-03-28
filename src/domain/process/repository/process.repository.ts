@@ -53,6 +53,7 @@ export class ProcessRepository {
       where: { id },
       relations: {
         userParticipants: true,
+        processImages: true,
         steps: { parent: true, formSchema: true, formAcceptSchema: true, formDeclineSchema: true },
       },
     });

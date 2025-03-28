@@ -94,6 +94,8 @@ export class StepParticipantsRepository {
       .innerJoinAndSelect('step_participants.step', 'step')
       .leftJoinAndSelect('step_participants.filledForm', 'filledForm')
       .leftJoinAndSelect('step_participants.mainReaction', 'mainReaction')
+      .leftJoinAndSelect('mainReaction.reactionFormFilled', 'reactionFormFilled')
+      .leftJoinAndSelect('reactionFormFilled.schema', 'schema')
       .where('step.id = :stepId', { stepId: dto.stepId })
       .andWhere('step.process_id = :processId', { processId: dto.processId })
       .andWhere('processParticipant.user_id = :userId', { userId: dto.userId })

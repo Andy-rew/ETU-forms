@@ -79,8 +79,8 @@ export class UserProcessViewResponse {
     this.title = process.title;
     this.startDate = process.startDate;
     this.endDate = process.endDate;
-    this.imageUrls = process.processImages.map((image) => new UserProcessViewImageItem(image));
-    this.steps = process.steps.map((step) => new UserProcessViewStepItem(step));
+    this.imageUrls = process.processImages?.map((image) => new UserProcessViewImageItem(image));
+    this.steps = process.steps?.map((step) => new UserProcessViewStepItem(step));
     this.description = process.description;
   }
 }

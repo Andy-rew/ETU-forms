@@ -24,7 +24,7 @@ import { UserProcessStepReactionSchemaFilledDto } from '@applications/http/user/
 import { UserProcessStepReactionSchemaFilledResponse } from '@applications/http/user/participant/process/response/user-process-step-reaction-schema-filled.response';
 import { UserProcessStepApplyDto } from '@applications/http/user/participant/process/request/user-process-step-apply.dto';
 
-@Controller('user/process/participant')
+@Controller('user/participant/process')
 export class UserProcessParticipantController {
   constructor(
     private readonly processRepository: ProcessRepository,

@@ -22,8 +22,8 @@ export class StepRepository {
       .where('step.process_id = :processId', { processId: dto.processId })
       .leftJoinAndSelect('step.parent', 'parent')
       .innerJoinAndSelect('step.formSchema', 'formSchema')
-      .innerJoinAndSelect('step.stepParticipants', 'stepParticipants')
-      .innerJoinAndSelect('stepParticipants.processParticipant', 'processParticipant')
+      .innerJoinAndSelect('step.participants', 'participants')
+      .innerJoinAndSelect('participants.processParticipant', 'processParticipant')
       .innerJoinAndSelect('processParticipant.user', 'user')
       .andWhere('user.id = :userId', { userId: dto.userId })
       .getMany();

@@ -16,7 +16,7 @@ import { UserProcessStepReactionSchemaFilledDto } from '@applications/http/user/
 import { UserProcessStepReactionSchemaFilledResponse } from '@applications/http/user/participant/process/response/user-process-step-reaction-schema-filled.response';
 
 export function ProcessParticipantProcessCompile(): void {
-  const userProcessController = userBaseController.createController('/process/participant', []);
+  const userProcessController = userBaseController.createController('/participant/process', []);
 
   userProcessController.addApiMethod('/view', {
     tags: [appUserProcessTag],

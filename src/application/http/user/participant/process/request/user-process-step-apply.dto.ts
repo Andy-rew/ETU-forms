@@ -1,6 +1,6 @@
 import { UuidProperty } from '@applications/decorators/api/common/uuid.property.decorator';
 import { IdProperty } from '@applications/decorators/api/common/id.property.decorator';
-import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
+import { StringProperty } from '@ivankrtv/openapidoc/dist';
 
 export class UserProcessStepApplyDto {
   @UuidProperty('Id процесса')
@@ -12,6 +12,6 @@ export class UserProcessStepApplyDto {
   @IdProperty({ description: 'Id шаблона формы этапа' })
   formSchemaId: number;
 
-  @TextProperty({ description: 'Заполненная форма этапа' })
+  @StringProperty({ description: 'JSON результат заполненной формы', example: '' })
   filledForm: JSON;
 }

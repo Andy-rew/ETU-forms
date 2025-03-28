@@ -9,6 +9,7 @@ import { UserBuilder } from './user.builder';
 import { CommonProcessManager } from '@domain/process/managers/common-process.manager';
 import * as dayjs from 'dayjs';
 import { Repository } from 'typeorm';
+import { ProcessParticipantEntity } from '@domain/process/entities/process-participant.entity';
 
 export class ProcessBuilder {
   constructor(private readonly app: INestApplication) {}
@@ -20,6 +21,7 @@ export class ProcessBuilder {
   private description: string | null = null;
   private images: FileEntity[] | null = null;
   private processAdmin: UserEntity | null = null;
+  private participants: UserEntity[] | null = null;
 
   public withTitle(title: string): this {
     this.title = title;
@@ -56,6 +58,11 @@ export class ProcessBuilder {
     return this;
   }
 
+  public withParticipants(participants: UserEntity[]): this {
+    this.participants = participants;
+    return this;
+  }
+
   public buildEntity(): ProcessEntity {
     const process = this.app.get(CommonProcessManager).buildForCreate({
       title: this.title,
@@ -89,6 +96,22 @@ export class ProcessBuilder {
     if (this.status !== createdProcess.status) {
       createdProcess.status = this.status;
       await this.app.get(getRepositoryToken(ProcessEntity)).save(createdProcess);
+    }
+
+    if (this.participants.length) {
+      const participants = [];
+      this.participants.forEach((participant) => {
+        const processParticipant = new ProcessParticipantEntity();
+        processParticipant.user = participant;
+        processParticipant.process = createdProcess;
+        participants.push(processParticipant);
+      });
+
+      await this.app
+        .get<Repository<ProcessParticipantEntity>>(getRepositoryToken(ProcessParticipantEntity))
+        .save(participants);
+
+      createdProcess.userParticipants = participants;
     }
 
     return createdProcess;

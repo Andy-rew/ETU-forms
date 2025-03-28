@@ -8,6 +8,8 @@ import { UserEntity } from '@domain/user/entities/user.entity';
 import { FormSchemaEntity } from '@domain/form-schema/entities/form-schema.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { ProcessParticipantEntity } from '@domain/process/entities/process-participant.entity';
+import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
 
 export class StepBuilder {
   constructor(private readonly app: INestApplication) {}
@@ -22,6 +24,7 @@ export class StepBuilder {
   private acceptFormSchema: FormSchemaEntity = null;
   private declineFormSchema: FormSchemaEntity = null;
   private formSchema: FormSchemaEntity = null;
+  private processParticipants: ProcessParticipantEntity[] = [];
 
   public withProcess(process: ProcessEntity): this {
     this.process = process;
@@ -35,6 +38,11 @@ export class StepBuilder {
 
   public withAcceptFormSchema(acceptFormSchema: FormSchemaEntity): this {
     this.acceptFormSchema = acceptFormSchema;
+    return this;
+  }
+
+  public withProcessParticipants(processParticipants: ProcessParticipantEntity[]): this {
+    this.processParticipants = processParticipants;
     return this;
   }
 
@@ -76,6 +84,23 @@ export class StepBuilder {
       participantsCount: step.participantsCount,
       parentId: step.parent?.id || null,
     });
+
+    if (this.processParticipants.length) {
+      const stepParticipants = [];
+
+      this.processParticipants.forEach((participant) => {
+        const stepParticipant = new StepParticipantsEntity();
+        stepParticipant.step = stepCreated;
+        stepParticipant.processParticipant = participant;
+        stepParticipants.push(stepParticipant);
+      });
+
+      await this.app
+        .get<Repository<StepParticipantsEntity>>(getRepositoryToken(StepParticipantsEntity))
+        .save(stepParticipants);
+
+      stepCreated.participants = stepParticipants;
+    }
 
     stepCreated.formSchema = this.formSchema;
     stepCreated.formAcceptSchema = this.acceptFormSchema;

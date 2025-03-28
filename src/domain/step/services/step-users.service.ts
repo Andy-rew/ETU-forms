@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { StepRepository } from '@domain/step/repository/step.repository';
 import { ProcessRepository } from '@domain/process/repository/process.repository';
 import { StepEntity } from '@domain/step/entities/step.entity';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { StepParticipantsRepository } from '@domain/step/repository/step-participants.repository';
 import { FormSchemaFilledEntity } from '@domain/form-schema/entities/form-schema-filled.entity';
+import * as dayjs from 'dayjs';
+import * as isBetween from 'dayjs/plugin/isBetween';
 
 @Injectable()
 export class StepUsersService {
@@ -12,7 +14,9 @@ export class StepUsersService {
     private readonly stepRepository: StepRepository,
     private readonly processRepository: ProcessRepository,
     private readonly stepParticipantsRepository: StepParticipantsRepository,
-  ) {}
+  ) {
+    dayjs.extend(isBetween);
+  }
 
   async getActualStepsForParticipant(dto: { processId: string; userId: number }): Promise<StepEntity[]> {
     const process = await this.processRepository.findByIdOrFail(dto.processId);
@@ -40,6 +44,10 @@ export class StepUsersService {
     });
 
     const step = stepParticipant.step;
+
+    if (!dayjs().isBetween(step.startTime, step.endTime, 'minutes', '[]')) {
+      throw new BadRequestException('Step is not active');
+    }
 
     const stepForm = await this.stepRepository.findViewById(step.id);
 
