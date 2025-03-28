@@ -48,15 +48,18 @@ export class ProcessRepository {
     return this.repo.findOneByOrFail({ id });
   }
 
-  async findByIdWitParticipantsAndSteps(id: string): Promise<ProcessEntity | null> {
+  async findByIdWithParticipantsAndSteps(id: string): Promise<ProcessEntity | null> {
     return this.repo.findOne({
       where: { id },
-      relations: { userParticipants: true, steps: { parent: true } },
+      relations: {
+        userParticipants: true,
+        steps: { parent: true, formSchema: true, formAcceptSchema: true, formDeclineSchema: true },
+      },
     });
   }
 
-  async findByIdWitParticipantsAndStepsOrFail(id: string): Promise<ProcessEntity> {
-    const process = await this.findByIdWitParticipantsAndSteps(id);
+  async findByIdWithParticipantsAndStepsOrFail(id: string): Promise<ProcessEntity> {
+    const process = await this.findByIdWithParticipantsAndSteps(id);
     if (!process) {
       throw new NotFoundException('Process not found');
     }

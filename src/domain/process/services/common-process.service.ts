@@ -117,7 +117,7 @@ export class CommonProcessService {
   }
 
   async changeStatus(dto: { processId: string; status: ProcessStatusEnum }) {
-    const process = await this.processRepository.findByIdOrFail(dto.processId);
+    const process = await this.processRepository.findByIdWithParticipantsAndStepsOrFail(dto.processId);
     await this.processStatusService.resolveStatus([process]);
 
     if (process.status === dto.status) {
@@ -138,6 +138,14 @@ export class CommonProcessService {
         if (process.status === ProcessStatusEnum.finished) {
           throw new BadRequestException('Process is finished, you cannot change status to inProgress');
         }
+        const existsStepWithOutSchema = process.steps.find(
+          (step) => !step.formSchema || !step.formAcceptSchema || !step.formDeclineSchema,
+        );
+
+        if (existsStepWithOutSchema) {
+          throw new BadRequestException('All steps should have form schema and reaction schemas');
+        }
+
         process.status = ProcessStatusEnum.inProgress;
         break;
       case ProcessStatusEnum.finished:

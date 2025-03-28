@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
 import { Repository } from 'typeorm';
+import { FormSchemaFilledEntity } from '@domain/form-schema/entities/form-schema-filled.entity';
 
 @Injectable()
 export class StepParticipantsRepository {
@@ -107,5 +108,22 @@ export class StepParticipantsRepository {
       );
     }
     return stepParticipant;
+  }
+
+  async saveWithFilledForm(dto: { filledForm: FormSchemaFilledEntity; stepParticipant: StepParticipantsEntity }) {
+    const qr = this.repo.manager.connection.createQueryRunner();
+    await qr.startTransaction();
+    try {
+      const filledForm = await qr.manager.save(dto.filledForm);
+
+      await qr.manager.update(StepParticipantsEntity, { id: dto.stepParticipant.id }, { filledForm });
+
+      await qr.commitTransaction();
+    } catch (error) {
+      await qr.rollbackTransaction();
+      throw new Error(error);
+    } finally {
+      await qr.release();
+    }
   }
 }

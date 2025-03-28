@@ -24,7 +24,7 @@ export class CommonStepService {
     participantsCount: number | null;
     parentId: number | null;
   }) {
-    const process = await this.processRepository.findByIdWitParticipantsAndStepsOrFail(dto.processId);
+    const process = await this.processRepository.findByIdWithParticipantsAndStepsOrFail(dto.processId);
 
     if (process.steps.find((step) => step.parent === null) && dto.parentId === null) {
       throw new BadRequestException('First step already exists. Pass parent step id');

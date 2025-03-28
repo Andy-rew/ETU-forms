@@ -7,7 +7,4 @@ export class UserProcessStepSchemaDto {
 
   @IdProperty()
   stepId: number;
-
-  @IdProperty({ description: 'Id шаблона формы этапа' })
-  formSchemaId: number;
 }

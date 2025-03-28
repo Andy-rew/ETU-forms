@@ -16,6 +16,7 @@ import { FormSchemaModule } from '@domain/form-schema/form-schema.module';
 import { StepExpertsService } from '@domain/step/services/step-experts.service';
 import { StepParticipantsRepository } from '@domain/step/repository/step-participants.repository';
 import { StepExpertsParticipantsRepository } from '@domain/step/repository/step-experts-participants.repository';
+import { StepUsersService } from '@domain/step/services/step-users.service';
 
 @Module({
   controllers: [ProcessAdminProcessStepController],
@@ -40,6 +41,7 @@ import { StepExpertsParticipantsRepository } from '@domain/step/repository/step-
     StepExpertsService,
     StepParticipantsRepository,
     StepExpertsParticipantsRepository,
+    StepUsersService,
   ],
   exports: [
     StepRepository,
@@ -47,6 +49,7 @@ import { StepExpertsParticipantsRepository } from '@domain/step/repository/step-
     StepExpertsRepository,
     StepParticipantsRepository,
     StepExpertsParticipantsRepository,
+    StepUsersService,
   ],
 })
 export class StepModule {}

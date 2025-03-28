@@ -16,11 +16,11 @@ import { UserProcessStepReactionSchemaFilledDto } from '@applications/http/user/
 import { UserProcessStepReactionSchemaFilledResponse } from '@applications/http/user/participant/process/response/user-process-step-reaction-schema-filled.response';
 
 export function ProcessParticipantProcessCompile(): void {
-  const userProcessController = userBaseController.createController('/participant/process', []);
+  const userProcessController = userBaseController.createController('/process/participant', []);
 
   userProcessController.addApiMethod('/view', {
     tags: [appUserProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить основную информацию о процессе',
@@ -32,7 +32,7 @@ export function ProcessParticipantProcessCompile(): void {
 
   userProcessController.addApiMethod('/my-steps', {
     tags: [appUserProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить мои этапы процесса',
@@ -45,7 +45,7 @@ export function ProcessParticipantProcessCompile(): void {
 
   userProcessController.addApiMethod('/step/schema', {
     tags: [appUserProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить шаблон формы этапа для заполнения',
@@ -57,7 +57,7 @@ export function ProcessParticipantProcessCompile(): void {
 
   userProcessController.addApiMethod('/step/filled-form', {
     tags: [appUserProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить заполненную форму этапа',
@@ -69,7 +69,7 @@ export function ProcessParticipantProcessCompile(): void {
 
   userProcessController.addApiMethod('/step/apply', {
     tags: [appUserProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Отправить заполненную форму этапа',
@@ -81,7 +81,7 @@ export function ProcessParticipantProcessCompile(): void {
 
   userProcessController.addApiMethod('/step/reaction/info', {
     tags: [appUserProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить информацию о реакции эксперта на заполненную форму этапа',
@@ -94,7 +94,7 @@ export function ProcessParticipantProcessCompile(): void {
 
   userProcessController.addApiMethod('/step/reaction/schema', {
     tags: [appUserProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить шаблон главной реакции реакции эксперта на заполненную форму этапа',
@@ -106,7 +106,7 @@ export function ProcessParticipantProcessCompile(): void {
 
   userProcessController.addApiMethod('/step/reaction/filled', {
     tags: [appUserProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить заполненный шаблон главной реакции реакции эксперта на заполненную форму этапа',

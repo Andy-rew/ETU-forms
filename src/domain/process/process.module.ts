@@ -18,9 +18,11 @@ import { ProcessController } from '@applications/http/common/process/process.con
 import { ProcessStatusService } from '@domain/process/services/process-status.service';
 import { ProcessParticipantRepository } from '@domain/process/repository/process-participant.repository';
 import { FormSchemaModule } from '@domain/form-schema/form-schema.module';
+import { UserProcessParticipantController } from '@applications/http/user/participant/process/user-process-participant.controller';
+import { ReactionModule } from '@domain/reaction/reaction.module';
 
 @Module({
-  controllers: [ProcessAdminProcessController, ProcessController],
+  controllers: [ProcessAdminProcessController, ProcessController, UserProcessParticipantController],
   imports: [
     TypeOrmModule.forFeature([ProcessEntity, ProcessManagersEntity, ProcessParticipantEntity]),
     FileModule,
@@ -28,6 +30,7 @@ import { FormSchemaModule } from '@domain/form-schema/form-schema.module';
     UserModule,
     StepModule,
     FormSchemaModule,
+    ReactionModule,
   ],
   providers: [
     ProcessRepository,

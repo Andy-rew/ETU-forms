@@ -7,6 +7,28 @@ import { Repository } from 'typeorm';
 export class StepRepository {
   constructor(@InjectRepository(StepEntity) private readonly repo: Repository<StepEntity>) {}
 
+  async findActualByProcessId(processId: string) {
+    return this.repo
+      .createQueryBuilder('step')
+      .where('step.process_id = :processId', { processId })
+      .leftJoinAndSelect('step.parent', 'parent')
+      .innerJoinAndSelect('step.formSchema', 'formSchema')
+      .getMany();
+  }
+
+  async findActualByProcessIdForUser(dto: { processId: string; userId: number }) {
+    return this.repo
+      .createQueryBuilder('step')
+      .where('step.process_id = :processId', { processId: dto.processId })
+      .leftJoinAndSelect('step.parent', 'parent')
+      .innerJoinAndSelect('step.formSchema', 'formSchema')
+      .innerJoinAndSelect('step.stepParticipants', 'stepParticipants')
+      .innerJoinAndSelect('stepParticipants.processParticipant', 'processParticipant')
+      .innerJoinAndSelect('processParticipant.user', 'user')
+      .andWhere('user.id = :userId', { userId: dto.userId })
+      .getMany();
+  }
+
   async findOneWithProcessById(id: number): Promise<StepEntity | null> {
     return this.repo.findOne({ where: { id }, relations: { process: true, parent: true } });
   }
@@ -87,8 +109,12 @@ export class StepRepository {
     return this.findOneWithProcessById(step.id);
   }
 
-  async findByProcessAndFormSchemaId(dto: { processId: string; formSchemaId: number }): Promise<StepEntity | null> {
-    return this.repo
+  async findByProcessAndFormSchemaId(dto: {
+    processId: string;
+    formSchemaId: number;
+    stepId?: number;
+  }): Promise<StepEntity | null> {
+    const query = this.repo
       .createQueryBuilder('step')
       .where('step.process_id = :processId')
       .andWhere((qb) => {
@@ -99,11 +125,20 @@ export class StepRepository {
       .setParameters({
         processId: dto.processId,
         formSchemaId: dto.formSchemaId,
-      })
-      .getOne();
+      });
+
+    if (dto.stepId) {
+      query.andWhere('step.id = :stepId', { stepId: dto.stepId });
+    }
+
+    return query.getOne();
   }
 
-  async findByProcessAndFormSchemaIdOrFail(dto: { processId: string; formSchemaId: number }): Promise<StepEntity> {
+  async findByProcessAndFormSchemaIdOrFail(dto: {
+    processId: string;
+    formSchemaId: number;
+    stepId?: number;
+  }): Promise<StepEntity> {
     const step = await this.findByProcessAndFormSchemaId(dto);
     if (!step) {
       throw new NotFoundException('Step for schema and process not found');

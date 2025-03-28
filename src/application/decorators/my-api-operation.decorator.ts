@@ -7,6 +7,7 @@ import { ProcessParticipantAccessGuard } from '@applications/guards/process-part
 import { AuthGuard } from '@applications/guards/auth.guard';
 import { AllowSchemaTemplateGuard } from '@applications/guards/allow-schema-template.guard';
 import { MySchemaManageGuard } from '@applications/guards/my-schema-manage.guard';
+import { ProcessStepParticipantAccessGuard } from '@applications/guards/process-step-participant.access.guard';
 
 export function MyApiOperation(dto: {
   anyRole?: boolean;
@@ -15,6 +16,9 @@ export function MyApiOperation(dto: {
     process?: {
       manager?: boolean;
       expert?: boolean;
+      participant?: boolean;
+    };
+    step?: {
       participant?: boolean;
     };
     schema?: {
@@ -51,6 +55,12 @@ export function MyApiOperation(dto: {
 
       if (dto.rights.process.participant) {
         decorators.push(UseGuards(ProcessParticipantAccessGuard));
+      }
+    }
+
+    if (dto.rights.step) {
+      if (dto.rights.step.participant) {
+        decorators.push(UseGuards(ProcessStepParticipantAccessGuard));
       }
     }
 

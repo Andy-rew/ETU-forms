@@ -6,6 +6,7 @@ import { DateProperty } from '@applications/decorators/api/common/date.property.
 import { ArraySchemasProperty } from '@applications/decorators/api/helpers/array-schemas.property.decorator';
 import { ProcessEntity } from '@domain/process/entities/process.entity';
 import { StepEntity } from '@domain/step/entities/step.entity';
+import { DateWithTimeProperty } from '@applications/decorators/api/common/date-time.property.decorator';
 
 class UserProcessViewImageItem {
   @IdProperty()
@@ -27,8 +28,20 @@ class UserProcessViewStepItem {
   @IdProperty({ description: 'Id родительского этапа (после которого данный). Для первого = null', nullable: true })
   parentId: number | null;
 
+  @TextProperty({ description: 'Название этапа' })
+  title: string;
+
+  @DateWithTimeProperty()
+  startTime: Date;
+
+  @DateWithTimeProperty()
+  endTime: Date;
+
   constructor(step: StepEntity) {
     this.id = step.id;
+    this.title = step.title;
+    this.startTime = step.startTime;
+    this.endTime = step.endTime;
     this.parentId = step.parent?.id || null;
   }
 }

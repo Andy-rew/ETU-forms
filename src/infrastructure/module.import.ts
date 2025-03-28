@@ -11,6 +11,7 @@ import { AuthModule } from '@domain/auth/auth.module';
 import { MailerModule } from '@domain/mailer/mailer.module';
 import { FormSchemaModule } from '@domain/form-schema/form-schema.module';
 import { DictsModule } from '@domain/dicts/dicts.module';
+import { ReactionModule } from '@domain/reaction/reaction.module';
 
 export const ModuleImport = [
   ConfigModule.forRoot({
@@ -43,4 +44,5 @@ export const ModuleImport = [
   MailerModule,
   FormSchemaModule,
   DictsModule,
+  ReactionModule,
 ];
