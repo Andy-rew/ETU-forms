@@ -95,7 +95,7 @@ export function ExpertProcessCompile(): void {
 
   expertController.addApiMethod('/steps/participants/reaction', {
     tags: [appExpertProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Отправить реакцию на этап',

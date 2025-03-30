@@ -52,4 +52,12 @@ export class ReactionRepository {
       .where('stepParticipant.id = :stepParticipantId', { stepParticipantId })
       .getMany();
   }
+
+  async saveWithFilledFormTransaction(reaction: ReactionEntity): Promise<ReactionEntity> {
+    return this.repo.manager.transaction(async (transactionalEntityManager) => {
+      await transactionalEntityManager.save(reaction.reactionFormFilled);
+      await transactionalEntityManager.save(reaction);
+      return reaction;
+    });
+  }
 }

@@ -9,6 +9,7 @@ import { MySchemaManageGuard } from '@applications/guards/my-schema-manage.guard
 import { ProcessStepParticipantAccessGuard } from '@applications/guards/process-step-participant.access.guard';
 import { ProcessExpertAccessGuard } from '@applications/guards/process-expert-access.guard';
 import { ProcessStepExpertAccessGuard } from '@applications/guards/process-step-expert-access.guard';
+import { ProcessStepMainExpertAccessGuard } from '@applications/guards/process-step-main-expert-access.guard';
 
 export function MyApiOperation(dto: {
   anyRole?: boolean;
@@ -22,6 +23,7 @@ export function MyApiOperation(dto: {
     step?: {
       participant?: boolean;
       expert?: boolean;
+      mainExpert?: boolean;
     };
     schema?: {
       allowTemplates?: boolean;
@@ -67,6 +69,10 @@ export function MyApiOperation(dto: {
 
       if (dto.rights.step.expert) {
         decorators.push(UseGuards(ProcessStepExpertAccessGuard));
+      }
+
+      if (dto.rights.step.mainExpert) {
+        decorators.push(UseGuards(ProcessStepMainExpertAccessGuard));
       }
     }
 

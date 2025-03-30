@@ -24,6 +24,9 @@ import { FormSchemaFilledRepository } from '@domain/form-schema/repository/form-
 import { ExpertProcessStepsParticipantsReactionAllDto } from '@applications/http/user/expert/process/request/expert-process-steps-participants-reaction-all.dto';
 import { ExpertProcessStepsParticipantsReactionAllResponse } from '@applications/http/user/expert/process/response/expert-process-steps-participants-reaction-all.response';
 import { ExpertProcessStepsParticipantsReactionMainDto } from '@applications/http/user/expert/process/request/expert-process-steps-participants-reaction-main.dto';
+import { ExpertProcessStepsParticipantsAddReactionDto } from '@applications/http/user/expert/process/request/expert-process-steps-participants-add-reaction.dto';
+import { ExpertProcessStepsParticipantsAddReactionResponse } from '@applications/http/user/expert/process/response/expert-process-steps-participants-add-reaction.response';
+import { CommonReactionService } from '@domain/reaction/service/common-reaction.service';
 
 @Controller('user/expert/process')
 export class ExpertProcessController {
@@ -35,6 +38,7 @@ export class ExpertProcessController {
     private readonly stepRepository: StepRepository,
     private readonly formSchemaRepository: FormSchemaRepository,
     private readonly formSchemaFilledRepository: FormSchemaFilledRepository,
+    private readonly commonReactionService: CommonReactionService,
   ) {}
 
   @MyApiOperation({
@@ -171,11 +175,10 @@ export class ExpertProcessController {
     return new ExpertProcessStepsParticipantsFormResponse(res);
   }
 
-  //todo guard для главного эксперта
   @MyApiOperation({
     rights: {
       step: {
-        expert: true,
+        mainExpert: true,
       },
     },
   })
@@ -194,11 +197,10 @@ export class ExpertProcessController {
     return new ExpertProcessStepsParticipantsReactionAllResponse(stepParticipant);
   }
 
-  //todo guard для главного эксперта
   @MyApiOperation({
     rights: {
       step: {
-        expert: true,
+        mainExpert: true,
       },
     },
   })
@@ -219,5 +221,30 @@ export class ExpertProcessController {
     });
 
     await this.stepParticipantsRepository.saveWithMainReaction({ stepParticipant, mainReaction: reaction });
+  }
+
+  @MyApiOperation({
+    rights: {
+      step: {
+        expert: true,
+      },
+    },
+  })
+  @Post('/steps/participants/reaction')
+  async applyReaction(
+    @Body() body: ExpertProcessStepsParticipantsAddReactionDto,
+    @ReqUser() user: UserEntity,
+  ): Promise<ExpertProcessStepsParticipantsAddReactionResponse> {
+    const reaction = await this.commonReactionService.createReactionByUser({
+      processId: body.processId,
+      stepId: body.stepId,
+      userId: body.userId,
+      schemaId: body.schemaId,
+      type: body.type,
+      filledReaction: body.filledReaction,
+      userReactedBy: user,
+    });
+
+    return new ExpertProcessStepsParticipantsAddReactionResponse(reaction);
   }
 }
