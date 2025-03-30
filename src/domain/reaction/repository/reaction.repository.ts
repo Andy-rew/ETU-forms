@@ -31,4 +31,25 @@ export class ReactionRepository {
     }
     return reaction;
   }
+
+  async findOneByStepParticipantAndExpert(dto: { stepParticipantId: number; userExpertId: number }) {
+    return this.repo
+      .createQueryBuilder('reaction')
+      .innerJoinAndSelect('reaction.reactionFormFilled', 'reactionFormFilled')
+      .innerJoinAndSelect('reaction.stepParticipant', 'stepParticipant')
+      .innerJoinAndSelect('reaction.reactedByUser', 'reactedByUser')
+      .where('stepParticipant.id = :stepParticipantId', { stepParticipantId: dto.stepParticipantId })
+      .andWhere('reactedByUser.id = :expertId', { expertId: dto.userExpertId })
+      .getOne();
+  }
+
+  async findAllForStepParticipant(stepParticipantId: number) {
+    return this.repo
+      .createQueryBuilder('reaction')
+      .innerJoinAndSelect('reaction.reactionFormFilled', 'reactionFormFilled')
+      .innerJoinAndSelect('reaction.stepParticipant', 'stepParticipant')
+      .innerJoinAndSelect('reaction.reactedByUser', 'reactedByUser')
+      .where('stepParticipant.id = :stepParticipantId', { stepParticipantId })
+      .getMany();
+  }
 }

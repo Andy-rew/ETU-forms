@@ -1,4 +1,3 @@
-import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
 import { IdProperty } from '@applications/decorators/api/common/id.property.decorator';
 import { EnumProperty, ObjectProperty } from '@ivankrtv/openapidoc/dist';
 import { ReactionEntity } from '@domain/reaction/entities/reaction.entity';
@@ -6,6 +5,7 @@ import { ReactionTypeEnum } from '@domain/reaction/enums/reaction-type.enum';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
 import { EmailProperty } from '@applications/decorators/api/common/email-property.decorator';
+import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
 
 class ExpertProcessStepsParticipantsReactionItem {
   @IdProperty({ description: 'Id реакции' })
@@ -62,7 +62,7 @@ export class ExpertProcessStepsParticipantsReactionResponse {
   @ObjectProperty({ description: 'Реакция, будет null, если еще не проставлена', nullable: true })
   reaction: ExpertProcessStepsParticipantsReactionItem | null;
 
-  constructor(stepParticipant: StepParticipantsEntity, reaction: ReactionEntity) {
+  constructor(stepParticipant: StepParticipantsEntity, reaction: ReactionEntity | null) {
     this.id = stepParticipant.id;
     this.filledFormId = stepParticipant.filledForm.id;
     this.user = new ExpertProcessStepsParticipantsUserItem(stepParticipant.processParticipant.user);

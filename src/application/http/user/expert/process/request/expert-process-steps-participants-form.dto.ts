@@ -8,11 +8,9 @@ export class ExpertProcessStepsParticipantsFormDto {
   @IdProperty()
   stepId: number;
 
-  @IdProperty({
-    description: 'Id участника этапа',
-  })
-  participantId: number;
-
   @IdProperty({ description: 'Id заполненной формы этапа/реакции' })
   formId: number;
+
+  @IdProperty()
+  schemaId: number;
 }

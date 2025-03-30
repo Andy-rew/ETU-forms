@@ -12,9 +12,9 @@ export class ExpertProcessStepsParticipantsAddReactionDto {
   stepId: number;
 
   @IdProperty({
-    description: 'Id участника этапа',
+    description: 'Id пользователя участника этапа',
   })
-  participantId: number;
+  userId: number;
 
   @EnumApiProperty({
     enum: ReactionTypeEnum,

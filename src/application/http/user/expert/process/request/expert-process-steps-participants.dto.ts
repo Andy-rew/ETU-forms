@@ -3,6 +3,8 @@ import { UuidProperty } from '@applications/decorators/api/common/uuid.property.
 import { TextProperty } from '@applications/decorators/api/common/text-property.decorator';
 import { BoolProperty } from '@ivankrtv/openapidoc/dist';
 import { IsBoolean, IsOptional } from 'class-validator';
+import { LimitProperty } from '@applications/decorators/api/common/limit.property.decorator';
+import { OffsetProperty } from '@applications/decorators/api/common/offset.property.decorator';
 
 export class ExpertProcessStepsParticipantsDto {
   @UuidProperty()
@@ -10,6 +12,12 @@ export class ExpertProcessStepsParticipantsDto {
 
   @IdProperty()
   stepId: number;
+
+  @LimitProperty()
+  limit: number;
+
+  @OffsetProperty()
+  offset: number;
 
   @TextProperty({ description: 'Фильтр по имени', example: 'Иван', isOptional: true })
   nameFilter?: string;

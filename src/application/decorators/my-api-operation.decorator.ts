@@ -2,12 +2,13 @@ import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import { AuthRoles } from '@applications/decorators/auth-roles.decorator';
 import { ProcessMangerAccessGuard } from '@applications/guards/process-manger-access.guard';
-import { ProcessExpertAccessGuard } from '@applications/guards/process-expert-access.guard';
 import { ProcessParticipantAccessGuard } from '@applications/guards/process-participant.access.guard';
 import { AuthGuard } from '@applications/guards/auth.guard';
 import { AllowSchemaTemplateGuard } from '@applications/guards/allow-schema-template.guard';
 import { MySchemaManageGuard } from '@applications/guards/my-schema-manage.guard';
 import { ProcessStepParticipantAccessGuard } from '@applications/guards/process-step-participant.access.guard';
+import { ProcessExpertAccessGuard } from '@applications/guards/process-expert-access.guard';
+import { ProcessStepExpertAccessGuard } from '@applications/guards/process-step-expert-access.guard';
 
 export function MyApiOperation(dto: {
   anyRole?: boolean;
@@ -20,6 +21,7 @@ export function MyApiOperation(dto: {
     };
     step?: {
       participant?: boolean;
+      expert?: boolean;
     };
     schema?: {
       allowTemplates?: boolean;
@@ -61,6 +63,10 @@ export function MyApiOperation(dto: {
     if (dto.rights.step) {
       if (dto.rights.step.participant) {
         decorators.push(UseGuards(ProcessStepParticipantAccessGuard));
+      }
+
+      if (dto.rights.step.expert) {
+        decorators.push(UseGuards(ProcessStepExpertAccessGuard));
       }
     }
 

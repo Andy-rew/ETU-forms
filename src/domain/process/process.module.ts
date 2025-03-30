@@ -20,9 +20,15 @@ import { ProcessParticipantRepository } from '@domain/process/repository/process
 import { FormSchemaModule } from '@domain/form-schema/form-schema.module';
 import { UserProcessParticipantController } from '@applications/http/user/participant/process/user-process-participant.controller';
 import { ReactionModule } from '@domain/reaction/reaction.module';
+import { ExpertProcessController } from '@applications/http/user/expert/process/expert-process.controller';
 
 @Module({
-  controllers: [ProcessAdminProcessController, ProcessController, UserProcessParticipantController],
+  controllers: [
+    ProcessAdminProcessController,
+    ProcessController,
+    UserProcessParticipantController,
+    ExpertProcessController,
+  ],
   imports: [
     TypeOrmModule.forFeature([ProcessEntity, ProcessManagersEntity, ProcessParticipantEntity]),
     FileModule,

@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
 import { Repository } from 'typeorm';
 import { FormSchemaFilledEntity } from '@domain/form-schema/entities/form-schema-filled.entity';
+import { ReactionTypeEnum } from '@domain/reaction/enums/reaction-type.enum';
+import { ReactionEntity } from '@domain/reaction/entities/reaction.entity';
 
 @Injectable()
 export class StepParticipantsRepository {
@@ -21,6 +23,8 @@ export class StepParticipantsRepository {
     surnameFilter?: string;
     patronymicFilter?: string;
     emailFilter?: string;
+    expertUserId?: number;
+    isPassedToNextStep?: boolean;
   }): Promise<[StepParticipantsEntity[], number]> {
     const query = this.repo
       .createQueryBuilder('step_participants')
@@ -48,6 +52,22 @@ export class StepParticipantsRepository {
 
     if (dto.emailFilter) {
       query.andWhere('user.email ILIKE :emailFilter', { emailFilter: `%${dto.emailFilter}%` });
+    }
+
+    if (dto.expertUserId) {
+      query.innerJoinAndSelect('step_participants.experts', 'experts');
+      query.innerJoinAndSelect('experts.stepExpert', 'stepExpert');
+      query.andWhere('stepExpert.user_id = :expertUserId', { expertUserId: dto.expertUserId });
+    }
+
+    if (typeof dto.isPassedToNextStep === 'boolean') {
+      if (dto.isPassedToNextStep) {
+        query.andWhere('mainReaction.type = :isPassedToNextStep', { isPassedToNextStep: ReactionTypeEnum.accept });
+      }
+
+      if (!dto.isPassedToNextStep) {
+        query.andWhere('mainReaction.type = :isPassedToNextStep', { isPassedToNextStep: ReactionTypeEnum.decline });
+      }
     }
 
     return query.getManyAndCount();
@@ -127,5 +147,13 @@ export class StepParticipantsRepository {
     } finally {
       await qr.release();
     }
+  }
+
+  async saveWithMainReaction(dto: { mainReaction: ReactionEntity; stepParticipant: StepParticipantsEntity }) {
+    await this.repo.manager.update(
+      StepParticipantsEntity,
+      { id: dto.stepParticipant.id },
+      { mainReaction: dto.mainReaction },
+    );
   }
 }

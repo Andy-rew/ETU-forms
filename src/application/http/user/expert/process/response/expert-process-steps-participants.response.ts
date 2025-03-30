@@ -8,8 +8,8 @@ import { ReactionTypeEnum } from '@domain/reaction/enums/reaction-type.enum';
 import { IdProperty } from '@applications/decorators/api/common/id.property.decorator';
 
 class ExpertProcessStepsParticipantsItem {
-  @IdProperty({ description: 'Id участника этапа' })
-  id: number;
+  @IdProperty({ description: 'Id пользователя участника этапа' })
+  userId: number;
 
   @BoolProperty({
     description: 'Проходит на следующий этап?',
@@ -51,7 +51,7 @@ class ExpertProcessStepsParticipantsItem {
   filledFormId: number | null;
 
   constructor(stepParticipant: StepParticipantsEntity) {
-    this.id = stepParticipant.id;
+    this.userId = stepParticipant.processParticipant.user.id;
     this.name = stepParticipant.processParticipant.user.name;
     this.surname = stepParticipant.processParticipant.user.surname;
     this.patronymic = stepParticipant.processParticipant.user.patronymic;

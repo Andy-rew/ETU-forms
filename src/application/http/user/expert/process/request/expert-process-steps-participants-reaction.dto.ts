@@ -9,7 +9,7 @@ export class ExpertProcessStepsParticipantsReactionDto {
   stepId: number;
 
   @IdProperty({
-    description: 'Id участника этапа',
+    description: 'Id пользователя-участника этапа',
   })
-  participantId: number;
+  userId: number;
 }

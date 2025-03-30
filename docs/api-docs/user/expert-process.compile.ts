@@ -22,7 +22,7 @@ export function ExpertProcessCompile(): void {
 
   expertController.addApiMethod('/view', {
     tags: [appExpertProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить основную информацию о процессе',
@@ -34,7 +34,7 @@ export function ExpertProcessCompile(): void {
 
   expertController.addApiMethod('/steps', {
     tags: [appExpertProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить этапы',
@@ -47,7 +47,7 @@ export function ExpertProcessCompile(): void {
 
   expertController.addApiMethod('/steps/participants', {
     tags: [appExpertProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить всех участников этапа для которых текущий пользователь является экспертом',
@@ -59,7 +59,7 @@ export function ExpertProcessCompile(): void {
 
   expertController.addApiMethod('/steps/participants/reaction', {
     tags: [appExpertProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить информацию о реакции на этап',
@@ -69,9 +69,9 @@ export function ExpertProcessCompile(): void {
     },
   });
 
-  expertController.addApiMethod('/step/schema', {
+  expertController.addApiMethod('/steps/schema', {
     tags: [appExpertProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить шаблон формы этапа/реакции для заполнения',
@@ -83,7 +83,7 @@ export function ExpertProcessCompile(): void {
 
   expertController.addApiMethod('/steps/participants/form', {
     tags: [appExpertProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить заполненную форму этапа/реакции',
@@ -107,7 +107,7 @@ export function ExpertProcessCompile(): void {
 
   expertController.addApiMethod('/steps/participants/reaction/main', {
     tags: [appExpertProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'POST',
     requiresAuthorization: true,
     title: 'Выбрать реакцию на этап как основную',
@@ -120,7 +120,7 @@ export function ExpertProcessCompile(): void {
 
   expertController.addApiMethod('/steps/participants/reaction/all', {
     tags: [appExpertProcessTag],
-    isImplemented: false,
+    isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
     title: 'Получить все реакции на этап',
