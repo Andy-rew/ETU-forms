@@ -4,6 +4,7 @@ import { IsEnum } from 'class-validator';
 import { FormSchemaFilledEntity } from '@domain/form-schema/entities/form-schema-filled.entity';
 import { UserEntity } from '@domain/user/entities/user.entity';
 import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
+import { StepExpertsParticipantsEntity } from '@domain/step/entities/step-experts-participants.entity';
 
 @Entity('reactions')
 export class ReactionEntity {
@@ -28,4 +29,10 @@ export class ReactionEntity {
     nullable: false,
   })
   stepParticipant: StepParticipantsEntity;
+
+  @OneToOne(
+    () => StepExpertsParticipantsEntity,
+    (stepExpertsParticipant: StepExpertsParticipantsEntity) => stepExpertsParticipant.reaction,
+  )
+  stepExpertsParticipant: StepExpertsParticipantsEntity;
 }

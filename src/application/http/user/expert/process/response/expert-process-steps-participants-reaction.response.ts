@@ -64,7 +64,7 @@ export class ExpertProcessStepsParticipantsReactionResponse {
 
   constructor(stepParticipant: StepParticipantsEntity, reaction: ReactionEntity | null) {
     this.id = stepParticipant.id;
-    this.filledFormId = stepParticipant.filledForm.id;
+    this.filledFormId = stepParticipant.filledForm?.id;
     this.user = new ExpertProcessStepsParticipantsUserItem(stepParticipant.processParticipant.user);
     this.reaction = reaction ? new ExpertProcessStepsParticipantsReactionItem(reaction) : null;
   }

@@ -89,9 +89,15 @@ export class ExpertProcessController {
     @Query() query: ExpertProcessStepsParticipantsDto,
     @ReqUser() user: UserEntity,
   ): Promise<ExpertProcessStepsParticipantsResponse> {
+    const stepExpert = await this.stepExpertsRepository.findByStepIdAndProcessIdOrFail({
+      stepId: query.stepId,
+      userId: user.id,
+      processId: query.processId,
+    });
+
     const [participants, count] = await this.stepParticipantsRepository.findAndCountStepParticipantsByStepId({
       processId: query.processId,
-      expertUserId: user.id,
+      expertUserId: stepExpert.isMain ? null : user.id,
       stepId: query.stepId,
       limit: query.limit,
       offset: query.offset,

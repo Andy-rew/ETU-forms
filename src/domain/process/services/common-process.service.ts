@@ -9,11 +9,14 @@ import { ProcessGetAllByRoleEnum } from '@domain/process/enums/process-get-all-b
 import { ProcessStatusEnum } from '@domain/process/enums/process-status.enum';
 import { ProcessStatusService } from '@domain/process/services/process-status.service';
 import { UserRoleEnum } from '@domain/user/enums/user-role.enum';
+import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
+import { StepParticipantsRepository } from '@domain/step/repository/step-participants.repository';
 
 @Injectable()
 export class CommonProcessService {
   constructor(
     private readonly processRepository: ProcessRepository,
+    private readonly stepParticipantsRepository: StepParticipantsRepository,
     private readonly processManager: CommonProcessManager,
     private readonly processStatusService: ProcessStatusService,
   ) {}
@@ -123,6 +126,7 @@ export class CommonProcessService {
     if (process.status === dto.status) {
       throw new BadRequestException('Process is already in this status');
     }
+    const stepParticipants = [];
 
     switch (dto.status) {
       case ProcessStatusEnum.draft:
@@ -146,6 +150,15 @@ export class CommonProcessService {
           throw new BadRequestException('All steps should have form schema and reaction schemas');
         }
 
+        const firstStep = process.steps.find((step) => step.parent === null);
+
+        process.userParticipants.forEach((participant) => {
+          const stepParticipant = new StepParticipantsEntity();
+          stepParticipant.processParticipant = participant;
+          stepParticipant.step = firstStep;
+          stepParticipants.push(stepParticipant);
+        });
+
         process.status = ProcessStatusEnum.inProgress;
         break;
       case ProcessStatusEnum.finished:
@@ -155,6 +168,6 @@ export class CommonProcessService {
         throw new BadRequestException('Unknown status');
     }
 
-    await this.processRepository.updateStatus(process);
+    await this.processRepository.updateStatusWithStepParticipantsTransaction(process, stepParticipants);
   }
 }

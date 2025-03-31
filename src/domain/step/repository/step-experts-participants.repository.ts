@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StepExpertsParticipantsEntity } from '@domain/step/entities/step-experts-participants.entity';
 import { Repository } from 'typeorm';
+import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
+import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
 
 @Injectable()
 export class StepExpertsParticipantsRepository {
@@ -11,6 +13,33 @@ export class StepExpertsParticipantsRepository {
 
   async saveMany(stepExpertsParticipants: StepExpertsParticipantsEntity[]): Promise<StepExpertsParticipantsEntity[]> {
     return this.repo.save(stepExpertsParticipants);
+  }
+
+  async findByStepParticipantAndExpert(dto: {
+    stepParticipant: StepParticipantsEntity;
+    stepExpert: StepExpertsEntity;
+  }): Promise<StepExpertsParticipantsEntity> {
+    return this.repo.findOne({
+      where: {
+        stepParticipant: {
+          id: dto.stepParticipant.id,
+        },
+        stepExpert: {
+          id: dto.stepExpert.id,
+        },
+      },
+    });
+  }
+
+  async findByStepParticipantAndExpertOrFail(dto: {
+    stepParticipant: StepParticipantsEntity;
+    stepExpert: StepExpertsEntity;
+  }): Promise<StepExpertsParticipantsEntity> {
+    const stepExpertsParticipants = await this.findByStepParticipantAndExpert(dto);
+    if (!stepExpertsParticipants) {
+      throw new NotFoundException('Step experts participants not found');
+    }
+    return stepExpertsParticipants;
   }
 
   async getParticipantsForExpert(dto: {

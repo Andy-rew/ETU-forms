@@ -57,6 +57,7 @@ export class ReactionRepository {
     return this.repo.manager.transaction(async (transactionalEntityManager) => {
       await transactionalEntityManager.save(reaction.reactionFormFilled);
       await transactionalEntityManager.save(reaction);
+      await transactionalEntityManager.save(reaction.stepExpertsParticipant);
       return reaction;
     });
   }

@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ProcessParticipantEntity } from '@domain/process/entities/process-participant.entity';
 import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
+import { StepExpertsEntity } from '@domain/step/entities/step-experts.entity';
 
 export class StepBuilder {
   constructor(private readonly app: INestApplication) {}
@@ -21,6 +22,7 @@ export class StepBuilder {
   private parent: StepEntity | null = null;
   private process: ProcessEntity | null = null;
   private experts: UserEntity[] | null = null;
+  private isMainExperts = false;
   private acceptFormSchema: FormSchemaEntity = null;
   private declineFormSchema: FormSchemaEntity = null;
   private formSchema: FormSchemaEntity = null;
@@ -53,6 +55,11 @@ export class StepBuilder {
 
   public withFormSchema(formSchema: FormSchemaEntity): this {
     this.formSchema = formSchema;
+    return this;
+  }
+
+  public withIsMainExperts(isMainExperts: boolean): this {
+    this.isMainExperts = isMainExperts;
     return this;
   }
 
@@ -100,6 +107,22 @@ export class StepBuilder {
         .save(stepParticipants);
 
       stepCreated.participants = stepParticipants;
+    }
+
+    if (this.experts && this.experts.length) {
+      const stepExperts: StepExpertsEntity[] = [];
+
+      this.experts.forEach((expert) => {
+        const stepExpert = new StepExpertsEntity();
+        stepExpert.step = stepCreated;
+        stepExpert.user = expert;
+        stepExpert.isMain = this.isMainExperts;
+        stepExperts.push(stepExpert);
+      });
+
+      await this.app.get<Repository<StepExpertsEntity>>(getRepositoryToken(StepExpertsEntity)).save(stepExperts);
+
+      stepCreated.experts = stepExperts;
     }
 
     stepCreated.formSchema = this.formSchema;

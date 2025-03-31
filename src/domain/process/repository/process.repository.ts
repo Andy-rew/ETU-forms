@@ -9,6 +9,7 @@ import { ProcessParticipantEntity } from '@domain/process/entities/process-parti
 import { ProcessGetAllByRoleEnum } from '@domain/process/enums/process-get-all-by-role.enum';
 import { ProcessStatusEnum } from '@domain/process/enums/process-status.enum';
 import { ProcessStatusResolveDto } from '@domain/process/dtos/processStatusResolve.dto';
+import { StepParticipantsEntity } from '@domain/step/entities/step-participants.entity';
 
 @Injectable()
 export class ProcessRepository {
@@ -241,8 +242,14 @@ export class ProcessRepository {
     return query.getManyAndCount();
   }
 
-  async updateStatus(process: ProcessEntity) {
-    await this.repo.update(process.id, { status: process.status });
+  async updateStatusWithStepParticipantsTransaction(
+    process: ProcessEntity,
+    stepParticipants?: StepParticipantsEntity[],
+  ) {
+    await this.repo.manager.transaction(async (transactionalEntityManager) => {
+      await transactionalEntityManager.save(stepParticipants);
+      await transactionalEntityManager.update(ProcessEntity, process.id, { status: process.status });
+    });
   }
 
   async setLinkAccess(dto: { linkAccess: boolean; processId: string }) {

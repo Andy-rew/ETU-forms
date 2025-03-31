@@ -33,6 +33,7 @@ export class StepParticipantsRepository {
       .innerJoinAndSelect('step_participants.step', 'step')
       .leftJoinAndSelect('step_participants.filledForm', 'filledForm')
       .leftJoinAndSelect('step_participants.mainReaction', 'mainReaction')
+      .leftJoinAndSelect('step_participants.reactions', 'reactions')
       .where('step.id = :stepId', { stepId: dto.stepId })
       .andWhere('step.process_id = :processId', { processId: dto.processId })
       .limit(dto.limit)

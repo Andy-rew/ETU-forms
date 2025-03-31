@@ -76,9 +76,13 @@ class ExpertProcessStepItem {
     this.startTime = step.startTime;
     this.endTime = step.endTime;
     this.parentId = step.parent?.id || null;
-    this.formSchema = new ExpertProcessStepFormSchemaItem(step.formSchema);
-    this.formAcceptSchema = new ExpertProcessStepFormAcceptSchemaItem(step.formAcceptSchema);
-    this.formDeclineSchema = new ExpertProcessStepFormDeclineSchemaItem(step.formDeclineSchema);
+    this.formSchema = step.formSchema ? new ExpertProcessStepFormSchemaItem(step.formSchema) : null;
+    this.formAcceptSchema = step.formAcceptSchema
+      ? new ExpertProcessStepFormAcceptSchemaItem(step.formAcceptSchema)
+      : null;
+    this.formDeclineSchema = step.formDeclineSchema
+      ? new ExpertProcessStepFormDeclineSchemaItem(step.formDeclineSchema)
+      : null;
   }
 }
 

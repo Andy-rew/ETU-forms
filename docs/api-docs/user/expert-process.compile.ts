@@ -62,7 +62,7 @@ export function ExpertProcessCompile(): void {
     isImplemented: true,
     method: 'GET',
     requiresAuthorization: true,
-    title: 'Получить информацию о реакции на этап',
+    title: 'Получить информацию о реакции на участника этапа',
     query: ExpertProcessStepsParticipantsReactionDto,
     responses: {
       '200': [ExpertProcessStepsParticipantsReactionResponse],

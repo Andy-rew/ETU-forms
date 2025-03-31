@@ -6,6 +6,8 @@ import { StepRepository } from '@domain/step/repository/step.repository';
 import { FormSchemaRepository } from '@domain/form-schema/repository/form-schema.repository';
 import { ReactionManager } from '@domain/reaction/manager/reaction.manager';
 import { ReactionRepository } from '@domain/reaction/repository/reaction.repository';
+import { StepExpertsParticipantsRepository } from '@domain/step/repository/step-experts-participants.repository';
+import { StepExpertsRepository } from '@domain/step/repository/step-experts.repository';
 
 @Injectable()
 export class CommonReactionService {
@@ -15,6 +17,8 @@ export class CommonReactionService {
     private readonly formSchemaRepository: FormSchemaRepository,
     private readonly reactionManager: ReactionManager,
     private readonly reactionRepository: ReactionRepository,
+    private readonly stepExpertsParticipantsRepository: StepExpertsParticipantsRepository,
+    private readonly stepExpertsRepository: StepExpertsRepository,
   ) {}
 
   async createReactionByUser(dto: {
@@ -38,9 +42,21 @@ export class CommonReactionService {
       userId: dto.userId,
     });
 
+    const stepExpert = await this.stepExpertsRepository.findByStepIdAndProcessIdOrFail({
+      stepId: dto.stepId,
+      processId: dto.processId,
+      userId: dto.userReactedBy.id,
+    });
+
+    const stepExpertParticipant = await this.stepExpertsParticipantsRepository.findByStepParticipantAndExpertOrFail({
+      stepParticipant,
+      stepExpert,
+    });
+
     const formSchema = await this.formSchemaRepository.findByIdOrFail(dto.schemaId);
 
     const reactionForCreate = this.reactionManager.createEntity({
+      stepExpertParticipant,
       stepParticipant,
       formSchema,
       type: dto.type,

@@ -98,7 +98,7 @@ export class ProcessBuilder {
       await this.app.get(getRepositoryToken(ProcessEntity)).save(createdProcess);
     }
 
-    if (this.participants.length) {
+    if (this.participants) {
       const participants = [];
       this.participants.forEach((participant) => {
         const processParticipant = new ProcessParticipantEntity();

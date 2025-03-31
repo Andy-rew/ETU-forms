@@ -71,7 +71,7 @@ export class ExpertProcessStepsParticipantsReactionAllResponse {
       (reaction) =>
         new ExpertProcessStepsParticipantsReactionAllReactionItem(
           reaction,
-          reaction.id === stepParticipantWithReactions.mainReaction.id,
+          reaction.id === stepParticipantWithReactions.mainReaction?.id,
         ),
     );
   }
